@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Card Details</title>
+      <link rel="stylesheet" href="styles.css">
+   </head>
+   <body>
+      <a href="index.html" class="back-link">&larr; Back to Collection</a>
+      <div class="card-details" id="cardDetails">
+         <!-- Card details will be inserted here -->
+      </div>
+      <!-- Include your external JavaScript file -->
+      <script type="module">
+         import { initCardDetailsPage } from "./common.js";
+         import { localMode } from "./config.js";
+         
+         if(localMode) {
+			initCardDetailsPage('cards.csv');
+         }
+      </script>
+      </script>
+   </body>
+</html>

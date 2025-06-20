@@ -1,0 +1,129 @@
+/* Define root variables for easy customization */
+:root {
+    --outline-color: #000;
+    --font-family: 'Roboto', sans-serif;
+}
+
+/* Add this at the top to import a custom font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Update the body to use the custom font */
+body {
+    font-family: var(--font-family);
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+#controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#tier-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.tier {
+    display: flex;
+    flex-direction: column; /* Ensure the name is on top */
+    gap: 10px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    min-height: 150px; /* Minimum height for the tier container */
+}
+
+.tier-name {
+    flex-basis: auto; /* Adjust to fit content */
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #f0f0f0; /* Default background color */
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    font-family: var(--font-family); /* Custom font */
+    position: relative; /* Add this line */
+}
+
+.tier-name.custom-outline {
+    -webkit-text-stroke: 1px var(--outline-color); /* Solid outline */
+}
+
+.tier-controls {
+    position: absolute;
+    top: 50%;
+    right: 25px; /* 5px original + 20px */
+    display: flex;
+    gap: 5px;
+    transform: translateY(-50%);
+}
+
+.tier-controls button {
+    background-color: #dc3545;
+    padding: 5px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tier-controls button:last-child {
+    margin-right: 20px; /* Add margin-right only to the last button */
+}
+
+.image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    cursor: grab;
+    border-radius: 10px;
+    transition: transform 0.2s ease;
+}
+
+.image:hover {
+    transform: scale(1.05);
+}
+
+#image-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#save-button {
+    margin-top: 20px;
+}
+
+/* Ensure images are added horizontally within the tier */
+.tier-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    flex-grow: 1; /* Allow the container to grow */
+}

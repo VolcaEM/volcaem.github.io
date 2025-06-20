@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Add New Yu‑Gi‑Oh Card Entry</title>
+      <style>
+         body {
+         font-family: Arial, sans-serif;
+         margin: 20px;
+         background: #fdfdfd;
+         }
+         h1 {
+         text-align: center;
+         }
+         form {
+         max-width: 600px;
+         margin: 0 auto;
+         background: #fff;
+         padding: 15px;
+         border: 1px solid #ddd;
+         border-radius: 4px;
+         }
+         label {
+         font-weight: bold;
+         margin-top: 10px;
+         display: block;
+         }
+         input[type="text"],
+         input[type="number"],
+         input[type="date"],
+         select,
+         textarea,
+         input[list] {
+         width: 100%;
+         padding: 6px;
+         margin-top: 4px;
+         border: 1px solid #ccc;
+         border-radius: 2px;
+         box-sizing: border-box;
+         }
+         textarea {
+         resize: vertical;
+         height: 80px;
+         }
+         button {
+         margin-top: 15px;
+         padding: 10px 15px;
+         font-size: 1em;
+         cursor: pointer;
+         border: none;
+         border-radius: 3px;
+         background: #0078d7;
+         color: #fff;
+         }
+         #csvOutput {
+         margin-top: 20px;
+         width: 100%;
+         height: 150px;
+         padding: 10px;
+         border: 1px solid #ccc;
+         font-family: Consolas, monospace;
+         }
+         /* Hide date input by default */
+         #dateObtainedWrapper {
+         display: none;
+         }
+      </style>
+   </head>
+   <body onload="document.getElementById('cardEntryForm').reset(); document.getElementById('csvOutput').value = '';">
+      <h1>Add New Yu‑Gi‑Oh Card Entry</h1>
+      <form id="cardEntryForm" autocomplete="off">
+         <!-- Free text fields -->
+         <label for="name">Name:</label>
+         <input type="text" id="name" required>
+         <!-- Dropdowns for fixed values -->
+         <label for="type">Type:</label>
+         <select id="type" required>
+            <option value="Monster (Vanilla)">Monster (Vanilla)</option>
+            <option value="Monster (Effect)">Monster (Effect)</option>
+            <option value="Monster (Ritual)">Monster (Ritual)</option>
+            <option value="Monster (Fusion)">Monster (Fusion)</option>
+            <option value="Monster (Synchro)">Monster (Synchro)</option>
+            <option value="Monster (XYZ)">Monster (XYZ)</option>
+            <option value="Monster (CXYZ)">Monster (CXYZ)</option>
+            <option value="Monster (CXYZ)">Monster (SXYZ)</option>
+            <option value="Monster (CXYZ)">Monster (FXYZ)</option>
+            <option value="Monster (Pendulum)">Monster (Pendulum)</option>
+            <option value="Monster (Link)">Monster (Link)</option>
+            <!-- <option value="Monster">Monster</option> -->
+            <!-- <option value="Spell">Spell</option> -->
+            <option value="Spell (Normal)">Spell (Normal)</option>
+            <option value="Spell (Quick-Play)">Spell (Quick-Play)</option>
+            <option value="Spell (Continuous)">Spell (Continuous)</option>
+            <option value="Spell (Equip)">Spell (Equip)</option>
+            <option value="Spell (Terrain)">Spell (Terrain)</option>
+            <!-- <option value="Trap">Trap</option> -->
+            <option value="Trap (Normal)">Trap (Normal)</option>
+            <option value="Trap (Continuous)">Trap (Continuous)</option>
+            <option value="Trap (Counter)">Trap (Counter)</option>
+            <option value="Token">Token</option>
+         </select>
+         <label for="rarity">Rarity:</label>
+         <select id="rarity" required>
+            <option value="Common">Common</option>
+            <option value="Rare">Rare</option>
+            <option value="Super Rare">Super Rare</option>
+            <option value="Ultra Rare">Ultra Rare</option>
+            <option value="Secret Rare">Secret Rare</option>
+            <option value="Ghost Rare">Ghost Rare</option>
+            <option value="Collectors Rare">Collector's Rare</option>
+            <option value="Ultimate Rare">Ultimate Rare</option>
+            <option value="Unknown">Unknown</option>
+            <option value="Fake">FAKE</option>
+         </select>
+         <label for="quality">Quality:</label>
+         <select id="quality" required>
+            <option value="Near Mint">Near Mint</option>
+            <option value="Slightly Played">Slightly Played</option>
+            <option value="Moderately Played">Moderately Played</option>
+            <option value="Played">Played</option>
+            <option value="Poor">Poor</option>
+            <option value="Unknown (good)">Unknown (good)</option>
+            <option value="Unknown (bad)">Unknown (bad)</option>
+         </select>
+         <label for="language">Language:</label>
+         <select id="language" required>
+            <option value="IT">IT</option>
+            <option value="EN">EN</option>
+            <option value="JP">JP</option>
+            <option value="DE">DE</option>
+            <option value="ES">ES</option>
+            <option value="FR">FR</option>
+         </select>
+         <label for="editionType">Edition Type:</label>
+         <select id="editionType" required>
+            <option value="First Edition">First Edition</option>
+            <option value="Limited Edition">Limited Edition</option>
+            <option value="Standard Edition">Standard Edition</option>
+         </select>
+         <!-- Numeric / unique fields -->
+         <label for="pricePaid">Price I paid for it:</label>
+         <input type="number" id="pricePaid" step="0.01" required>
+         <!-- Current market price is removed; it will be set to 0.00 in the CSV -->
+         <label for="id">ID:</label>
+         <input list="ids" id="id" required>
+         <datalist id="ids">
+            <option value="CBLZ">
+            <option value="CBLZ">
+            <option value="LCYW">
+            <option value="DR1">
+            <option value="LEDE">
+            <option value="LTGY">
+            <option value="DRLG">
+            <option value="LED9">
+            <option value="MIY">
+            <option value="LDK2">
+            <option value="VASM">
+            <option value="RA01">
+            <option value="ORCS">
+            <option value="CSOC">
+            <option value="ALIN">
+            <option value="MACR">
+            <option value="PHNI">
+            <option value="INOV">
+            <option value="SDOK">
+            <option value="CRV">
+            <option value="SDRE">
+            <option value="DIFO">
+            <option value="MAMA">
+            <option value="PHSW">
+            <option value="EOJ">
+            <option value="SDCH">
+            <option value="NUMH">
+            <option value="YS13">
+            <option value="SDCB">
+            <option value="ABYR">
+            <option value="DP07">
+            <option value="GLAS">
+            <option value="BLTR">
+            <option value="CT09">
+            <option value="JOTL">
+            <option value="INFO">
+            <option value="GAOV">
+            <option value="OP19">
+            <option value="REDU">
+            <option value="SDBE">
+            <option value="DPYG">
+            <option value="BP01">
+            <option value="YS11">
+            <option value="YS12">
+            <option value="TSHD">
+            <option value="BP02">
+            <option value="IGAS">
+            <option value="MP24">
+            <option value="AGOV">
+            <option value="DUNE">
+            <option value="MP21">
+            <option value="ANGU">
+            <option value="SP13">
+            <option value="PRIO">
+            <option value="RA04">
+            <option value="SDCS">
+            <option value="LEDD">
+            <option value="SDDC">
+            <option value="RA03">
+            <option value="HA06">
+            <option value="LOTD">
+            <option value="ROTA">
+            <option value="MP23">
+            <option value="GRCR">
+            <option value="RA02">
+            <option value="RYMP">
+            <option value="CYAC">
+            <option value="HA05">
+            <option value="BLCR">
+            <option value="YSDS">
+            <option value="LED3">
+            <option value="SDWD">
+            <option value="PSV">
+            <option value="MIK">
+            <option value="SDDL">
+            <option value="TDGS">
+            <option value="DRL3">
+            <option value="GLD5">
+            <option value="DP10">
+            <option value="AMDE">
+            <option value="SDDE">
+            <option value="YHGJ">
+            <option value="COTD">
+            <option value="RP02">
+            <option value="SDMM">
+            <option value="SR07">
+            <option value="SR13">
+            <option value="SDLS">
+            <option value="GENF">
+            <option value="RIRA">
+            <option value="SUDA">
+            <option value="TAMA">
+            <option value="CRBR">
+            <option value="CRMS">
+            <option value="SDCR">
+            <option value="MP22">
+            <option value="MIL1">
+            <option value="ABPF">
+            <option value="BACH">
+            <option value="MP15">
+            <option value="ANPR">
+            <option value="ZTIN">
+            <option value="PGL2">
+            <option value="SP14">
+            <option value="DUOV">
+            <option value="OP22">
+            <option value="BLC1">
+            <option value="CORE">
+            <option value="SDM">
+            <option value="SDAZ">
+            <option value="PHHY">
+            <option value="STOR">
+            <option value="DPBC">
+            <option value="LED6">
+            <option value="YSYR">
+            <option value="PMT">
+            <option value="SOI">
+            <option value="DL09">
+            <option value="DUDE">
+            <option value="5DS3">
+            <option value="DAMA">
+            <option value="BLMR">
+            <option value="5DS2">
+            <option value="LC03">
+            <option value="SD8">
+            <option value="SDBT">
+            <option value="MZTM">
+            <option value="HISU">
+         </datalist>
+         <!-- Checkbox to specify date -->
+         <label>
+         <input type="checkbox" id="specifyDate" onchange="toggleDateInput()"> Specify date obtained
+         </label>
+         <!-- Date Obtained input: hidden by default -->
+         <div id="dateObtainedWrapper">
+         <label for="dateObtained">Date Obtained:</label>
+         <input type="date" id="dateObtained">
+         </div>
+         <label for="location">Location:</label>
+         <input list="locationOptions" id="location" required>
+         <datalist id="locationOptions">
+         <option value="Shelf">
+         <option value="Binder">
+         <option value="Deck Box">
+         <option value="Random">
+         <option value="Unknown">
+         <option value="DMG Binder">
+         <option value="CTZ">
+         </datalist>
+         <label for="comments">Comments:</label>
+         <textarea id="comments"></textarea>
+         <!-- <label for="wikiUrl">Wiki URL:</label> -->
+         <!-- <input type="text" id="wikiUrl"> -->
+         <button type="button" onclick="generateCSV()">Generate CSV Line</button>
+      </form>
+      <!-- Output: The generated CSV line -->
+      <textarea id="csvOutput" readonly placeholder="CSV line will appear here..."></textarea>
+      <script>
+         // Toggle the display of the date input based on checkbox status
+         function toggleDateInput() {
+           var checkbox = document.getElementById('specifyDate');
+           var dateWrapper = document.getElementById('dateObtainedWrapper');
+           dateWrapper.style.display = checkbox.checked ? 'block' : 'none';
+         }
+         
+         function generateCSV() {
+         // If the value is empty (or just spaces), use "Unknown"
+         var name = document.getElementById('name').value.trim() || "Unknown";
+         var type = document.getElementById('type').value || "Unknown";
+         var rarity = document.getElementById('rarity').value || "Unknown";
+         var quality = document.getElementById('quality').value || "Unknown";
+         var language = document.getElementById('language').value || "Unknown";
+         var editionType = document.getElementById('editionType').value || "Unknown";
+         var priceInput = document.getElementById('pricePaid').value;
+         var priceNumber = parseFloat(priceInput);
+         var pricePaid = isNaN(priceNumber) ? "Unknown" : priceNumber.toFixed(2);
+         var id = document.getElementById('id').value.trim().toUpperCase() || "Unknown";
+         var dashIndex = id.indexOf("-");
+         var packId = dashIndex !== -1 ? id.substring(0, dashIndex) : "Unknown";
+         
+         // Current market price is hard-set to 0.00
+         var marketPrice = "0.00";
+         
+         // For the date: if the "specify date" checkbox is checked and a date is entered, use it;
+         // otherwise, fall back to the default date "24/10/2006"
+         var specifyDate = document.getElementById('specifyDate').checked;
+         var dateObtained;
+         if (specifyDate) {
+         var dateValue = document.getElementById('dateObtained').value;
+         if (dateValue) {
+           var parts = dateValue.split("-");
+           dateObtained = parts[2] + "/" + parts[1] + "/" + parts[0];
+         } else {
+           dateObtained = "24/10/2006";
+         }
+         } else {
+         dateObtained = "24/10/2006";
+         }
+         
+         var location = document.getElementById('location').value || "Unknown";
+         var comments = document.getElementById('comments').value.trim() || "";
+         var wikiUrl = 
+         // document.getElementById('wikiUrl').value.trim() || 
+         "https://yugipedia.com/wiki/" + id;
+         
+         // Automatically generate Photo URL using the contents of the id field.
+         // (If id is empty, it becomes "Unknown" and so the photo URL will be "images/cards/Unknown.png")
+         var photoUrl = "images/cards/" + language + "/" + id + ".png";
+         
+         
+         // Combine all values in order into a CSV line (pipe-separated)
+         var csvLine = [
+         name,
+         type,
+         rarity,
+         quality,
+         language,
+         editionType,
+         pricePaid,
+         marketPrice,
+         id,
+         packId,
+         dateObtained,
+         location,
+         comments,
+         photoUrl,
+         wikiUrl
+         ].join("|");
+         
+         document.getElementById('csvOutput').value = csvLine;
+         }
+      </script>
+   </body>
+</html>

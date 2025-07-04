@@ -120,6 +120,15 @@ export const translations = [{
         go: "Go",
         pageLanguage: "Display Language: ",
         loadcsv: "Load CSV",
+        totalSpent: "Total spent: ",
+        product: "Product",
+        sleeves: "Sleeves",
+        structuredeck: "Structure Deck",
+        storage: "Storage",
+        fieldcentercard: "Field Center Card",
+        empty: "Empty",
+        album: "Album",
+        none: "",
     },
     {
         collectionheader: "La mia collezione di carte di Yu-Gi-Oh",
@@ -231,6 +240,15 @@ export const translations = [{
         go: "Vai",
         pageLanguage: "Lingua Pagina: ",
         loadcsv: "Carica CSV",
+        totalSpent: "Totale: ",
+        product: "Prodotto",
+        sleeves: "Sleeves",
+        structuredeck: "Structure Deck",
+        storage: "Storage",
+        fieldcentercard: "Field Center Card",
+        empty: "Vuoto/a",
+        album: "Album",
+        none: "",
     }
 ];
 

@@ -1,0 +1,21 @@
+	 .edition-badge {
+		 display: inline-block;
+		 background-color: black;
+		 color: white;
+		 border-radius: 50%;
+		 width: 20px;
+		 height: 20px;
+		 text-align: center;
+		 line-height: 20px;
+		 font-size: 0.8em;
+		 margin-left: 4px;
+	}
+	 .edition-badge-0 {
+		 color: gold;
+	}
+	 .edition-badge-2 {
+		 color: white;
+	}
+	 .edition-badge-3 {
+		 color: white;
+	}

@@ -137,6 +137,12 @@
          </tbody>
       </table>
       <!-- Summaries -->
+      <br>
+      <hr>
+      <h2 data-translation-key="totalSpent"></h2>
+      <strong>
+         <p id="totalSpentValue">€0.00</p>
+      </strong>
       <div id="debugInfo" style="display: none;">
          <hr>
          <br>
@@ -168,6 +174,8 @@
 			let csvload = document.getElementById("loadCSV");
 			csvload.style.display = "block";
          }
+         
+         document.body.style.zoom = "90%";
          
          initCollectionPage();
          

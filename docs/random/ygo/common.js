@@ -229,6 +229,10 @@ export function getQualityBadge(quality) {
         return '<span class="badge" data-original-title="Near Mint">❌</span>';
     }
 
+    if (q === "none") {
+        return "";
+    }
+
     if (q === translations[0]["nearmint"].toLowerCase()) {
         return '<span class="badge badge-cond-near-mint" data-original-title="Near Mint">NM</span>';
     } else if (q === translations[0]["slightlyplayed"].toLowerCase()) {
@@ -269,6 +273,7 @@ export function getEditionBadge(edition) {
 
 // Process type string, extracting any parenthesized info as a badge.
 export function getTypeDisplay(typeText) {
+
     let base = typeText;
     let badges = [];
     const regex = /\(([^)]+)\)/;
@@ -278,7 +283,7 @@ export function getTypeDisplay(typeText) {
         // Remove the parenthesized part from the base.
         base = typeText.replace(regex, "").trim();
 
-        // Split the parenthesized string by "|" so we can support multiple badges.
+        // Split the parenthesized string by "/" so we can support multiple badges.
         const badgeTokens = match[1].split("/").map(token => token.trim());
 
         // Define an array of badge rules in order of priority.
@@ -357,7 +362,31 @@ export function getTypeDisplay(typeText) {
             {
                 prefix: translations[0]["toon"].replaceAll("—— ", "").replaceAll("— ", ""),
                 cssClass: "badge-type-toon"
-            }
+            },
+            {
+                prefix: translations[0]["sleeves"].replaceAll("—— ", "").replaceAll("— ", ""),
+                cssClass: "badge-type-sleeves"
+            },
+            {
+                prefix: translations[0]["structuredeck"].replaceAll("—— ", "").replaceAll("— ", ""),
+                cssClass: "badge-type-structuredeck"
+            },
+            {
+                prefix: translations[0]["storage"].replaceAll("—— ", "").replaceAll("— ", ""),
+                cssClass: "badge-type-storage"
+            },
+            {
+                prefix: translations[0]["fieldcentercard"].replaceAll("—— ", "").replaceAll("— ", ""),
+                cssClass: "badge-type-fieldcentercard"
+            },
+            {
+                prefix: translations[0]["empty"].replaceAll("—— ", "").replaceAll("— ", ""),
+                cssClass: "badge-type-empty"
+            },
+            {
+                prefix: translations[0]["album"].replaceAll("—— ", "").replaceAll("— ", ""),
+                cssClass: "badge-type-album"
+            },
 
             // Add more rules here as needed.
         ];
@@ -367,10 +396,12 @@ export function getTypeDisplay(typeText) {
             for (const rule of badgeRules) {
                 if (token.startsWith(rule.prefix)) {
                     // Clean the token text to match the translation key.
-                    const processedToken = token.replace("-", "").toLowerCase().trim();
+                    const processedToken = token.replaceAll("—— ", "").replaceAll("— ", "").replaceAll("-", "").toLowerCase().trim().replaceAll(" ", "");
                     // Look up the translation for this token; if not available, fall back to the token.
+                    // console.log("Processed Token: " + processedToken);
+                    const myresult = translations[langIndex][processedToken];
                     const displayText =
-                        translations[langIndex][processedToken].replaceAll("—— ", "").replaceAll("— ", "") || token;
+                        myresult.replaceAll("—— ", "").replaceAll("— ", "") || token;
                     badges.push(`<span class="${rule.cssClass}">${displayText}</span>`);
                     break; // Once a rule is matched, we move on to the next token.
                 }
@@ -447,8 +478,8 @@ export class CardManager {
                 edition: data["Edition type"],
                 pricePaid: data["Price I paid for it"],
                 marketPrice: data["Current market price"],
-                id: data["ID"],
-                packId: data["Pack ID"],
+                id: data["ID"].replaceAll("None", "").replaceAll("NONE", ""),
+                packId: data["Pack ID"].replaceAll("None", "").replaceAll("NONE", ""),
                 "Date Obtained": data["Date Obtained"],
                 location: data["Location"],
                 comments: data["Comments"],
@@ -688,17 +719,17 @@ export function displayCards(cards) {
 
         // Quality badge.
         let tdQuality = document.createElement("td");
-        tdQuality.innerHTML = getQualityBadge(card.quality);
+        tdQuality.innerHTML = getQualityBadge(card.quality).replaceAll("None", "");
         tr.appendChild(tdQuality);
 
         // Language badge.
         let tdLanguage = document.createElement("td");
-        tdLanguage.innerHTML = getLanguageBadge(card.language);
+        tdLanguage.innerHTML = getLanguageBadge(card.language).replaceAll("None", "").replaceAll("NONE", "");
         tr.appendChild(tdLanguage);
 
         // Edition badge.
         let tdEdition = document.createElement("td");
-        tdEdition.innerHTML = getEditionBadge(card.edition);
+        tdEdition.innerHTML = getEditionBadge(card.edition.replaceAll("None", ""));
         tr.appendChild(tdEdition);
 
         // Price I Paid.
@@ -715,12 +746,12 @@ export function displayCards(cards) {
 
         // ID.
         let tdID = document.createElement("td");
-        tdID.textContent = card.id;
+        tdID.textContent = card.id.replaceAll("None", "").replaceAll("NONE", "");
         tr.appendChild(tdID);
 
         // Pack ID
         let tdPackID = document.createElement("td");
-        tdPackID.textContent = card.packId + " ";
+        tdPackID.textContent = card.packId.replaceAll("None", "").replaceAll("NONE", "") + " ";
         tdPackID.style.height = "0px";
         tdPackID.style.width = "0px";
         tdPackID.style.display = "none";
@@ -744,7 +775,7 @@ export function displayCards(cards) {
 
         // Wiki button.
         let tdWiki = document.createElement("td");
-        if (card.wikiUrl) {
+        if (card.wikiUrl && card.wikiUrl.length > 0) {
             let wikiBtn = document.createElement("button");
             wikiBtn.textContent = translations[langIndex]["go"];
             wikiBtn.addEventListener("click", () => {
@@ -752,12 +783,14 @@ export function displayCards(cards) {
             });
             tdWiki.appendChild(wikiBtn);
         } else {
-            tdWiki.textContent = "N/A";
+            tdWiki.textContent = "";
         }
         tr.appendChild(tdWiki);
 
         tbody.appendChild(tr);
     });
+
+    updateTotalSpent();
 
     if (resultCountEl) {
         resultCountEl.innerHTML = "<div class=\"results\">" + translations[langIndex]["showingcards"]
@@ -908,7 +941,9 @@ export function handleApplyFilters() {
                     "Played": 4,
                     "Poor": 5,
                     "Unknown (good)": 6,
-                    "Unknown (bad)": 7
+                    "Unknown (bad)": 7,
+                    "Fake": 8,
+                    "None": 9,
                 };
 
                 // Get the assigned order values; if a quality isn't in the list, give it a high order.
@@ -932,7 +967,10 @@ export function handleApplyFilters() {
                 const editionOrder = {
                     "Limited Edition": 1,
                     "First Edition": 2,
-                    "Standard Edition": 3
+                    "Standard Edition": 3,
+                    "Unknown": 4,
+                    "None": 5,
+                    "Fake": 6,
                 };
 
                 // Get the order value for each edition, using a fallback if the edition isn't mapped.
@@ -956,7 +994,11 @@ export function handleApplyFilters() {
                     normalizeRarity(translations[0]["ultrarare"]),
                     normalizeRarity(translations[0]["superrare"]),
                     normalizeRarity(translations[0]["rare"]),
-                    normalizeRarity(translations[0]["common"])
+                    normalizeRarity(translations[0]["common"]),
+                    normalizeRarity(translations[0]["unknown"]),
+                    "None",
+                    "Fake",
+                    "FAKE",
                 ];
 
                 const indexA = rarityOrder.indexOf(normalizeRarity(a.rarity));
@@ -1135,4 +1177,19 @@ export function initCollectionPage() {
         });
     }
 
+}
+
+export function updateTotalSpent() {
+    let total = currentDisplayedCards
+        .reduce((sum, card) => sum + (card.pricePaid || 0), 0);
+
+    // total = total + (total * 0.05);
+
+    // Format with browser’s locale; force EUR or change as needed
+    const formatted = new Intl.NumberFormat(undefined, {
+        style: "currency",
+        currency: "EUR"
+    }).format(total);
+
+    document.getElementById("totalSpentValue").textContent = formatted;
 }

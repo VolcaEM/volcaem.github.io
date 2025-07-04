@@ -1,0 +1,20 @@
+	 .badge-cond-near-mint {
+		 color: #ffffff;
+		 background-color: #87b726;
+	}
+	 .badge-cond-slightly-played {
+		 color: #ffffff;
+		 background-color: #c8d400;
+	}
+	 .badge-cond-moderately-played {
+		 color: #ffffff;
+		 background-color: #f9b000;
+	}
+	 .badge-cond-played {
+		 color: #ffffff;
+		 background-color: #ee7203;
+	}
+	 .badge-cond-poor {
+		 color: #ffffff;
+		 background-color: #b13907;
+	}

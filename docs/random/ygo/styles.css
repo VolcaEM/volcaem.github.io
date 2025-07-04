@@ -1,362 +1,170 @@
- 
-/* General styling */
- body {
-     font-family: Arial, sans-serif;
-     margin: 20px;
-}
- header {
-     text-align: center;
-     margin-bottom: 20px;
-}
- #filters {
-     margin-bottom: 20px;
-}
- #filters input, #filters select {
-     padding: 5px;
-     margin-right: 10px;
-}
- button {
-     padding: 5px 10px;
-}
- table {
-     width: 100%;
-     border-collapse: collapse;
-}
- th, td {
-     border: 1px solid #ccc;
-     padding: 8px;
-     text-align: left;
-     vertical-align: middle;
-     text-align: center;
-}
- th {
-     background-color: #f4f4f4;
-}
-/* Card image cell styling */
-/* Set the image cell size to a fixed width and height. Here we assume 120px wide and 150px tall represent the top 30% of a typical card image. Adjust these values as needed. */
- .img-cell {
-     width: 100px;
-     height: 60px;
-     overflow: hidden;
-    /* Crop any part of the image beyond this cell */
-     position: relative;
-}
-/* The card image is forced to fill the container while showing only its top part. object-fit: cover scales (or crops) the image so that the cell is filled, and object-position: top ensures the top edge is visible. */
- .card-image {
-     width: 100%;
-     height: 100%;
-     object-fit: cover;
-     object-position: top;
-     transition: transform 0.3s ease;
-     cursor: pointer;
-}
-/* --- UPDATED: Full image overlay using fixed positioning --- */
- #fullImageOverlay {
-     position: fixed;
-    /* Fixed relative to the viewport */
-     display: none;
-    /* Hidden until activated */
-     z-index: 1000;
-    /* Ensures it appears on top */
-     pointer-events: none;
-    /* Doesn’t block any mouse interactions */
-     transition: top 0.1s ease, left 0.1s ease;
-    /* Smoothly moves with the mouse */
-}
- #fullImageOverlay img {
-     display: block;
-     width: auto;
-     height: auto;
-     max-width: 300px;
-    /* Scales down overly-big images */
-     max-height: 442px;
-    /* Adjust these as needed */
-     min-width: 300px;
-    /* Enlarges images that are too small */
-     min-height: 442px;
-}
- .card-image:hover {
-     transform: scale(1.5);
-}
-/* Quality badges (rectangular like Near Mint) */
- .badge {
-     padding: 3px 6px;
-     border-radius: 3px;
-     font-size: 0.9em;
-}
- .badge-cond-near-mint {
-     color: #ffffff;
-     background-color: #87b726;
-}
- .badge-cond-slightly-played {
-     color: #ffffff;
-     background-color: #c8d400;
-}
- .badge-cond-moderately-played {
-     color: #ffffff;
-     background-color: #f9b000;
-}
- .badge-cond-played {
-     color: #ffffff;
-     background-color: #ee7203;
-}
- .badge-cond-poor {
-     color: #ffffff;
-     background-color: #b13907;
-}
-/* Edition badge as a black circle */
- .edition-badge {
-     display: inline-block;
-     background-color: black;
-     color: white;
-     border-radius: 50%;
-     width: 20px;
-     height: 20px;
-     text-align: center;
-     line-height: 20px;
-     font-size: 0.8em;
-     margin-left: 4px;
-}
- .edition-badge-0 {
-     color: gold;
-}
- .edition-badge-2 {
-     color: white;
-}
- .edition-badge-3 {
-     color: white;
-}
- .null {
-     color: none !important;
-     width: 0px !important;
-     height: 0px !important;
-     display: none !important;
-}
-/* Type badges – now rectangular */
- .badge-type-fake {
-     background-color: red;
-     color: white;
-     padding: 2px 4px;
-     border-radius: 3px;
-     font-size: 1em;
-     margin-left: 4px;
-     white-space: nowrap 
-}
- .badge-type-xyz {
-     background-color: black;
-     color: white;
-     padding: 2px 4px;
-     border-radius: 3px;
-     font-size: 0.8em;
-     margin-left: 4px;
-     white-space: nowrap 
-}
- .badge-type-cxyz {
-     background-color: black;
-     color: yellow;
-     padding: 2px 4px;
-     border-radius: 3px;
-     font-size: 0.8em;
-     margin-left: 4px;
-     white-space: nowrap 
-}
- .badge-type-effect {
-     background-color: orange;
-     color: black;
-     padding: 2px 4px;
-     border-radius: 3px;
-     font-size: 0.8em;
-     margin-left: 4px;
-     white-space: nowrap 
-}
- .badge-type-continuous {
-     background-color: purple;
-     color: white;
-     padding: 2px 4px;
-     border-radius: 3px;
-     font-size: 0.8em;
-     margin-left: 4px;
-     white-space: nowrap 
-}
- .badge-type-vanilla {
-     background-color: bisque;
-     color: black;
-     padding: 2px 4px;
-     border-radius: 3px;
-     font-size: 0.8em;
-     margin-left: 4px;
-     white-space: nowrap 
-}
- .badge-type-normal {
-     background-color: gainsboro;
-     color: black;
-     padding: 2px 4px;
-     border-radius: 3px;
-     font-size: 0.8em;
-     margin-left: 4px;
-     white-space: nowrap 
-}
- .badge-type-quickplay {
-     background-color: darkcyan;
-     color: white;
-     padding: 2px 4px;
-     border-radius: 3px;
-     font-size: 0.8em;
-     margin-left: 4px;
-     white-space: nowrap 
-}
- .badge-type-equip {
-     background-color: darkcyan;
-     color: white;
-     padding: 2px 4px;
-     border-radius: 3px;
-     font-size: 0.8em;
-     margin-left: 4px;
-     white-space: nowrap 
-}
- .badge-type-terrain {
-     background-color: darkcyan;
-     color: white;
-     padding: 2px 4px;
-     border-radius: 3px;
-     font-size: 0.8em;
-     margin-left: 4px;
-     white-space: nowrap 
-}
- .badge-type-fusion {
-     background-color: plum;
-     color: black;
-     padding: 2px 4px;
-     border-radius: 3px;
-     font-size: 0.8em;
-     margin-left: 4px;
-     white-space: nowrap 
-}
- .badge-type-synchro {
-     background-color: silver;
-     color: black;
-     padding: 2px 4px;
-     border-radius: 3px;
-     font-size: 0.8em;
-     margin-left: 4px;
-     white-space: nowrap 
-}
- .badge-type-ritual {
-     background-color: paleturquoise;
-     color: black;
-     padding: 2px 4px;
-     border-radius: 3px;
-     font-size: 0.8em;
-     margin-left: 4px;
-     white-space: nowrap 
-}
- .badge-type-pendulum {
-     background-color: darkkhaki;
-     color: black;
-     padding: 2px 4px;
-     border-radius: 3px;
-     font-size: 0.8em;
-     margin-left: 4px;
-     white-space: nowrap 
-}
- .badge-type-link {
-     background-color: cornflowerblue;
-     color: white;
-     padding: 2px 4px;
-     border-radius: 3px;
-     font-size: 0.8em;
-     margin-left: 4px;
-     white-space: nowrap 
-}
- .badge-type-counter {
-     background-color: purple;
-     color: white;
-     padding: 2px 4px;
-     border-radius: 3px;
-     font-size: 0.8em;
-     margin-left: 4px;
-     white-space: nowrap 
-}
- .badge-type-tuner {
-     background-color: silver;
-     color: black;
-     padding: 2px 4px;
-     border-radius: 3px;
-     font-size: 0.8em;
-     margin-left: 4px;
-     white-space: nowrap 
-}
- .badge-type-toon {
-     background-color: beige;
-     color: black;
-     padding: 2px 4px;
-     border-radius: 3px;
-     font-size: 0.8em;
-     margin-left: 4px;
-     white-space: nowrap 
-}
- .card-details {
-     max-width: 600px;
-     margin: auto;
-     border: 1px solid #ccc;
-     padding: 20px;
-}
- .card-details img {
-     width: 200px;
-     transition: transform 0.3s ease;
-     cursor: pointer;
-}
- .card-details img:hover {
-     transform: scale(1.5);
-}
- .back-link {
-     display: block;
-     margin-bottom: 20px;
-}
- .detail-row {
-     margin: 10px 0;
-}
- .detail-label {
-     font-weight: bold;
-}
- .topbutton {
-     margin-left: 10px;
-     margin-right: 10px;
-}
- .textboxinput {
-     min-width: 200px;
-}
- li {
-    /* margin-left: 35px;
-     */
-}
- .topmenu {
-     margin-bottom: 15px;
-     margin-top: 15px;
-     display: flex;
-     justify-content: center;
-    /* centers horizontally */
-     align-items: center;
-    /* centers vertically */
-     flex-direction: row;
-     flex-wrap: wrap;
-}
- .break {
-     flex-basis: 100%;
-     height: 0;
-}
- .bottommenu {
-     margin-bottom: 15px;
-     margin-top: 15px;
-     display: flex;
-     justify-content: center;
-    /* centers horizontally */
-     align-items: center;
-    /* centers vertically */
-     flex-direction: row;
-     flex-wrap: wrap;
-}
- .results {
-     margin-left: 8px;
-}
- 
+	 @import "badges-condition.css";
+	 @import "badges-edition.css";
+	 @import "badges-type.css";
+	 :root {
+		 --td-height: 30px;
+		 --multiplier: 1.2;
+		 --img-width: calc(300px * var(--multiplier));
+		 --img-height: calc(442px * var(--multiplier));
+		 --img-cell-width: 100px;
+		 --img-cell-height: var(--td-height);
+	}
+	/* General styling */
+	 body {
+		 font-family: Arial, sans-serif;
+		 margin: 20px;
+	}
+	 header {
+		 text-align: center;
+		 margin-bottom: 20px;
+	}
+	 #filters {
+		 margin-bottom: 20px;
+	}
+	 #filters input, #filters select {
+		 padding: 5px;
+		 margin-right: 10px;
+	}
+	 button {
+		 padding: 5px 10px;
+	}
+	 table {
+		 width: 100%;
+		 border-collapse: collapse;
+	}
+	 th, td {
+		 border: 1px solid #ccc;
+		 padding: 8px;
+		 text-align: left;
+		 vertical-align: middle;
+		 text-align: center;
+	}
+	 tr, td {
+		 height: var(--td-height) !important;
+	}
+	 td {
+		 white-space: nowrap;
+	}
+	 th {
+		 background-color: #f4f4f4;
+	}
+	/* Card image cell styling */
+	/* Set the image cell size to a fixed width and height. Here we assume 120px wide and 150px tall represent the top 30% of a typical card image. Adjust these values as needed. */
+	 .img-cell {
+		 width: var(--img-cell-width);
+		 height: var(--img-cell-height);
+		 overflow: hidden;
+		/* Crop any part of the image beyond this cell */
+		 position: relative;
+	}
+	/* The card image is forced to fill the container while showing only its top part. object-fit: cover scales (or crops) the image so that the cell is filled, and object-position: top ensures the top edge is visible. */
+	 .card-image {
+		 width: 100%;
+		 height: 100%;
+		 object-fit: cover;
+		 object-position: top;
+		 transition: transform 0.3s ease;
+		 cursor: pointer;
+	}
+	/* --- UPDATED: Full image overlay using fixed positioning --- */
+	 #fullImageOverlay {
+		 position: fixed;
+		/* Fixed relative to the viewport */
+		 display: none;
+		/* Hidden until activated */
+		 z-index: 1000;
+		/* Ensures it appears on top */
+		 pointer-events: none;
+		/* Doesn’t block any mouse interactions */
+		 transition: top 0.1s ease, left 0.1s ease;
+		/* Smoothly moves with the mouse */
+	}
+	 #fullImageOverlay img {
+		 display: block;
+		 width: auto;
+		 height: auto;
+		 max-width: var(--img-width);
+		 max-height: var(--img-height);
+		 min-width: var(--img-width);
+		 min-height: var(--img-height);
+	}
+	 .card-image:hover {
+		 transform: scale(1.5);
+	}
+	/* Quality badges (rectangular like Near Mint) */
+	 .badge {
+		 padding: 3px 6px;
+		 border-radius: 3px;
+		 font-size: 0.9em;
+	}
+	 .null {
+		 color: none !important;
+		 width: 0px !important;
+		 height: 0px !important;
+		 display: none !important;
+	}
+	 .card-details {
+		 max-width: 600px;
+		 margin: auto;
+		 border: 1px solid #ccc;
+		 padding: 20px;
+	}
+	 .card-details img {
+		 width: 200px;
+		 transition: transform 0.3s ease;
+		 cursor: pointer;
+	}
+	 .card-details img:hover {
+		 transform: scale(1.5);
+	}
+	 .back-link {
+		 display: block;
+		 margin-bottom: 20px;
+	}
+	 .detail-row {
+		 margin: 10px 0;
+	}
+	 .detail-label {
+		 font-weight: bold;
+	}
+	 .topbutton {
+		 margin-left: 10px;
+		 margin-right: 10px;
+	}
+	 .textboxinput {
+		 min-width: 200px;
+	}
+	 li {
+		/* margin-left: 35px;
+		 */
+	}
+	 .topmenu {
+		 margin-bottom: 15px;
+		 margin-top: 15px;
+		 display: flex;
+		 justify-content: center;
+		/* centers horizontally */
+		 align-items: center;
+		/* centers vertically */
+		 flex-direction: row;
+		 flex-wrap: wrap;
+	}
+	 .break {
+		 flex-basis: 100%;
+		 height: 0;
+	}
+	 .bottommenu {
+		 margin-bottom: 15px;
+		 margin-top: 15px;
+		 display: flex;
+		 justify-content: center;
+		/* centers horizontally */
+		 align-items: center;
+		/* centers vertically */
+		 flex-direction: row;
+		 flex-wrap: wrap;
+	}
+	 .results {
+		 margin-left: 8px;
+	}
+	 

@@ -2,12 +2,10 @@
 	 @import "badges-edition.css";
 	 @import "badges-type.css";
 	 :root {
-		 --td-height: 30px;
 		 --multiplier: 1.2;
 		 --img-width: calc(300px * var(--multiplier));
 		 --img-height: calc(442px * var(--multiplier));
 		 --img-cell-width: 100px;
-		 --img-cell-height: var(--td-height);
 	}
 	/* General styling */
 	 body {
@@ -35,14 +33,19 @@
 	 th, td {
 		 border: 1px solid #ccc;
 		 padding: 8px;
-		 text-align: left;
 		 vertical-align: middle;
 		 text-align: center;
 	}
 	 tr, td {
-		 height: var(--td-height) !important;
+		 height: 30px;
 	}
-	 td {
+	 .small-tr {
+		 height: 22px !important;
+	}
+	 .tall-tr {
+		 height: 60px !important;
+	}
+	 .nowrap-td {
 		 white-space: nowrap;
 	}
 	 th {
@@ -52,10 +55,16 @@
 	/* Set the image cell size to a fixed width and height. Here we assume 120px wide and 150px tall represent the top 30% of a typical card image. Adjust these values as needed. */
 	 .img-cell {
 		 width: var(--img-cell-width);
-		 height: var(--img-cell-height);
+		 height: 30px;
 		 overflow: hidden;
 		/* Crop any part of the image beyond this cell */
 		 position: relative;
+	}
+	 .img-cell.tall-tr {
+		 height: 60px !important;
+	}
+	 .img-cell.small-tr {
+		 height: 30px !important;
 	}
 	/* The card image is forced to fill the container while showing only its top part. object-fit: cover scales (or crops) the image so that the cell is filled, and object-position: top ensures the top edge is visible. */
 	 .card-image {

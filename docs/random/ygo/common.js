@@ -4,6 +4,9 @@ import {
     langIndex,
     localMode,
     shouldShowImage,
+    allowNewlines,
+    useTallTr,
+    useSmallTr,
 } from './config.js';
 
 import {
@@ -631,7 +634,18 @@ export function displayCards(cards) {
     }
 
     cards.forEach(card => {
+
+        let nowrap_td = !allowNewlines;
+        let usetall_tr = useTallTr;
+        let usesmall_tr = useSmallTr;
+
         const tr = document.createElement("tr");
+
+        if (usetall_tr === true) {
+            tr.classList.add("tall-tr");
+        } else if (usesmall_tr === true) {
+            tr.classList.add("small-tr");
+        }
 
         // Image cell with a set maximum width and error-handling tooltip.
         const imgTd = document.createElement("td");
@@ -643,6 +657,9 @@ export function displayCards(cards) {
             // showImage.style.display = "block";
 
             imgTd.classList.add("img-cell");
+            if (nowrap_td === true) imgTd.classList.add("nowrap-td");
+            if (usetall_tr === true) imgTd.classList.add("tall-tr");
+            if (usesmall_tr === true) imgTd.classList.add("small-tr");
             const img = document.createElement("img");
             img.src = card.getImageUrl();
 
@@ -693,6 +710,9 @@ export function displayCards(cards) {
             imgTd.appendChild(img);
             tr.appendChild(imgTd);
         } else {
+            if (nowrap_td === true) imgTd.classList.add("nowrap-td");
+            if (usetall_tr === true) imgTd.classList.add("tall-tr");
+            if (usesmall_tr === true) imgTd.classList.add("small-tr");
             showImage.style.display = "none";
             showImage.style.width = "0px";
             showImage.style.height = "0px";
@@ -704,49 +724,76 @@ export function displayCards(cards) {
         if (card.rarity.toLowerCase() == translations[0]["fake"].toLowerCase()) {
             tdName.innerHTML = tdName.textContent + " <b>(" + translations[langIndex]["fake"] + ")</b>";
         }
+        if (nowrap_td === true) tdName.classList.add("nowrap-td");
+        if (usetall_tr === true) tdName.classList.add("tall-tr");
+        if (usesmall_tr === true) tdName.classList.add("small-tr");
         tr.appendChild(tdName);
 
         // Type.
         let tdType = document.createElement("td");
         tdType.innerHTML = getTypeDisplay(card.type);
+        if (nowrap_td === true) tdType.classList.add("nowrap-td");
+        if (usetall_tr === true) tdType.classList.add("tall-tr");
+        if (usesmall_tr === true) tdType.classList.add("small-tr");
         tr.appendChild(tdType);
 
         // Rarity.
         let tdRarity = document.createElement("td");
         let fakestr = `<span class="badge-type-fake">` + translations[langIndex]["fake"] + `</span>`;
         tdRarity.innerHTML = (card.rarity.toLowerCase() == translations[0]["fake"].toLowerCase() ? fakestr : translations[langIndex][card.rarity.toLowerCase().trim().replace(" ", "")]);
+        if (nowrap_td === true) tdRarity.classList.add("nowrap-td");
+        if (usetall_tr === true) tdRarity.classList.add("tall-tr");
+        if (usesmall_tr === true) tdRarity.classList.add("small-tr");
         tr.appendChild(tdRarity);
 
         // Quality badge.
         let tdQuality = document.createElement("td");
         tdQuality.innerHTML = getQualityBadge(card.quality).replaceAll("None", "");
+        if (nowrap_td === true) tdQuality.classList.add("nowrap-td");
+        if (usetall_tr === true) tdQuality.classList.add("tall-tr");
+        if (usesmall_tr === true) tdQuality.classList.add("small-tr");
         tr.appendChild(tdQuality);
 
         // Language badge.
         let tdLanguage = document.createElement("td");
         tdLanguage.innerHTML = getLanguageBadge(card.language).replaceAll("None", "").replaceAll("NONE", "");
+        if (nowrap_td === true) tdLanguage.classList.add("nowrap-td");
+        if (usetall_tr === true) tdLanguage.classList.add("tall-tr");
+        if (usesmall_tr === true) tdLanguage.classList.add("small-tr");
         tr.appendChild(tdLanguage);
 
         // Edition badge.
         let tdEdition = document.createElement("td");
         tdEdition.innerHTML = getEditionBadge(card.edition.replaceAll("None", ""));
+        if (nowrap_td === true) tdEdition.classList.add("nowrap-td");
+        if (usetall_tr === true) tdEdition.classList.add("tall-tr");
+        if (usesmall_tr === true) tdEdition.classList.add("small-tr");
         tr.appendChild(tdEdition);
 
         // Price I Paid.
         let tdPricePaid = document.createElement("td");
         tdPricePaid.textContent = card.pricePaid.toFixed(2);
+        if (nowrap_td === true) tdPricePaid.classList.add("nowrap-td");
+        if (usetall_tr === true) tdPricePaid.classList.add("tall-tr");
+        if (usesmall_tr === true) tdPricePaid.classList.add("small-tr");
         tr.appendChild(tdPricePaid);
 
         // Market Price.
         /* 
 		let tdMarketPrice = document.createElement("td");
         tdMarketPrice.textContent = card.marketPrice.toFixed(2);
+		if(nowrap_td === true) tdMarketPrice.classList.add("nowrap-td");
+		if(usetall_tr === true) tdMarketPrice.classList.add("tall-tr");
+		if(usesmall_tr === true) tdMarketPrice.classList.add("small-tr");
         tr.appendChild(tdMarketPrice);
 		*/
 
         // ID.
         let tdID = document.createElement("td");
         tdID.textContent = card.id.replaceAll("None", "").replaceAll("NONE", "");
+        if (nowrap_td === true) tdID.classList.add("nowrap-td");
+        if (usetall_tr === true) tdID.classList.add("tall-tr");
+        if (usesmall_tr === true) tdID.classList.add("small-tr");
         tr.appendChild(tdID);
 
         // Pack ID
@@ -756,25 +803,40 @@ export function displayCards(cards) {
         tdPackID.style.width = "0px";
         tdPackID.style.display = "none";
         tdPackID.style.opacity = "0%";
+        if (nowrap_td === true) tdPackID.classList.add("nowrap-td");
+        if (usetall_tr === true) tdPackID.classList.add("tall-tr");
+        if (usesmall_tr === true) tdPackID.classList.add("small-tr");
         tr.appendChild(tdPackID);
 
         // Date Obtained.
         let tdDate = document.createElement("td");
         tdDate.textContent = card.dateObtained;
+        if (nowrap_td === true) tdDate.classList.add("nowrap-td");
+        if (usetall_tr === true) tdDate.classList.add("tall-tr");
+        if (usesmall_tr === true) tdDate.classList.add("small-tr");
         tr.appendChild(tdDate);
 
         // Location.
         let tdLocation = document.createElement("td");
         tdLocation.textContent = card.location;
+        if (nowrap_td === true) tdLocation.classList.add("nowrap-td");
+        if (usetall_tr === true) tdLocation.classList.add("tall-tr");
+        if (usesmall_tr === true) tdLocation.classList.add("small-tr");
         tr.appendChild(tdLocation);
 
         // Comments.
         let tdComments = document.createElement("td");
         tdComments.textContent = card.comments;
+        if (nowrap_td === true) tdComments.classList.add("nowrap-td");
+        if (usetall_tr === true) tdComments.classList.add("tall-tr");
+        if (usesmall_tr === true) tdComments.classList.add("small-tr");
         tr.appendChild(tdComments);
 
         // Wiki button.
         let tdWiki = document.createElement("td");
+        if (nowrap_td === true) tdWiki.classList.add("nowrap-td");
+        if (usetall_tr === true) tdWiki.classList.add("tall-tr");
+        if (usesmall_tr === true) tdWiki.classList.add("small-tr");
         if (card.wikiUrl && card.wikiUrl.length > 0) {
             let wikiBtn = document.createElement("button");
             wikiBtn.textContent = translations[langIndex]["go"];
@@ -1105,6 +1167,10 @@ export function initCardDetailsPage(myfile) {
 export function initCollectionPage() {
 
     resetFilters();
+
+    if (allowNewlines === false) {
+        document.body.style.zoom = "90%";
+    }
 
     if (localMode) {
         document.addEventListener("DOMContentLoaded", () => {

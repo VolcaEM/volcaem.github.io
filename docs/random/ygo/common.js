@@ -1017,7 +1017,7 @@ export function handleApplyFilters() {
 
             if (sortBy === "pricePaid") return a.pricePaid - b.pricePaid;
             if (sortBy === "marketPrice") return a.marketPrice - b.marketPrice;
-            if (sortBy === "packId") return a.packId.localeCompare(b.packId);
+            if (sortBy === "Id") return a.id.localeCompare(b.id);
             if (sortBy === "location") return a.location.localeCompare(b.location);
             if (sortBy === "comments") return b.comments.localeCompare(a.comments);
             if (sortBy === "dateObtained") {

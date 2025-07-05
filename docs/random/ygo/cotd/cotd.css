@@ -1,0 +1,163 @@
+	 
+	/* 1) Reset & base */
+	 * {
+		 margin: 0;
+		 padding: 0;
+		 box-sizing: border-box;
+	}
+	 html, body {
+		 width: 100%;
+		 height: 100%;
+		 background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
+		 font-family: Arial, sans-serif;
+		 color: #333;
+	}
+	/* 2) Table fills viewport */
+	 table.layout {
+		 width: 100%;
+		 // height: 100vh;
+		/* table still full‐height */
+		 border-collapse: separate;
+		 table-layout: fixed;
+		 border-spacing: 0 1rem;
+	}
+	 table.layout td {
+		 padding: 0;
+		 text-align: center;
+		 vertical-align: middle;
+		/* vertical centering by default */
+	}
+	/* 3) Header row */
+	 tr.row-header td h1 {
+		 font-size: 2rem;
+		 display: block;
+		 margin-bottom: 0.25rem;
+	}
+	 tr.row-header td p.instruction {
+		 font-size: 0.95rem;
+		 color: #555;
+		 display: block;
+		 margin-bottom: 0.5rem;
+	}
+	/* 4) Image row – NO height here! just wrap the card */
+	 tr.row-image td {
+		/* no height:100vh or anything */
+		 padding: 1rem 0;
+		/* 1rem above & below image row */
+	}
+	 .card-scene {
+		 width: clamp(150px,40vw,300px);
+		 max-width: 300px;
+		 max-height: 442px;
+		 aspect-ratio: 59 / 86;
+		 margin: 0 auto;
+		 perspective: 1000px;
+		 position: relative;
+	}
+	 .card {
+		 width: 100%;
+		 height: 100%;
+		 max-width: 300px;
+		 max-height: 442px;
+		 transform-style: preserve-3d;
+		 transition: transform 1s ease;
+		 position: relative;
+	}
+	 .card img {
+		 width: 100%;
+		 height: 100%;
+		 max-width: 300px;
+		 max-height: 442px;
+		 display: block;
+		 border-radius: 12px;
+		 backface-visibility: hidden;
+		 pointer-events: none;
+	}
+	 .card-back {
+		 position: absolute;
+		 top: 0;
+		 left: 0;
+		 max-width: 300px;
+		 max-height: 442px;
+	}
+	 .card-front, .effect-image {
+		 position: absolute;
+		 top: 0;
+		 left: 0;
+		 max-width: 300px;
+		 max-height: 442px;
+		 transform: rotateY(180deg);
+	}
+	 .card.flipped {
+		 transform: rotateY(180deg);
+		 max-width: 300px;
+		 max-height: 442px;
+	}
+	 .effect-image {
+		 max-width: 300px;
+		 max-height: 442px;
+		 position: absolute;
+		 top: 0;
+		 left: 0;
+		 width: 100%;
+		 height: 100%;
+		 border-radius: 12px;
+		 opacity: 0.8;
+		 display: block;
+		 pointer-events: none;
+		 z-index: 9999;
+	}
+	/* 5) Text row */
+	 tr.row-text td #card-info {
+		 animation: fadeIn 0.4s ease forwards;
+	}
+	 #card-name {
+		 font-size: 1.3rem;
+		 margin-bottom: 0.25rem;
+	}
+	 #card-rarity {
+		 font-size: 1rem;
+		 color: #666;
+		 margin-bottom: 0.5rem;
+	}
+	 #card-info, #card-subtext {
+		 display: block;
+		 // animation: fadeIn 0.5s ease 0.8s forwards;
+		 transition: opacity 0.4s ease;
+		 font-size: 0.9rem;
+		 color: #555;
+	}
+	/* 6) Button row */
+	 tr.row-button td #draw-button {
+		 padding: 12px 24px;
+		 font-size: 1rem;
+		 background: #ff66cc;
+		 color: #fff;
+		 border: none;
+		 border-radius: 6px;
+		 cursor: pointer;
+		 transition: background 0.3s ease, opacity 0.4s ease;
+		 opacity: 1;
+		 margin-top: 0.5rem;
+		 margin-bottom: 1rem;
+	}
+	 #draw-button.fade-out {
+		 opacity: 0;
+	}
+	 #draw-button:hover {
+		 background: #ff85d2;
+	}
+	/* 7) Fade-in keyframes */
+	 @keyframes fadeIn {
+		 from {
+			 opacity: 0;
+		}
+		 to {
+			 opacity: 1;
+		}
+	}
+	 .spacer-row td {
+		 height: 1rem;
+		/* blank 1rem tall row */
+	}
+	 

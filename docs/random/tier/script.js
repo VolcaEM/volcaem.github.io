@@ -6,160 +6,244 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveButton = document.getElementById('save-button');
 
     let tierCount = 0;
+    let zoomedImage = null;
 
-    // Function to create a new tier
-    function createTier(name = `Tier ${tierCount + 1}`) {
-        const tier = document.createElement('div');
-        tier.classList.add('tier');
-        tier.dataset.tier = tierCount;
+    // 0) Create a single tooltip DIV
+    const tooltip = document.createElement('div');
+    Object.assign(tooltip.style, {
+        position: 'absolute',
+        padding: '4px 8px',
+        background: 'rgba(0,0,0,0.75)',
+        color: '#fff',
+        borderRadius: '4px',
+        pointerEvents: 'none',
+        whiteSpace: 'nowrap',
+        fontSize: '12px',
+        display: 'none',
+        zIndex: '20000'
+    });
+    document.body.appendChild(tooltip);
 
-        const tierName = document.createElement('div');
-        tierName.classList.add('tier-name');
-        tierName.classList.add('custom-outline');
-        tierName.contentEditable = true;
-        tierName.textContent = name;
-        tierName.style.backgroundColor = getRandomColor();
-        tier.appendChild(tierName);
-
-        const tierControls = document.createElement('div');
-        tierControls.classList.add('tier-controls');
-
-        const upButton = document.createElement('button');
-        upButton.textContent = '↑';
-        upButton.addEventListener('click', () => moveTier(tier, -1));
-        tierControls.appendChild(upButton);
-
-        const downButton = document.createElement('button');
-        downButton.textContent = '↓';
-        downButton.addEventListener('click', () => moveTier(tier, 1));
-        tierControls.appendChild(downButton);
-
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'X';
-        deleteButton.addEventListener('click', () => deleteTier(tier));
-        tierControls.appendChild(deleteButton);
-
-        tierName.appendChild(tierControls); // Append controls to tierName
-
-        const tierImages = document.createElement('div');
-        tierImages.classList.add('tier-images');
-        tier.appendChild(tierImages);
-
-        tierListContainer.appendChild(tier);
-
-        tier.addEventListener('dragover', (event) => {
-            event.preventDefault();
-        });
-
-        tier.addEventListener('drop', (event) => {
-            event.preventDefault();
-            const src = event.dataTransfer.getData('text/plain');
-            const img = document.querySelector(`img[src="${src}"]`);
-            if (img) {
-                img.remove();
-                const newImg = document.createElement('img');
-                newImg.src = src;
-                newImg.classList.add('image');
-                newImg.draggable = true;
-                newImg.addEventListener('dragstart', dragStart);
-                tierImages.appendChild(newImg);
-            }
-        });
-
-        tierCount++;
+    function showTooltip(e) {
+        tooltip.textContent = e.currentTarget.dataset.filename;
+        tooltip.style.display = 'block';
+        moveTooltip(e);
     }
 
-    // Function to move a tier up or down
-    function moveTier(tier, direction) {
-        const currentIndex = Array.from(tierListContainer.children).indexOf(tier);
-        const newIndex = currentIndex + direction;
-        if (newIndex >= 0 && newIndex < tierListContainer.children.length) {
-            tierListContainer.insertBefore(tier, tierListContainer.children[newIndex + (direction > 0 ? 1 : 0)]);
+    function moveTooltip(e) {
+        const x = e.pageX + 10,
+            y = e.pageY + 10;
+        tooltip.style.left = x + 'px';
+        tooltip.style.top = y + 'px';
+    }
+
+    function hideTooltip() {
+        tooltip.style.display = 'none';
+    }
+
+    // 1) Inject Zoom CSS (50vh height)
+    const styleTag = document.createElement('style');
+    styleTag.textContent = `
+    img.image {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+      cursor: zoom-in;
+    }
+    .zoomed-image {
+      position: fixed !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      height: 60vh !important;
+      width: auto !important;
+      max-width: 90vw !important;
+      z-index: 10000 !important;
+      cursor: zoom-out !important;
+      object-fit: contain !important;
+    }
+  `;
+    document.head.appendChild(styleTag);
+
+    // toggle zoom on click
+    function handleImageClick(e) {
+        const img = e.currentTarget;
+        if (zoomedImage === img) {
+            img.classList.remove('zoomed-image');
+            zoomedImage = null;
+        } else {
+            if (zoomedImage) zoomedImage.classList.remove('zoomed-image');
+            img.classList.add('zoomed-image');
+            zoomedImage = img;
         }
     }
 
-    // Function to delete a tier
+    // drag‐start helper
+    function dragStart(e) {
+        // hide tooltip if dragging starts
+        hideTooltip();
+        if (zoomedImage === e.currentTarget) {
+            e.currentTarget.classList.remove('zoomed-image');
+            zoomedImage = null;
+        }
+        e.dataTransfer.setData('text/plain', e.currentTarget.src);
+    }
+
+    // reorder main images
+    function sortImageContainer() {
+        Array.from(imageContainer.querySelectorAll('img.image'))
+            .sort((a, b) =>
+                a.dataset.filename.localeCompare(
+                    b.dataset.filename,
+                    undefined, {
+                        numeric: true,
+                        sensitivity: 'base'
+                    }
+                )
+            )
+            .forEach(img => imageContainer.appendChild(img));
+    }
+
+    // DRY: make an <img> node wired up with tooltip, drag, click, etc.
+    function makeImageElement(src, filename) {
+        const img = document.createElement('img');
+        img.src = src;
+        img.dataset.filename = filename;
+        img.classList.add('image');
+        img.draggable = true;
+        img.addEventListener('click', handleImageClick);
+        img.addEventListener('dragstart', dragStart);
+        img.addEventListener('mouseenter', showTooltip);
+        img.addEventListener('mousemove', moveTooltip);
+        img.addEventListener('mouseleave', hideTooltip);
+        return img;
+    }
+
+    // create a new tier
+    function createTier(name = `Tier ${tierCount+1}`) {
+        const tier = document.createElement('div');
+        tier.classList.add('tier');
+        tier.dataset.tier = tierCount++;
+
+        const header = document.createElement('div');
+        header.classList.add('tier-name', 'custom-outline');
+        header.contentEditable = true;
+        header.textContent = name;
+        header.style.backgroundColor = getRandomColor();
+        tier.appendChild(header);
+
+        const ctrls = document.createElement('div');
+        ctrls.classList.add('tier-controls');
+        [
+            ['↑', -1],
+            ['↓', 1],
+            ['X', 'del']
+        ].forEach(([txt, act]) => {
+            const btn = document.createElement('button');
+            btn.textContent = txt;
+            if (act === 'del') btn.onclick = () => deleteTier(tier);
+            else btn.onclick = () => moveTier(tier, act);
+            ctrls.appendChild(btn);
+        });
+        header.appendChild(ctrls);
+
+        const imgsDiv = document.createElement('div');
+        imgsDiv.classList.add('tier-images');
+        tier.appendChild(imgsDiv);
+
+        tier.addEventListener('dragover', e => e.preventDefault());
+        tier.addEventListener('drop', e => {
+            e.preventDefault();
+            const src = e.dataTransfer.getData('text/plain');
+            const orig = document.querySelector(`img[src="${src}"]`);
+            if (!orig) return;
+
+            // cleanup
+            hideTooltip();
+            if (zoomedImage === orig) {
+                orig.classList.remove('zoomed-image');
+                zoomedImage = null;
+            }
+
+            const filename = orig.dataset.filename;
+            orig.remove();
+            imgsDiv.appendChild(makeImageElement(src, filename));
+        });
+
+        tierListContainer.appendChild(tier);
+    }
+
+    function moveTier(tier, dir) {
+        const kids = Array.from(tierListContainer.children);
+        const i = kids.indexOf(tier),
+            t = i + dir;
+        if (t < 0 || t >= kids.length) return;
+        tierListContainer.insertBefore(
+            tier,
+            kids[t + (dir > 0 ? 1 : 0)]
+        );
+    }
+
     function deleteTier(tier) {
-        const images = tier.querySelectorAll('.image');
-        images.forEach(img => imageContainer.appendChild(img));
+        tier.querySelectorAll('img.image').forEach(img => {
+            hideTooltip();
+            img.classList.remove('zoomed-image');
+            zoomedImage = null;
+            imageContainer.appendChild(img);
+        });
+        sortImageContainer();
         tier.remove();
     }
 
-    // Function to get a random color
     function getRandomColor() {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
+        return '#' + [...Array(6)]
+            .map(_ => '0123456789ABCDEF' [Math.random() * 16 | 0])
+            .join('');
     }
 
-    // Debounce function to limit the rate of function execution
-    function debounce(func, wait) {
-        let timeout;
-        return function(...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
+    function debounce(fn, ms) {
+        let t;
+        return (...a) => {
+            clearTimeout(t);
+            t = setTimeout(() => fn(...a), ms);
         };
     }
 
-    // Load images with debounce
-    imageLoader.addEventListener('change', debounce((event) => {
-        const files = event.target.files;
-        for (const file of files) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.classList.add('image');
-                img.draggable = true;
-                img.addEventListener('dragstart', dragStart);
-                imageContainer.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-        }
+    imageLoader.addEventListener('change', debounce(e => {
+        Array.from(e.target.files).forEach(file => {
+            const url = URL.createObjectURL(file);
+            const img = makeImageElement(url, file.name);
+            imageContainer.appendChild(img);
+            sortImageContainer();
+        });
     }, 100));
 
-    // Drag and drop functionality with requestAnimationFrame
-    function dragStart(event) {
-        event.dataTransfer.setData('text/plain', event.target.src);
-    }
-
-    imageContainer.addEventListener('dragover', (event) => {
-        event.preventDefault();
-    });
-
-    imageContainer.addEventListener('drop', (event) => {
-        event.preventDefault();
+    imageContainer.addEventListener('dragover', e => e.preventDefault());
+    imageContainer.addEventListener('drop', e => {
+        e.preventDefault();
         requestAnimationFrame(() => {
-            const src = event.dataTransfer.getData('text/plain');
-            const img = document.querySelector(`img[src="${src}"]`);
-            if (img) {
-                img.remove();
-                const newImg = document.createElement('img');
-                newImg.src = src;
-                newImg.classList.add('image');
-                newImg.draggable = true;
-                newImg.addEventListener('dragstart', dragStart);
-                imageContainer.appendChild(newImg);
-            }
+            const src = e.dataTransfer.getData('text/plain');
+            const orig = document.querySelector(`img[src="${src}"]`);
+            if (!orig) return;
+            const filename = orig.dataset.filename;
+            orig.remove();
+            const img = makeImageElement(src, filename);
+            imageContainer.appendChild(img);
+            sortImageContainer();
         });
     });
 
-    // Save as PNG
-    saveButton.addEventListener('click', () => {
+    saveButton.addEventListener('click', () =>
         html2canvas(tierListContainer).then(canvas => {
-            const link = document.createElement('a');
-            link.download = 'tier-list.png';
-            link.href = canvas.toDataURL();
-            link.click();
-        });
-    });
+            const a = document.createElement('a');
+            a.download = 'tier-list.png';
+            a.href = canvas.toDataURL();
+            a.click();
+        })
+    );
 
-    // Initial tier creation
+    // Init
     createTier();
-
-    // Add new tier button functionality
-    addTierButton.addEventListener('click', () => createTier());
+    addTierButton.onclick = () => createTier();
 });

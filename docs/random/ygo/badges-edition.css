@@ -1,27 +1,26 @@
-	 :root {
-		 --edition-color-default: white;
-		 --edition-color-0: gold;
-	}
-	
-	 .edition-badge {
-		 display: inline-block;
-		 background-color: black;
-		 color: white;
-		 border-radius: 50%;
-		 width: 20px;
-		 height: 20px;
-		 text-align: center;
-		 line-height: 20px;
-		 font-size: 0.8em;
-		 margin-left: 4px;
-	}
-	 .edition-badge-0 {
-		 color: var(--edition-color-0);
-	}
-	 .edition-badge-2 {
-		 color: var(--edition-color-default);
-	}
-	 .edition-badge-3 {
-		 color: var(--edition-color-default);
-	}
-	 
+:root {
+     --edition-color-default: white;
+     --edition-color-0: gold;
+}
+ .edition-badge {
+     display: inline-block;
+     background-color: black;
+     color: white;
+     border-radius: 50%;
+     width: 20px;
+     height: 20px;
+     text-align: center;
+     line-height: 20px;
+     font-size: 0.8em;
+     margin-left: 4px;
+}
+ .edition-badge-0 {
+     color: var(--edition-color-0);
+}
+ .edition-badge-2 {
+     color: var(--edition-color-default);
+}
+ .edition-badge-3 {
+     color: var(--edition-color-default);
+}
+ 

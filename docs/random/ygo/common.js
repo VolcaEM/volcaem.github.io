@@ -3,1087 +3,152 @@
 import {
     langIndex,
     localMode,
-    shouldShowImage,
     allowNewlines,
-    useTallTr,
-    useSmallTr,
 } from './config.js';
+
+import {
+    currentGame,
+} from './detect.js';
+
+import {
+    manager,
+} from './card.js';
 
 import {
     translations,
     applyTranslations,
+    addToTranslationArray,
 } from './translations.js';
 
-var loadedFile = false;
+import {
+    gameTranslations,
+} from './translations_games.js';
+
+import {
+    currentDisplayedCards,
+    reverseCurrentDisplayedCards,
+    loadedFile,
+} from './dynamic.js';
+
+import {
+    getTypeDisplay,
+    getQualityBadge,
+    getEditionBadge,
+    getLanguageBadge,
+} from './badges.js';
+
+import {
+    loadCSVAndDisplayCards,
+    displayCards,
+} from './csv.js';
+
+import {
+    precomputeNumericFields,
+    comparators,
+    getCardSortIndexChanges,
+} from './sort.js';
+
+export const cardId = getQueryParam("id");
 
 ////////////////////////////////
 // Helper Functions and Dictionary
 ////////////////////////////////
 
-// Language dictionary mapping two-letter codes to emoji.
-var languageDict = {
-    "IT": "🇮🇹",
-    "EN": "🇺🇸",
-    "DE": "🇩🇪",
-    "FR": "🇫🇷",
-    "JP": "🇯🇵"
-};
-
-export let currentDisplayedCards = [];
-export var has_debug_checkbox = document.getElementById("debugCheckbox") != null;
-
-// --- UPDATED: Overlay helper functions that position the full image ---
-export function showOverlay(e, card, thumbnail) {
-    const overlay = document.getElementById('fullImageOverlay');
-    const overlayImg = overlay.querySelector('img');
-    // Set the full (uncropped) image source
-    overlayImg.src = card.getImageUrl();
-    overlay.style.display = 'block';
-
-    // When the image loads (or if already cached), update its position.
-    overlayImg.onload = function() {
-        updateOverlayPosition(e, thumbnail, overlay);
-    };
-    updateOverlayPosition(e, thumbnail, overlay);
-}
-
-export function updateOverlayPosition(e, thumbnail, overlay) {
-    // Get the thumbnail's bounding rectangle
-    const thumbRect = thumbnail.getBoundingClientRect();
-
-    // Check if the mouse pointer is within the thumbnail's boundaries.
-    if (
-        e.clientX < thumbRect.left ||
-        e.clientX > thumbRect.right ||
-        e.clientY < thumbRect.top ||
-        e.clientY > thumbRect.bottom
-    ) {
-        // If not within the boundaries, hide the overlay.
-        hideOverlay();
-        return;
+export function ensureTranslationsReady() {
+    if (currentGame) {
+        const entries = gameTranslations[currentGame.toLowerCase()] || [];
+        entries.forEach(([key, en, it]) =>
+            addToTranslationArray(key, en, it)
+        );
     }
-
-    // Align the overlay horizontally with the left edge of the thumbnail.
-    // overlay.style.left = thumbRect.left + "px";
-    overlay.style.left = "0px";
-
-    const overlayImg = overlay.querySelector('img');
-    const displayHeight = overlayImg.offsetHeight;
-
-    // Position the overlay so that its vertical center is at the mouse Y coordinate.
-    overlay.style.top = (e.clientY - displayHeight / 2) + "px";
-}
-
-
-export function hideOverlay() {
-    const overlay = document.getElementById('fullImageOverlay');
-    overlay.style.display = 'none';
-}
-
-export function updatePackStats() {
-    const container = document.getElementById("packStats");
-    if (!container) return;
-
-    const cards = manager.cards; // use all cards (unfiltered)
-    const total = cards.length;
-    const packMap = {}; // stores counts by packId
-
-    cards.forEach(card => {
-        // Group empty or missing pack IDs as "Unknown"
-        const packId = card.packId && card.packId.trim() !== "" ? card.packId : translations[langIndex]["Unknown"];
-        packMap[packId] = (packMap[packId] || 0) + 1;
-    });
-
-    // Sort the pack IDs by count in descending order.
-    const sortedPackIds = Object.keys(packMap).sort((a, b) => packMap[b] - packMap[a]);
-
-    let tableHTML = `<table style="border-collapse:collapse; width: 100%;" border="1">
-      <caption><strong>Pack Statistics</strong></caption>
-      <thead>
-          <tr>
-              <th>PackID</th>
-              <th>Count</th>
-              <th>Percentage</th>
-          </tr>
-      </thead>
-      <tbody>`;
-
-    sortedPackIds.forEach(packId => {
-        const count = packMap[packId];
-        const percentage = ((count / total) * 100).toFixed(2);
-        tableHTML += `<tr>
-          <td>${packId}</td>
-          <td>${count}</td>
-          <td>${percentage}%</td>
-      </tr>`;
-    });
-    tableHTML += `</tbody></table>`;
-
-    container.innerHTML = tableHTML;
-}
-
-
-export function updateLocationStats() {
-    const container = document.getElementById("locationStats");
-    if (!container) return;
-
-    const cards = manager.cards;
-    const total = cards.length;
-    const locationMap = {};
-
-    cards.forEach(card => {
-        // Group empty or missing locations as "Unknown"
-        const location = card.location && card.location.trim() !== "" ? card.location : translations[langIndex]["Unknown"];
-        locationMap[location] = (locationMap[location] || 0) + 1;
-    });
-
-    // Sort the locations by count in descending order.
-    const sortedLocations = Object.keys(locationMap).sort((a, b) => locationMap[b] - locationMap[a]);
-
-    let tableHTML = `<table style="border-collapse:collapse; width: 100%;" border="1">
-      <caption><strong>Location Statistics</strong></caption>
-      <thead>
-          <tr>
-              <th>Location</th>
-              <th>Count</th>
-              <th>Percentage</th>
-          </tr>
-      </thead>
-      <tbody>`;
-
-    sortedLocations.forEach(loc => {
-        const count = locationMap[loc];
-        const percentage = ((count / total) * 100).toFixed(2);
-        tableHTML += `<tr>
-          <td>${loc}</td>
-          <td>${count}</td>
-          <td>${percentage}%</td>
-      </tr>`;
-    });
-    tableHTML += `</tbody></table>`;
-
-    container.innerHTML = tableHTML;
-}
-
-
-// Update the debug text areas with pack options, location options, and duplicate cards.
-export function updateDebugOptions() {
-    // --- Pack Options ---
-    const packSet = new Set();
-    manager.cards.forEach(card => {
-        const pid = card.packId && card.packId.trim() !== "" ? card.packId : translations[langIndex]["Unknown"];
-        packSet.add(pid);
-    });
-    const packOptionsLines = [...packSet]
-        .map(pid => `<option value="${pid}">`)
-        .join("\n");
-    const packOptionsElement = document.getElementById("packOptions");
-    if (packOptionsElement) {
-        packOptionsElement.value = packOptionsLines;
-    }
-
-    // --- Location Options ---
-    const locationSet = new Set();
-    manager.cards.forEach(card => {
-        const loc = card.location && card.location.trim() !== "" ? card.location : translations[langIndex]["Unknown"];
-        locationSet.add(loc);
-    });
-    const locationOptionsLines = [...locationSet]
-        .map(loc => `<option value="${loc}">`)
-        .join("\n");
-    const locationOptionsElement = document.getElementById("locationOptions");
-    if (locationOptionsElement) {
-        locationOptionsElement.value = locationOptionsLines;
-    }
-
-    // --- Duplicate Cards ---
-    // Calculate frequency of each card name.
-    const freq = {};
-    manager.cards.forEach(card => {
-        const name = card.name.replace("<", "").replace(">", "") || translations[langIndex]["Unknown"];
-        freq[name] = (freq[name] || 0) + 1;
-    });
-
-    // Get all names found more than once.
-    const duplicateLines = Object.keys(freq)
-        .filter(name => freq[name] > 1)
-        .map(name => `<li>${name} - ${freq[name]}x</li>`)
-        .join("\n");
-
-    const duplicateCardsElement = document.getElementById("duplicateCards");
-    if (duplicateCardsElement) {
-        duplicateCardsElement.innerHTML = "<ul>\n" + duplicateLines + "</ul>\n";
-    }
-}
-
-export function getLanguageBadge(language) {
-    let code = language.trim().toUpperCase();
-    let emoji = languageDict[code] || code;
-    return `<span data-cell-title="Language">${emoji}</span>`;
-}
-
-export function getQualityBadge(quality) {
-    let q = quality.toLowerCase();
-
-    if (q === translations[0]["unknowngood"].toLowerCase()) {
-        return '<span class="badge" data-original-title="Near Mint">✅</span>';
-    }
-    if (q === translations[0]["unknownbad"].toLowerCase()) {
-        return '<span class="badge" data-original-title="Near Mint">❌</span>';
-    }
-
-    if (q === "none") {
-        return "";
-    }
-
-    if (q === translations[0]["nearmint"].toLowerCase()) {
-        return '<span class="badge badge-cond-near-mint" data-original-title="Near Mint">NM</span>';
-    } else if (q === translations[0]["slightlyplayed"].toLowerCase()) {
-        return '<span class="badge badge-cond-slightly-played" data-original-title="Slightly Played">SP</span>';
-    } else if (q === translations[0]["moderatelyplayed"].toLowerCase()) {
-        return '<span class="badge badge-cond-moderately-played" data-original-title="Moderately Played">MP</span>';
-    } else if (q === translations[0]["played"].toLowerCase()) {
-        return '<span class="badge badge-cond-played" data-original-title="Played">PL</span>';
-    } else if (q === translations[0]["poor"].toLowerCase()) {
-        return '<span class="badge badge-cond-poor" data-original-title="Poor">PO</span>';
-    } else {
-        return quality;
-    }
-}
-
-export function getEditionBadge(edition) {
-    let accepted = true;
-    let ed = edition.toLowerCase();
-    let num = "";
-    if (ed.includes(translations[0]["first"].toLowerCase())) {
-        num = "1";
-        accepted = true;
-    } else if (ed.includes(translations[0]["limited"].toLowerCase())) {
-        num = "0";
-        accepted = true;
-    } else if (ed.includes(translations[0]["standard"].toLowerCase())) {
-        num = "2";
-        accepted = !has_debug_checkbox;
-    } else {
-        num = "3";
-        accepted = !has_debug_checkbox;
-    }
-    // Here, we return two classes: a base class ("edition-badge") for common styling,
-    // and a dynamic class ("edition-badge-[num]") for specific modifications.
-    return (accepted ? `<span class="edition-badge edition-badge-${num}" data-original-title="${edition}">${num}</span>` : `<span class="null" data-original-title="${edition}"></span>`);
-}
-
-
-// Process type string, extracting any parenthesized info as a badge.
-export function getTypeDisplay(typeText) {
-
-    let base = typeText;
-    let badges = [];
-    const regex = /\(([^)]+)\)/;
-    const match = typeText.match(regex);
-
-    if (match) {
-        // Remove the parenthesized part from the base.
-        base = typeText.replace(regex, "").trim();
-
-        // Split the parenthesized string by "/" so we can support multiple badges.
-        const badgeTokens = match[1].split("/").map(token => token.trim());
-
-        // Define an array of badge rules in order of priority.
-        const badgeRules = [{
-                prefix: translations[0]["cxyz"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-cxyz"
-            },
-            {
-                prefix: translations[0]["fxyz"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-cxyz"
-            },
-            {
-                prefix: translations[0]["sxyz"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-cxyz"
-            },
-            {
-                prefix: translations[0]["xyz"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-xyz"
-            },
-            {
-                prefix: translations[0]["effect"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-effect"
-            },
-            {
-                prefix: translations[0]["continuous"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-continuous"
-            },
-            {
-                prefix: translations[0]["vanilla"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-vanilla"
-            },
-            {
-                prefix: translations[0]["normal"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-normal"
-            },
-            {
-                prefix: translations[0]["quickplay"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-quickplay"
-            },
-            {
-                prefix: translations[0]["equip"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-equip"
-            },
-            {
-                prefix: translations[0]["terrain"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-terrain"
-            },
-            {
-                prefix: translations[0]["fusion"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-fusion"
-            },
-            {
-                prefix: translations[0]["synchro"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-synchro"
-            },
-            {
-                prefix: translations[0]["counter"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-counter"
-            },
-            {
-                prefix: translations[0]["ritual"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-ritual"
-            },
-            {
-                prefix: translations[0]["pendulum"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-pendulum"
-            },
-            {
-                prefix: translations[0]["link"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-link"
-            },
-            {
-                prefix: translations[0]["tuner"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-tuner"
-            },
-            {
-                prefix: translations[0]["toon"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-toon"
-            },
-            {
-                prefix: translations[0]["sleeves"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-sleeves"
-            },
-            {
-                prefix: translations[0]["structuredeck"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-structuredeck"
-            },
-            {
-                prefix: translations[0]["storage"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-storage"
-            },
-            {
-                prefix: translations[0]["fieldcentercard"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-fieldcentercard"
-            },
-            {
-                prefix: translations[0]["empty"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-empty"
-            },
-            {
-                prefix: translations[0]["album"].replaceAll("—— ", "").replaceAll("— ", ""),
-                cssClass: "badge-type-album"
-            },
-
-            // Add more rules here as needed.
-        ];
-
-        // Process each badge token individually.
-        for (const token of badgeTokens) {
-            for (const rule of badgeRules) {
-                if (token.startsWith(rule.prefix)) {
-                    // Clean the token text to match the translation key.
-                    const processedToken = token.replaceAll("—— ", "").replaceAll("— ", "").replaceAll("-", "").toLowerCase().trim().replaceAll(" ", "");
-                    // Look up the translation for this token; if not available, fall back to the token.
-                    // console.log("Processed Token: " + processedToken);
-                    const myresult = translations[langIndex][processedToken];
-                    const displayText =
-                        myresult.replaceAll("—— ", "").replaceAll("— ", "") || token;
-                    badges.push(`<span class="${rule.cssClass}">${displayText}</span>`);
-                    break; // Once a rule is matched, we move on to the next token.
-                }
-            }
-        }
-    }
-
-    // Look up the base type translation.
-    const baseDisplay = translations[langIndex][base.replace("-", "").toLowerCase().trim()];
-    // Join the badge spans with a single space in between.
-    const badgeDisplay = badges.join(" ");
-
-    return baseDisplay + (badgeDisplay ? " " + badgeDisplay : "");
-}
-
-
-// Parse dates in dd/mm/YYYY format for sorting.
-export function parseDate(dateStr) {
-    let parts = dateStr.split("/");
-    if (parts.length !== 3) return new Date(0);
-    return new Date(parts[2], parts[1] - 1, parts[0]);
-}
-
-////////////////////////////////
-// Card Classes
-////////////////////////////////
-
-export class Card {
-    constructor(data) {
-        this.name = data.name;
-        this.type = data.type;
-        this.rarity = data.rarity;
-        this.quality = data.quality;
-        this.language = data.language;
-        this.edition = data.edition;
-        this.pricePaid = parseFloat(data.pricePaid) || 0;
-        this.marketPrice = parseFloat(data.marketPrice) || 0;
-        this.id = data.id;
-        this.packId = data.packId;
-        this.dateObtained = data["Date Obtained"];
-        this.location = data.location;
-        this.comments = data.comments;
-        this.wikiUrl = data["Wiki URL"] || "";
-        this.photoURL = data.photoURL || "";
-    }
-
-    // Returns the image URL – if no external URL is provided, uses local images/cards/<id>.png.
-    getImageUrl() {
-        return this.photoURL ? this.photoURL : `images/cards/${this.id}.png`;
-    }
-}
-
-export class CardManager {
-    constructor() {
-        this.cards = [];
-    }
-
-    loadCards(csvText) {
-        const lines = csvText.split('\n');
-        if (lines.length <= 1) return;
-        const headers = lines[0].split("|").map(h => h.trim());
-        for (let i = 1; i < lines.length; i++) {
-            const line = lines[i].trim();
-            if (line === "") continue;
-            const fields = line.split("|").map(f => f.trim());
-            let data = {};
-            headers.forEach((header, i) => data[header] = fields[i] || "");
-            this.cards.push(new Card({
-                name: data["Name"],
-                type: data["Type"],
-                rarity: data["Rarity"],
-                quality: data["Quality"],
-                language: data["Language"],
-                edition: data["Edition type"],
-                pricePaid: data["Price I paid for it"],
-                marketPrice: data["Current market price"],
-                id: data["ID"].replaceAll("None", "").replaceAll("NONE", ""),
-                packId: data["Pack ID"].replaceAll("None", "").replaceAll("NONE", ""),
-                "Date Obtained": data["Date Obtained"],
-                location: data["Location"],
-                comments: data["Comments"],
-                photoURL: data["Photo URL"],
-                "Wiki URL": data["Wiki URL"]
-            }));
-        }
-
-        let sort_alphabetically = true;
-
-        if (sort_alphabetically) {
-            this.cards.sort((a, b) => {
-                return a.name
-                    .replace("CXyz ", "")
-                    .replace("Number C", "Number ")
-                    .replace("Numero C", "Numero ")
-                    .replace("Number S", "Number ")
-                    .replace("Numero S", "Numero ")
-                    .replace("Number F", "Number ")
-                    .replace("Numero F", "Numero ")
-                    .localeCompare(b.name
-                        .replace("CXyz ", "")
-                        .replace("Number C", "Number ")
-                        .replace("Numero C", "Numero ")
-                        .replace("Number S", "Number ")
-                        .replace("Numero S", "Numero ")
-                        .replace("Number F", "Number ")
-                        .replace("Numero F", "Numero "), 'it', {
-                            numeric: true,
-                            sensitivity: 'base'
-                        });
-            });
-        }
-    }
-
-    filterCards(filters) {
-        return this.cards.filter(card => {
-            if (filters.name && !card.name.toLowerCase().replaceAll("—— ", "").replaceAll("— ", "").includes(filters.name.toLowerCase().replaceAll("—— ", "").replaceAll("— ", "")))
-                return false;
-
-            if (filters.type) {
-                // Normalize and extract card type details.
-                const cardTypeStr = card.type.toLowerCase().trim();
-                const cardBase = card.type.replace(/\(([^)]+)\)/, "").trim().toLowerCase();
-                let cardBadges = [];
-                const badgeMatch = card.type.match(/\(([^)]+)\)/);
-                if (badgeMatch) {
-                    // Use "/" as delimiter, so "Pendulum/Effect" becomes ["pendulum", "effect"].
-                    cardBadges = badgeMatch[1].split("/").map(token => token.trim().toLowerCase());
-                }
-
-                // If the filter string includes parentheses, assume a full-type match.
-                if (filters.type.indexOf("(") !== -1) {
-                    const filterTypeStr = filters.type.toLowerCase().trim();
-                    // Extract the base from the filter.
-                    const filterBase = filters.type.replace(/\(([^)]+)\)/, "").trim().toLowerCase();
-                    let filterBadges = [];
-                    const filterBadgeMatch = filters.type.match(/\(([^)]+)\)/);
-                    if (filterBadgeMatch) {
-                        filterBadges = filterBadgeMatch[1].split("/").map(token => token.trim().toLowerCase());
-                    }
-
-                    // Base must match exactly.
-                    if (cardBase !== filterBase) return false;
-
-                    // Each badge in the filter must be present in the card.
-                    for (const token of filterBadges) {
-                        // Special handling in case you use "xyz" as shorthand.
-                        if (token === "xyz") {
-                            if (!cardTypeStr.includes("xyz)")) return false;
-                        } else {
-                            if (!cardBadges.includes(token)) return false;
-                        }
-                    }
-                } else {
-                    // Partial matching: the filter may be a single term or multiple tokens separated by "/"
-                    const filterTypeStr = filters.type.toLowerCase().trim();
-                    let filterTokens = filterTypeStr.includes("/") ?
-                        filterTypeStr.split("/").map(t => t.trim()) : [filterTypeStr];
-
-                    // For each filter token, at least one must appear in the card base or one of its badges.
-                    for (const token of filterTokens) {
-                        if (
-                            !cardBase.includes(token) &&
-                            !cardBadges.some(badge => badge.includes(token))
-                        ) {
-                            return false;
-                        }
-                    }
-                }
-            }
-
-
-
-            if (filters.rarity && card.rarity !== filters.rarity)
-                return false;
-
-            if (filters.quality && card.quality !== filters.quality)
-                return false;
-
-            // --- New: Filter by language
-            if (filters.language && card.language.toLowerCase() !== filters.language.toLowerCase())
-                return false;
-
-            // --- New: Filter by edition (or edition type)
-            if (filters.edition && card.edition.toLowerCase() !== filters.edition.toLowerCase())
-                return false;
-
-            return true;
-        });
-    }
-
-    findCardById(id) {
-        return this.cards.find(card => card.id === id);
-    }
-
-    findCardsById(cardId) {
-        return this.cards.filter(card => card.id === cardId);
-    }
-}
-
-export const manager = new CardManager();
-export const cardId = getQueryParam("id");
-
-// Display cards in the table.
-export function displayCards(cards) {
-    // Store a copy of the current displayed cards.
-    currentDisplayedCards = cards.slice();
-
-    const tbody = document.getElementById("cardBody");
-    tbody.innerHTML = "";
-
-    // Calculate the unique card names.
-    const uniqueNames = new Set(cards.map(card => card.name));
-
-    // Update the result count immediately even if 0 entries.
-    const resultCountEl = document.getElementById("resultCount");
-    if (cards.length === 0) {
-        const tr = document.createElement("tr");
-        const td = document.createElement("td");
-        td.setAttribute("colspan", "15");
-        td.textContent = translations[langIndex]["nothingfound"];
-        tr.appendChild(td);
-        tbody.appendChild(tr);
-        if (resultCountEl) {
-            resultCountEl.textContent = translations[langIndex]["showingentries"].replaceAll("NUMBER", "0");
-        }
-        return;
-    }
-
-    cards.forEach(card => {
-
-        let nowrap_td = !allowNewlines;
-        let usetall_tr = useTallTr;
-        let usesmall_tr = useSmallTr;
-
-        const tr = document.createElement("tr");
-
-        if (usetall_tr === true) {
-            tr.classList.add("tall-tr");
-        } else if (usesmall_tr === true) {
-            tr.classList.add("small-tr");
-        }
-
-        // Image cell with a set maximum width and error-handling tooltip.
-        const imgTd = document.createElement("td");
-
-        let showImage = document.getElementById("imageth");
-
-        if (shouldShowImage) {
-
-            // showImage.style.display = "block";
-
-            imgTd.classList.add("img-cell");
-            if (nowrap_td === true) imgTd.classList.add("nowrap-td");
-            if (usetall_tr === true) imgTd.classList.add("tall-tr");
-            if (usesmall_tr === true) imgTd.classList.add("small-tr");
-            const img = document.createElement("img");
-            img.src = card.getImageUrl();
-
-            // img.alt = card.name;
-            img.alt = "X";
-
-            // Define the event handler functions so they can be removed later
-            function clickHandler() {
-                window.location.href = `card.html?id=${encodeURIComponent(card.id)}`;
-            }
-
-            function mouseEnterHandler(e) {
-                showOverlay(e, card, img);
-            }
-
-            function mouseMoveHandler(e) {
-                updateOverlayPosition(e, img, document.getElementById('fullImageOverlay'));
-            }
-
-            function mouseLeaveHandler() {
-                hideOverlay();
-            }
-
-            img.onerror = function() {
-                this.title = 'Should be loaded from: images/cards/' + card.language + '/' + card.id + '.png';
-                img.classList.remove("card-image");
-
-                // Remove event listeners
-                img.removeEventListener("click", clickHandler);
-                img.removeEventListener("mouseenter", mouseEnterHandler);
-                img.removeEventListener("mousemove", mouseMoveHandler);
-                img.removeEventListener("mouseleave", mouseLeaveHandler);
-            };
-
-            if (img.src.length > 0) {
-                //console.log(img.src);
-                img.classList.add("card-image");
-
-                // Add the event listeners
-                if (localMode) {
-                    img.addEventListener("click", clickHandler);
-                }
-                img.addEventListener("mouseenter", mouseEnterHandler);
-                img.addEventListener("mousemove", mouseMoveHandler);
-                img.addEventListener("mouseleave", mouseLeaveHandler);
-            }
-
-            imgTd.appendChild(img);
-            tr.appendChild(imgTd);
-        } else {
-            if (nowrap_td === true) imgTd.classList.add("nowrap-td");
-            if (usetall_tr === true) imgTd.classList.add("tall-tr");
-            if (usesmall_tr === true) imgTd.classList.add("small-tr");
-            showImage.style.display = "none";
-            showImage.style.width = "0px";
-            showImage.style.height = "0px";
-        }
-
-        // Name.
-        let tdName = document.createElement("td");
-        tdName.textContent = card.name;
-        if (card.rarity.toLowerCase() == translations[0]["fake"].toLowerCase()) {
-            tdName.innerHTML = tdName.textContent + " <b>(" + translations[langIndex]["fake"] + ")</b>";
-        }
-        if (nowrap_td === true) tdName.classList.add("nowrap-td");
-        if (usetall_tr === true) tdName.classList.add("tall-tr");
-        if (usesmall_tr === true) tdName.classList.add("small-tr");
-        tr.appendChild(tdName);
-
-        // Type.
-        let tdType = document.createElement("td");
-        tdType.innerHTML = getTypeDisplay(card.type);
-        if (nowrap_td === true) tdType.classList.add("nowrap-td");
-        if (usetall_tr === true) tdType.classList.add("tall-tr");
-        if (usesmall_tr === true) tdType.classList.add("small-tr");
-        tr.appendChild(tdType);
-
-        // Rarity.
-        let tdRarity = document.createElement("td");
-        let fakestr = `<span class="badge-type-fake">` + translations[langIndex]["fake"] + `</span>`;
-        tdRarity.innerHTML = (card.rarity.toLowerCase() == translations[0]["fake"].toLowerCase() ? fakestr : translations[langIndex][card.rarity.toLowerCase().trim().replace(" ", "")]);
-        if (nowrap_td === true) tdRarity.classList.add("nowrap-td");
-        if (usetall_tr === true) tdRarity.classList.add("tall-tr");
-        if (usesmall_tr === true) tdRarity.classList.add("small-tr");
-        tr.appendChild(tdRarity);
-
-        // Quality badge.
-        let tdQuality = document.createElement("td");
-        tdQuality.innerHTML = getQualityBadge(card.quality).replaceAll("None", "");
-        if (nowrap_td === true) tdQuality.classList.add("nowrap-td");
-        if (usetall_tr === true) tdQuality.classList.add("tall-tr");
-        if (usesmall_tr === true) tdQuality.classList.add("small-tr");
-        tr.appendChild(tdQuality);
-
-        // Language badge.
-        let tdLanguage = document.createElement("td");
-        tdLanguage.innerHTML = getLanguageBadge(card.language).replaceAll("None", "").replaceAll("NONE", "");
-        if (nowrap_td === true) tdLanguage.classList.add("nowrap-td");
-        if (usetall_tr === true) tdLanguage.classList.add("tall-tr");
-        if (usesmall_tr === true) tdLanguage.classList.add("small-tr");
-        tr.appendChild(tdLanguage);
-
-        // Edition badge.
-        let tdEdition = document.createElement("td");
-        tdEdition.innerHTML = getEditionBadge(card.edition.replaceAll("None", ""));
-        if (nowrap_td === true) tdEdition.classList.add("nowrap-td");
-        if (usetall_tr === true) tdEdition.classList.add("tall-tr");
-        if (usesmall_tr === true) tdEdition.classList.add("small-tr");
-        tr.appendChild(tdEdition);
-
-        // Price I Paid.
-        let tdPricePaid = document.createElement("td");
-        tdPricePaid.textContent = card.pricePaid.toFixed(2);
-        if (nowrap_td === true) tdPricePaid.classList.add("nowrap-td");
-        if (usetall_tr === true) tdPricePaid.classList.add("tall-tr");
-        if (usesmall_tr === true) tdPricePaid.classList.add("small-tr");
-        tr.appendChild(tdPricePaid);
-
-        // Market Price.
-        /* 
-		let tdMarketPrice = document.createElement("td");
-        tdMarketPrice.textContent = card.marketPrice.toFixed(2);
-		if(nowrap_td === true) tdMarketPrice.classList.add("nowrap-td");
-		if(usetall_tr === true) tdMarketPrice.classList.add("tall-tr");
-		if(usesmall_tr === true) tdMarketPrice.classList.add("small-tr");
-        tr.appendChild(tdMarketPrice);
-		*/
-
-        // ID.
-        let tdID = document.createElement("td");
-        tdID.textContent = card.id.replaceAll("None", "").replaceAll("NONE", "");
-        if (nowrap_td === true) tdID.classList.add("nowrap-td");
-        if (usetall_tr === true) tdID.classList.add("tall-tr");
-        if (usesmall_tr === true) tdID.classList.add("small-tr");
-        tr.appendChild(tdID);
-
-        // Pack ID
-        let tdPackID = document.createElement("td");
-        tdPackID.textContent = card.packId.replaceAll("None", "").replaceAll("NONE", "") + " ";
-        tdPackID.style.height = "0px";
-        tdPackID.style.width = "0px";
-        tdPackID.style.display = "none";
-        tdPackID.style.opacity = "0%";
-        if (nowrap_td === true) tdPackID.classList.add("nowrap-td");
-        if (usetall_tr === true) tdPackID.classList.add("tall-tr");
-        if (usesmall_tr === true) tdPackID.classList.add("small-tr");
-        tr.appendChild(tdPackID);
-
-        // Date Obtained.
-        let tdDate = document.createElement("td");
-        tdDate.textContent = card.dateObtained;
-        if (nowrap_td === true) tdDate.classList.add("nowrap-td");
-        if (usetall_tr === true) tdDate.classList.add("tall-tr");
-        if (usesmall_tr === true) tdDate.classList.add("small-tr");
-        tr.appendChild(tdDate);
-
-        // Location.
-        let tdLocation = document.createElement("td");
-        tdLocation.textContent = card.location;
-        if (nowrap_td === true) tdLocation.classList.add("nowrap-td");
-        if (usetall_tr === true) tdLocation.classList.add("tall-tr");
-        if (usesmall_tr === true) tdLocation.classList.add("small-tr");
-        tr.appendChild(tdLocation);
-
-        // Comments.
-        let tdComments = document.createElement("td");
-        tdComments.textContent = card.comments;
-        if (nowrap_td === true) tdComments.classList.add("nowrap-td");
-        if (usetall_tr === true) tdComments.classList.add("tall-tr");
-        if (usesmall_tr === true) tdComments.classList.add("small-tr");
-        tr.appendChild(tdComments);
-
-        // Wiki button.
-        let tdWiki = document.createElement("td");
-        if (nowrap_td === true) tdWiki.classList.add("nowrap-td");
-        if (usetall_tr === true) tdWiki.classList.add("tall-tr");
-        if (usesmall_tr === true) tdWiki.classList.add("small-tr");
-        if (card.wikiUrl && card.wikiUrl.length > 0) {
-            let wikiBtn = document.createElement("button");
-            wikiBtn.textContent = translations[langIndex]["go"];
-            wikiBtn.addEventListener("click", () => {
-                window.open(card.wikiUrl, "_blank");
-            });
-            tdWiki.appendChild(wikiBtn);
-        } else {
-            tdWiki.textContent = "";
-        }
-        tr.appendChild(tdWiki);
-
-        tbody.appendChild(tr);
-    });
-
-    updateTotalSpent();
-
-    if (resultCountEl) {
-        resultCountEl.innerHTML = "<div class=\"results\">" + translations[langIndex]["showingcards"]
-            .replace("NUMBER", currentDisplayedCards.length.toString())
-            .replace("UNIQUENUM", uniqueNames.size.toString()) + "\t</div>";
-    }
-
-
 }
 
 // Function to reset all filter controls
 export function resetFilters() {
-    document.getElementById("selectedLanguage").selectedIndex = langIndex;
-    document.getElementById("filterName").value = "";
-    document.getElementById("filterType").value = "";
-    document.getElementById("filterRarity").value = "";
-    document.getElementById("filterQuality").value = "";
-    document.getElementById("filterLanguage").value = "";
-    document.getElementById("filterEdition").value = "";
-    document.getElementById("sortBy").value = "";
-    document.getElementById("debugCheckbox").checked = false;
-    document.getElementById("sortBy").selectedIndex = 0;
+    document.getElementById("selectedLanguage")
+        .selectedIndex = langIndex;
+    document.getElementById("filterName")
+        .value = "";
+    document.getElementById("filterType")
+        .value = "";
+    document.getElementById("filterRarity")
+        .value = "";
+    document.getElementById("filterQuality")
+        .value = "";
+    document.getElementById("filterLanguage")
+        .value = "";
+    document.getElementById("filterEdition")
+        .value = "";
+    document.getElementById("sortBy")
+        .value = "";
+    document.getElementById("debugCheckbox")
+        .checked = false;
+    document.getElementById("sortBy")
+        .selectedIndex = 0;
+    document.getElementById("packOptions")
+        .value = "";
+    document.getElementById("locationOptions")
+        .value = "";
+
 }
 
-// Function to load CSV data and display cards
-export function loadCSVAndDisplayCards(myfile) {
-
-    if (!myfile.includes(".")) {
-        return;
-    }
-
-    fetch(myfile)
-        .then(response => response.text())
-        .then(csvText => {
-            manager.loadCards(csvText);
-            displayCards(manager.cards);
-            updatePackStats();
-            updateLocationStats();
-            // Update the copy-only debug textareas.
-            updateDebugOptions();
-            loadedFile = true;
-            let csvload = document.getElementById("loadCSV");
-            if (csvload) {
-                csvload.style.display = "none";
-                //console.log("Set the display style of the CSV button to none");
-            } else {
-                //console.log("CSV load button is null");
-            }
-        })
-        .catch(err => {
-            console.error("Error loading CSV file:", err);
-            const tbody = document.getElementById("cardBody");
-            tbody.innerHTML = "";
-            const tr = document.createElement("tr");
-            const td = document.createElement("td");
-            td.setAttribute("colspan", "15");
-            td.textContent = translations[langIndex]["csverror"];
-            tr.appendChild(td);
-            tbody.appendChild(tr);
-        });
-}
-
-// Function to handle the filtering logic when the "Apply Filters" button is clicked
 export function handleApplyFilters() {
+    if (!loadedFile) return;
 
-    if (!loadedFile) {
-        return;
-    }
+    ensureTranslationsReady();
+    maybeApplyLanguage();
 
-    let selectedLanguageElem = document.getElementById("selectedLanguage");
-    if (selectedLanguageElem) {
-        let selectedLanguage = selectedLanguageElem.selectedIndex;
-        if (selectedLanguage !== langIndex) {
-            applyTranslations(selectedLanguage);
-        }
-    }
+    const filters = collectFiltersFromDOM();
+    let cards = manager.filterCards(filters);
 
-    // Gather filter values from the page
-    const filters = {
-        name: document.getElementById("filterName").value,
-        type: document.getElementById("filterType").value,
-        rarity: document.getElementById("filterRarity").value,
-        quality: document.getElementById("filterQuality").value,
-        language: document.getElementById("filterLanguage").value,
-        edition: document.getElementById("filterEdition").value
-    };
-
-    // Filter the cards using the filters object
-    let filteredCards = manager.filterCards(filters);
     const sortBy = document.getElementById("sortBy").value;
+    //console.log("🧮 Sorting triggered with sortBy:", sortBy);
 
-    if (sortBy) {
-        filteredCards.sort((a, b) => {
-            if (sortBy === "name") return a.name
-                .replace("CXyz ", "")
-                .replace("Number C", "Number ")
-                .replace("Numero C", "Numero ")
-                .replace("Number S", "Number ")
-                .replace("Numero S", "Numero ")
-                .replace("Number F", "Number ")
-                .replace("Numero F", "Numero ")
-                .localeCompare(b.name
-                    .replace("CXyz ", "")
-                    .replace("Number C", "Number ")
-                    .replace("Numero C", "Numero ")
-                    .replace("Number S", "Number ")
-                    .replace("Numero S", "Numero ")
-                    .replace("Number F", "Number ")
-                    .replace("Numero F", "Numero "), 'it', {
-                        numeric: true,
-                        sensitivity: 'base'
-                    });
-            if (sortBy === "type") {
-                const stripHTML = str =>
-                    str.replace(/<[^>]*>/g, "") // remove all HTML tags
-                    .replace(/\n/g, "") // remove newline characters
-                    .replace(/\s+/g, " ") // collapse multiple spaces into one
-                    .trim() // trim leading/trailing whitespace
-                    .toLowerCase(); // convert to lowercase
+    // Precompute numeric fields
+    cards.forEach(precomputeNumericFields);
 
-                const aTypeClean = stripHTML(a.type);
-                const bTypeClean = stripHTML(b.type);
+    const comparator = comparators[sortBy];
 
-                const is_cxyz = aTypeClean.includes("cxyz") || bTypeClean.includes("cxyz");
-
-                if (is_cxyz) {
-                    //console.log("Comparing types:");
-                    //console.log("Raw a.type: ", a.type);
-                    //console.log("Cleaned a.type: ", aTypeClean);
-                    //console.log("Raw b.type: ", b.type);
-                    //console.log("Cleaned b.type: ", bTypeClean);
-                }
-
-                const result = aTypeClean.localeCompare(bTypeClean);
-
-                //if(is_cxyz) console.log("localeCompare result: ", result);
-                return result;
-            }
-
-            if (sortBy === "condition") {
-                // Define the desired custom order.
-                // Lower numbers will sort first.
-                const qualityOrder = {
-                    "": 0, // If quality is empty
-                    "Near Mint": 1,
-                    "Slightly Played": 2,
-                    "Moderately Played": 3,
-                    "Played": 4,
-                    "Poor": 5,
-                    "Unknown (good)": 6,
-                    "Unknown (bad)": 7,
-                    "Fake": 8,
-                    "None": 9,
-                };
-
-                // Get the assigned order values; if a quality isn't in the list, give it a high order.
-                const aOrder = qualityOrder[a.quality] !== undefined ? qualityOrder[a.quality] : 999;
-                const bOrder = qualityOrder[b.quality] !== undefined ? qualityOrder[b.quality] : 999;
-
-                return aOrder - bOrder;
-            }
-
-            if (sortBy === "pricePaid") return a.pricePaid - b.pricePaid;
-            if (sortBy === "marketPrice") return a.marketPrice - b.marketPrice;
-            if (sortBy === "Id") return a.id.localeCompare(b.id);
-            if (sortBy === "location") return a.location.localeCompare(b.location);
-            if (sortBy === "comments") return b.comments.localeCompare(a.comments);
-            if (sortBy === "dateObtained") {
-                return parseDate(a.dateObtained) - parseDate(b.dateObtained);
-            }
-            if (sortBy === "language") return a.language.localeCompare(b.language);
-            if (sortBy === "edition") {
-                // Define the desired custom order, where lower numbers come first.
-                const editionOrder = {
-                    "Limited Edition": 1,
-                    "First Edition": 2,
-                    "Standard Edition": 3,
-                    "Unknown": 4,
-                    "None": 5,
-                    "Fake": 6,
-                };
-
-                // Get the order value for each edition, using a fallback if the edition isn't mapped.
-                const aOrder = editionOrder[a.edition] !== undefined ? editionOrder[a.edition] : 999;
-                const bOrder = editionOrder[b.edition] !== undefined ? editionOrder[b.edition] : 999;
-
-                return aOrder - bOrder;
-            }
-
-            if (sortBy === "rarity") {
-                // Create a normalization function.
-                const normalizeRarity = (str) =>
-                    str.toLowerCase().replace(/['’]/g, "").trim(); // remove both straight and curly apostrophes
-
-                // Build the rarity order array using the normalized values.
-                const rarityOrder = [
-                    normalizeRarity(translations[0]["collectorsrare"]),
-                    normalizeRarity(translations[0]["ultimaterare"]),
-                    normalizeRarity(translations[0]["secretrare"]),
-                    normalizeRarity(translations[0]["ghostrare"]),
-                    normalizeRarity(translations[0]["ultrarare"]),
-                    normalizeRarity(translations[0]["superrare"]),
-                    normalizeRarity(translations[0]["rare"]),
-                    normalizeRarity(translations[0]["common"]),
-                    normalizeRarity(translations[0]["unknown"]),
-                    "None",
-                    "Fake",
-                    "FAKE",
-                ];
-
-                const indexA = rarityOrder.indexOf(normalizeRarity(a.rarity));
-                const indexB = rarityOrder.indexOf(normalizeRarity(b.rarity));
-                // If indexOf returns -1 (not found), use rarityOrder.length as a fallback.
-                const rarityA = indexA !== -1 ? indexA : rarityOrder.length;
-                const rarityB = indexB !== -1 ? indexB : rarityOrder.length;
-
-                // First sort by rarity.
-                if (rarityA !== rarityB) {
-                    return rarityA - rarityB;
-                }
-
-                // If the rarities are the same, sort by pricePaid (assumed numeric).
-                return parseFloat(b.pricePaid) - parseFloat(a.pricePaid);
-            }
-            return 0;
-        });
+    if (comparator && typeof comparator === "function") {
+        cards.sort(comparator);
+        //console.log("🔃 Sorted using comparator:", sortBy);
+    } else if (sortBy === "rarity") {
+        const changes = getCardSortIndexChanges(cards);
+        const sortedCards = changes.map(change => cards[change.from]);
+        cards = sortedCards;
+        //console.log("✅ Cards sorted by rarity and name");
     }
 
-    displayCards(filteredCards);
+
+    displayCards(cards);
 }
 
+
+// Apply translation if the selected language changed
+function maybeApplyLanguage() {
+    const sel = document.getElementById("selectedLanguage");
+    if (!sel) return;
+
+    const idx = sel.selectedIndex;
+    if (idx !== langIndex) applyTranslations(idx);
+}
+
+// Gather all filter values from the DOM
+function collectFiltersFromDOM() {
+    function getVal(id) {
+        const el = document.getElementById(id);
+        return el ? el.value : "";
+    }
+
+    return {
+        name: getVal("filterName"),
+        type: getVal("filterType"),
+        rarity: getVal("filterRarity"),
+        quality: getVal("filterQuality"),
+        language: getVal("filterLanguage"),
+        edition: getVal("filterEdition")
+    };
+}
 
 export function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -1117,6 +182,10 @@ export function displayCardDetails(cards) {
 
         // Now iterate over each card version to display variant-specific data.
         cards.forEach((card, index) => {
+            let cleanedMarketPrice = card.marketPrice.replaceAll("⬆️", "")
+                .replaceAll("⬇️", "")
+                .replaceAll("➡️", "")
+                .replaceAll("None", "");
             container.innerHTML += `
 			            <hr>
 				<br>
@@ -1126,7 +195,7 @@ export function displayCardDetails(cards) {
                     <div class="detail-row"><span class="detail-label">Language:</span> ${getLanguageBadge(card.language)}</div>
                     <div class="detail-row"><span class="detail-label">Edition:</span> ${getEditionBadge(card.edition)}</div>
                     <div class="detail-row"><span class="detail-label">Price I Paid:</span> €${card.pricePaid.toFixed(2)}</div>
-                    <div class="detail-row"><span class="detail-label">Market Price:</span> €${card.marketPrice.toFixed(2)}</div>
+                    <div class="detail-row"><span class="detail-label">Market Price:</span> €${cleanedMarketPrice}</div>
                     <div class="detail-row"><span class="detail-label">Location:</span> ${card.location}</div>
                     <div class="detail-row"><span class="detail-label">Comments:</span> ${card.comments}</div>
 					<br>
@@ -1140,7 +209,8 @@ export function displayCardDetails(cards) {
 
 export function initCardDetailsPage(myfile) {
     if (!cardId) {
-        document.getElementById("cardDetails").textContent = "No card ID provided.";
+        document.getElementById("cardDetails")
+            .textContent = "No card ID provided.";
         return;
     }
 
@@ -1151,14 +221,16 @@ export function initCardDetailsPage(myfile) {
                 manager.loadCards(csvText);
                 const cards = manager.findCardsById(cardId); // Use the new method
                 if (!cards || cards.length === 0) {
-                    document.getElementById("cardDetails").textContent = "Card not found.";
+                    document.getElementById("cardDetails")
+                        .textContent = "Card not found.";
                 } else {
                     displayCardDetails(cards); // Pass the array of cards
                 }
             })
             .catch(err => {
                 console.error("Error loading CSV file:", err);
-                document.getElementById("cardDetails").textContent = "Error loading card details.";
+                document.getElementById("cardDetails")
+                    .textContent = "Error loading card details.";
             });
     }
 }
@@ -1192,7 +264,7 @@ export function initCollectionPage() {
             }
             if (currentDisplayedCards && currentDisplayedCards.length) {
                 // Reverse the order in-place and re-display.
-                currentDisplayedCards.reverse();
+                reverseCurrentDisplayedCards();
                 displayCards(currentDisplayedCards);
             }
         });
@@ -1243,19 +315,4 @@ export function initCollectionPage() {
         });
     }
 
-}
-
-export function updateTotalSpent() {
-    let total = currentDisplayedCards
-        .reduce((sum, card) => sum + (card.pricePaid || 0), 0);
-
-    // total = total + (total * 0.05);
-
-    // Format with browser’s locale; force EUR or change as needed
-    const formatted = new Intl.NumberFormat(undefined, {
-        style: "currency",
-        currency: "EUR"
-    }).format(total);
-
-    document.getElementById("totalSpentValue").textContent = formatted;
 }

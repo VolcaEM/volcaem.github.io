@@ -12,48 +12,14 @@
       <header>
          <h1 data-translation-key="collectionheader"></h1>
       </header>
+      <p id="detectedgame" style="text-align: center;"></p>
       <!-- Filter Section -->
       <section id="filters">
          <div class="topmenu">
             <input type="text" id="filterName" class="textboxinput" placeholder="" data-translation-key="filterNamePlaceholder">
             <select id="filterType">
-               <option value="" data-translation-key="allTypes"></option>
-               <option value="Monster" data-translation-key="monsters"></option>
-               <option value="Monster (Vanilla)" data-translation-key="vanilla"></option>
-               <option value="Monster (Effect)" data-translation-key="effect"></option>
-               <option value="Monster (Ritual)" data-translation-key="ritual"></option>
-               <option value="Monster (Fusion)" data-translation-key="fusion"></option>
-               <option value="Monster (Synchro)" data-translation-key="synchro"></option>
-               <option value="Monster (XYZ)" data-translation-key="xyz"></option>
-               <option value="Monster (CXYZ)" data-translation-key="cxyz"></option>
-               <option value="Monster (FXYZ)" data-translation-key="fxyz"></option>
-               <option value="Monster (SXYZ)" data-translation-key="sxyz"></option>
-               <option value="Monster (Pendulum)" data-translation-key="pendulum"></option>
-               <option value="Monster (Link)" data-translation-key="link"></option>
-               <option value="Spell" data-translation-key="spells"></option>
-               <option value="Spell (Normal)" data-translation-key="normal"></option>
-               <option value="Spell (Quick-Play)" data-translation-key="quickplay"></option>
-               <option value="Spell (Continuous)" data-translation-key="continuous"></option>
-               <option value="Spell (Equip)" data-translation-key="equip"></option>
-               <option value="Spell (Terrain)" data-translation-key="terrain"></option>
-               <option value="Trap" data-translation-key="traps"></option>
-               <option value="Trap (Normal)" data-translation-key="normal"></option>
-               <option value="Trap (Continuous)" data-translation-key="continuous"></option>
-               <option value="Trap (Counter)" data-translation-key="counter"></option>
-               <option value="Token" data-translation-key="token"></option>
             </select>
             <select id="filterRarity">
-               <option value="" data-translation-key="rarityAll"></option>
-               <option value="Common" data-translation-key="common"></option>
-               <option value="Rare" data-translation-key="rare"></option>
-               <option value="Super Rare" data-translation-key="superrare"></option>
-               <option value="Ultra Rare" data-translation-key="ultrarare"></option>
-               <option value="Secret Rare" data-translation-key="secretrare"></option>
-               <option value="Ghost Rare" data-translation-key="ghostrare"></option>
-               <option value="Collectors Rare" data-translation-key="collectorsrare"></option>
-               <option value="Ultimate Rare" data-translation-key="ultimaterare"></option>
-               <option value="Unknown" data-translation-key="unknown"></option>
-               <option value="Fake" data-translation-key="fake"></option>
             </select>
             <select id="filterQuality">
                <option value="" data-translation-key="qualityAll"></option>
@@ -90,6 +56,7 @@
                <option value="edition" data-translation-key="sortEdition"></option>
                <option value="pricePaid" data-translation-key="sortPricePaid"></option>
                <option value="marketPrice" data-translation-key="sortMarketPrice"></option>
+               <option value="stonks" data-translation-key="sortStonks"></option>
                <option value="Id" data-translation-key="sortId"></option>
                <option value="dateObtained" data-translation-key="sortDateObtained"></option>
                <option value="location" data-translation-key="sortLocation"></option>
@@ -124,7 +91,7 @@
                <th data-translation-key="tableLanguage"></th>
                <th data-translation-key="tableEdition"></th>
                <th data-translation-key="tableSpent"></th>
-               <!-- <th data-translation-key="tableMarket"></th> -->
+               <th data-translation-key="tableMarket"></th>
                <th data-translation-key="tableId"></th>
                <th data-translation-key="tableObtained"></th>
                <th data-translation-key="tableLocation"></th>

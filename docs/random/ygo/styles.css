@@ -1,179 +1,183 @@
-	 @import "badges-condition.css";
-	 @import "badges-edition.css";
-	 @import "badges-type.css";
-	 :root {
-		 --multiplier: 1.2;
-		 --img-width: calc(300px * var(--multiplier));
-		 --img-height: calc(442px * var(--multiplier));
-		 --img-cell-width: 100px;
-	}
-	/* General styling */
-	 body {
-		 font-family: Arial, sans-serif;
-		 margin: 20px;
-	}
-	 header {
-		 text-align: center;
-		 margin-bottom: 20px;
-	}
-	 #filters {
-		 margin-bottom: 20px;
-	}
-	 #filters input, #filters select {
-		 padding: 5px;
-		 margin-right: 10px;
-	}
-	 button {
-		 padding: 5px 10px;
-	}
-	 table {
-		 width: 100%;
-		 border-collapse: collapse;
-	}
-	 th, td {
-		 border: 1px solid #ccc;
-		 padding: 8px;
-		 vertical-align: middle;
-		 text-align: center;
-	}
-	 tr, td {
-		 height: 30px;
-	}
-	 .small-tr {
-		 height: 22px !important;
-	}
-	 .tall-tr {
-		 height: 60px !important;
-	}
-	 .nowrap-td {
-		 white-space: nowrap;
-	}
-	 th {
-		 background-color: #f4f4f4;
-	}
-	/* Card image cell styling */
-	/* Set the image cell size to a fixed width and height. Here we assume 120px wide and 150px tall represent the top 30% of a typical card image. Adjust these values as needed. */
-	 .img-cell {
-		 width: var(--img-cell-width);
-		 height: 30px;
-		 overflow: hidden;
-		/* Crop any part of the image beyond this cell */
-		 position: relative;
-	}
-	 .img-cell.tall-tr {
-		 height: 60px !important;
-	}
-	 .img-cell.small-tr {
-		 height: 30px !important;
-	}
-	/* The card image is forced to fill the container while showing only its top part. object-fit: cover scales (or crops) the image so that the cell is filled, and object-position: top ensures the top edge is visible. */
-	 .card-image {
-		 width: 100%;
-		 height: 100%;
-		 object-fit: cover;
-		 object-position: top;
-		 transition: transform 0.3s ease;
-		 cursor: pointer;
-	}
-	/* --- UPDATED: Full image overlay using fixed positioning --- */
-	 #fullImageOverlay {
-		 position: fixed;
-		/* Fixed relative to the viewport */
-		 display: none;
-		/* Hidden until activated */
-		 z-index: 1000;
-		/* Ensures it appears on top */
-		 pointer-events: none;
-		/* Doesn’t block any mouse interactions */
-		 transition: top 0.1s ease, left 0.1s ease;
-		/* Smoothly moves with the mouse */
-	}
-	 #fullImageOverlay img {
-		 display: block;
-		 width: auto;
-		 height: auto;
-		 max-width: var(--img-width);
-		 max-height: var(--img-height);
-		 min-width: var(--img-width);
-		 min-height: var(--img-height);
-	}
-	 .card-image:hover {
-		 transform: scale(1.5);
-	}
-	/* Quality badges (rectangular like Near Mint) */
-	 .badge {
-		 padding: 3px 6px;
-		 border-radius: 3px;
-		 font-size: 0.9em;
-	}
-	 .null {
-		 color: none !important;
-		 width: 0px !important;
-		 height: 0px !important;
-		 display: none !important;
-	}
-	 .card-details {
-		 max-width: 600px;
-		 margin: auto;
-		 border: 1px solid #ccc;
-		 padding: 20px;
-	}
-	 .card-details img {
-		 width: 200px;
-		 transition: transform 0.3s ease;
-		 cursor: pointer;
-	}
-	 .card-details img:hover {
-		 transform: scale(1.5);
-	}
-	 .back-link {
-		 display: block;
-		 margin-bottom: 20px;
-	}
-	 .detail-row {
-		 margin: 10px 0;
-	}
-	 .detail-label {
-		 font-weight: bold;
-	}
-	 .topbutton {
-		 margin-left: 10px;
-		 margin-right: 10px;
-	}
-	 .textboxinput {
-		 min-width: 200px;
-	}
-	 li {
-		/* margin-left: 35px;
-		 */
-	}
-	 .topmenu {
-		 margin-bottom: 15px;
-		 margin-top: 15px;
-		 display: flex;
-		 justify-content: center;
-		/* centers horizontally */
-		 align-items: center;
-		/* centers vertically */
-		 flex-direction: row;
-		 flex-wrap: wrap;
-	}
-	 .break {
-		 flex-basis: 100%;
-		 height: 0;
-	}
-	 .bottommenu {
-		 margin-bottom: 15px;
-		 margin-top: 15px;
-		 display: flex;
-		 justify-content: center;
-		/* centers horizontally */
-		 align-items: center;
-		/* centers vertically */
-		 flex-direction: row;
-		 flex-wrap: wrap;
-	}
-	 .results {
-		 margin-left: 8px;
-	}
-	 
+ @import "badges-condition.css";
+ @import "badges-edition.css";
+ @import "badges-type-general.css";
+ @import "badges-type-yugioh.css";
+ @import "badges-type-pokemon.css";
+ @import "badges-type-vanguard.css";
+ @import "badges-type-digimon.css";
+ :root {
+     --multiplier: 1.2;
+     --img-width: calc(300px * var(--multiplier));
+     --img-height: calc(442px * var(--multiplier));
+     --img-cell-width: 100px;
+}
+/* General styling */
+ body {
+     font-family: Arial, sans-serif;
+     margin: 20px;
+}
+ header {
+     text-align: center;
+     margin-bottom: 20px;
+}
+ #filters {
+     margin-bottom: 20px;
+}
+ #filters input, #filters select {
+     padding: 5px;
+     margin-right: 10px;
+}
+ button {
+     padding: 5px 10px;
+}
+ table {
+     width: 100%;
+     border-collapse: collapse;
+}
+ th, td {
+     border: 1px solid #ccc;
+     padding: 8px;
+     vertical-align: middle;
+     text-align: center;
+}
+ tr, td {
+     height: 30px;
+}
+ .small-tr {
+     height: 22px !important;
+}
+ .tall-tr {
+     height: 60px !important;
+}
+ .nowrap-td {
+     white-space: nowrap;
+}
+ th {
+     background-color: #f4f4f4;
+}
+/* Card image cell styling */
+/* Set the image cell size to a fixed width and height. Here we assume 120px wide and 150px tall represent the top 30% of a typical card image. Adjust these values as needed. */
+ .img-cell {
+     width: var(--img-cell-width);
+     height: 30px;
+     overflow: hidden;
+    /* Crop any part of the image beyond this cell */
+     position: relative;
+}
+ .img-cell.tall-tr {
+     height: 60px !important;
+}
+ .img-cell.small-tr {
+     height: 30px !important;
+}
+/* The card image is forced to fill the container while showing only its top part. object-fit: cover scales (or crops) the image so that the cell is filled, and object-position: top ensures the top edge is visible. */
+ .card-image {
+     width: 100%;
+     height: 100%;
+     object-fit: cover;
+     object-position: top;
+     transition: transform 0.3s ease;
+     cursor: pointer;
+}
+/* --- UPDATED: Full image overlay using fixed positioning --- */
+ #fullImageOverlay {
+     position: fixed;
+    /* Fixed relative to the viewport */
+     display: none;
+    /* Hidden until activated */
+     z-index: 1000;
+    /* Ensures it appears on top */
+     pointer-events: none;
+    /* Doesn’t block any mouse interactions */
+     transition: top 0.1s ease, left 0.1s ease;
+    /* Smoothly moves with the mouse */
+}
+ #fullImageOverlay img {
+     display: block;
+     width: auto;
+     height: auto;
+     max-width: var(--img-width);
+     max-height: var(--img-height);
+     min-width: var(--img-width);
+     min-height: var(--img-height);
+}
+ .card-image:hover {
+     transform: scale(1.5);
+}
+/* Quality badges (rectangular like Near Mint) */
+ .badge {
+     padding: 3px 6px;
+     border-radius: 3px;
+     font-size: 0.9em;
+}
+ .null {
+     color: none !important;
+     width: 0px !important;
+     height: 0px !important;
+     display: none !important;
+}
+ .card-details {
+     max-width: 600px;
+     margin: auto;
+     border: 1px solid #ccc;
+     padding: 20px;
+}
+ .card-details img {
+     width: 200px;
+     transition: transform 0.3s ease;
+     cursor: pointer;
+}
+ .card-details img:hover {
+     transform: scale(1.5);
+}
+ .back-link {
+     display: block;
+     margin-bottom: 20px;
+}
+ .detail-row {
+     margin: 10px 0;
+}
+ .detail-label {
+     font-weight: bold;
+}
+ .topbutton {
+     margin-left: 10px;
+     margin-right: 10px;
+}
+ .textboxinput {
+     min-width: 200px;
+}
+ li {
+    /* margin-left: 35px;
+     */
+}
+ .topmenu {
+     margin-bottom: 15px;
+     margin-top: 15px;
+     display: flex;
+     justify-content: center;
+    /* centers horizontally */
+     align-items: center;
+    /* centers vertically */
+     flex-direction: row;
+     flex-wrap: wrap;
+}
+ .break {
+     flex-basis: 100%;
+     height: 0;
+}
+ .bottommenu {
+     margin-bottom: 15px;
+     margin-top: 15px;
+     display: flex;
+     justify-content: center;
+    /* centers horizontally */
+     align-items: center;
+    /* centers vertically */
+     flex-direction: row;
+     flex-wrap: wrap;
+}
+ .results {
+     margin-left: 8px;
+}
+ 

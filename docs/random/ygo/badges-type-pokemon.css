@@ -1,0 +1,90 @@
+/* Evolutions & Categories */
+ .badge-type-base {
+     background-color: darkgray;
+     color: white;
+}
+ .badge-type-stage1 {
+     background-color: lightskyblue;
+     color: black;
+}
+ .badge-type-stage2 {
+     background-color: cornflowerblue;
+     color: white;
+}
+ .badge-type-mega {
+     background-color: mediumvioletred;
+     color: white;
+}
+ .badge-type-energy {
+     background-color: gold;
+     color: black;
+}
+ .badge-type-supporter {
+     background-color: olive;
+     color: white;
+}
+ .badge-type-trainer {
+     background-color: teal;
+     color: white;
+}
+ .badge-type-item {
+     background-color: seagreen;
+     color: white;
+}
+ .badge-type-stadium {
+     background-color: slategray;
+     color: white;
+}
+ .badge-type-none {
+     background-color: lightgray;
+     color: black;
+}
+/* Elemental Types */
+ .badge-type-grass {
+     background-color: green;
+     color: white;
+}
+ .badge-type-fire {
+     background-color: orangered;
+     color: white;
+}
+ .badge-type-water {
+     background-color: deepskyblue;
+     color: white;
+}
+ .badge-type-lightning {
+     background-color: yellow;
+     color: black;
+}
+ .badge-type-psychic {
+     background-color: mediumorchid;
+     color: white;
+}
+ .badge-type-fighting {
+     background-color: sienna;
+     color: white;
+}
+ .badge-type-darkness {
+     background-color: dimgray;
+     color: white;
+}
+ .badge-type-metal {
+     background-color: lightsteelblue;
+     color: black;
+}
+ .badge-type-dragon {
+     background-color: indigo;
+     color: white;
+}
+ .badge-type-colorless {
+     background-color: lightgray;
+     color: black;
+}
+ .badge-type-specialenergy {
+     background-color: lightgray;
+     color: black;
+}
+ .badge-type-fairy {
+     background-color: lightpink;
+     color: white;
+}

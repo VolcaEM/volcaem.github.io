@@ -1,0 +1,17 @@
+:root {
+     --badge-padding: 2px 4px;
+     --badge-radius: 3px;
+     --badge-font-size: 0.8em;
+     --badge-margin-left: 4px;
+     --badge-white-space: nowrap;
+}
+
+/* Base rules for any badge-type-... */
+ [class^="badge-type-"], [class*=" badge-type-"] {
+     padding: var(--badge-padding);
+     border-radius: var(--badge-radius);
+     font-size: var(--badge-font-size);
+     margin-left: var(--badge-margin-left);
+     white-space: var(--badge-white-space);
+}
+ 

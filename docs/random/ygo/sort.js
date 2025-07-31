@@ -17,7 +17,7 @@ import {
 // Strip emojis/"None", parse floats, and compute profit
 export function precomputeNumericFields(card) {
     card._marketPrice = parseFloat(
-        card.marketPrice
+        (card.marketPrice || "0.00")
         .replace(/⬆️|⬇️|➡️|None/g, "")
         .trim()
     ) || 0;
@@ -38,7 +38,7 @@ export const comparators = {
 
     // Numeric sorts (ascending)
     pricePaid: (a, b) => b._pricePaid - a._pricePaid,
-    marketPrice: (a, b) => a._marketPrice - b._marketPrice,
+    marketPrice: (a, b) => (a._marketPrice || 0.00) - (b._marketPrice || 0.00),
 
     // Profit sort (descending)
     stonks: (a, b) => Math.max(0.00, b._profit - a._profit),

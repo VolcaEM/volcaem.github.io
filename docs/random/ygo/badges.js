@@ -43,6 +43,18 @@ var languageDict = {
     "JP": "🇯🇵"
 };
 
+// Define shared badge rules (could be moved to a separate module too!)
+export const sharedBadgeRules = [
+    { key: 'sleeves', cssClass: 'badge-type-sleeves' },
+    { key: 'structuredeck', cssClass: 'badge-type-structuredeck' },
+    { key: 'storage', cssClass: 'badge-type-storage' },
+    { key: 'fieldcentercard', cssClass: 'badge-type-fieldcentercard' },
+    { key: 'empty', cssClass: 'badge-type-empty' },
+    { key: 'album', cssClass: 'badge-type-album' },
+    { key: 'separator', cssClass: 'badge-type-separator' },
+    { key: 'deckcase', cssClass: 'badge-type-deckcase' }
+];
+
 export function getLanguageBadge(language) {
     let code = language.trim()
         .toUpperCase();
@@ -125,19 +137,19 @@ export function getTypeDisplay(typeText) {
             .map(t => t.trim());
 
         // pick rules for this game
-        let rules = [];
+        let rules = [...sharedBadgeRules];
         switch (currentGame) {
             case "Yu-Gi-Oh":
-                rules = getYgoBadgeRules();
+                rules.push(...getYgoBadgeRules());
                 break;
             case "Pokémon":
-                rules = getPkmBadgeRules();
+                rules.push(...getPkmBadgeRules());
                 break;
             case "Vanguard":
-                rules = getVanguardBadgeRules();
+                rules.push(...getVanguardBadgeRules());
                 break;
             case "Digimon":
-                rules = getDigimonBadgeRules();
+                rules.push(...getDigimonBadgeRules());
                 break;
         }
 

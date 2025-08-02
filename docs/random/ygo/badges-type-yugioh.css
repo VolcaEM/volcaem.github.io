@@ -1,5 +1,5 @@
 /* Beige group */
- .badge-type-album, .badge-type-fieldcentercard, .badge-type-sleeves, .badge-type-storage, .badge-type-structuredeck, .badge-type-toon {
+.badge-type-toon {
      background-color: beige;
      color: black;
 }

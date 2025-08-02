@@ -90,5 +90,7 @@ export const baseTranslations = {
     fieldcentercard: ['Field Center Card', 'Field Center Card'],
     empty: ['Empty', 'Vuoto'],
     album: ['Album', 'Album'],
+    separator: ['Separators', 'Divisori'],
+    deckcase: ['Deck Case', 'Porta-mazzo'],
     none: ['', ''],
 };

@@ -10,6 +10,7 @@ export function getPkmBadgeRules() {
         { key: 'base', cssClass: 'badge-type-base' },
         { key: 'stage-1', cssClass: 'badge-type-stage1' },
         { key: 'stage-2', cssClass: 'badge-type-stage2' },
+        { key: 'stage-3', cssClass: 'badge-type-stage3' },
         { key: 'mega', cssClass: 'badge-type-mega' },
         { key: 'energy', cssClass: 'badge-type-energy' },
         { key: 'special-energy', cssClass: 'badge-type-specialenergy' },
@@ -47,6 +48,7 @@ export const pokemonFilterOptions = [
     ['Base', 'base'],
     ['Stage 1', 'stage-1'],
     ['Stage 2', 'stage-2'],
+    ['Stage 3', 'stage-3'],
     ['MEGA', 'mega'],
 
     // Divider: elemental / color types
@@ -71,7 +73,6 @@ export const pokemonFilterOptions = [
     ['Trainer', 'trainer'],
     ['Item', 'item'],
     ['Stadium', 'stadium'],
-    ['None', 'none'],
 ];
 
 

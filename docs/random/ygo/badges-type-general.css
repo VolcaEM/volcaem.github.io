@@ -14,4 +14,8 @@
      margin-left: var(--badge-margin-left);
      white-space: var(--badge-white-space);
 }
- 
+
+.badge-type-album, .badge-type-fieldcentercard, .badge-type-sleeves, .badge-type-storage, .badge-type-structuredeck, .badge-type-separator, .badge-type-deckcase {
+     background-color: beige;
+     color: black;
+}

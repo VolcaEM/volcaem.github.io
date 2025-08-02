@@ -11,6 +11,10 @@
      background-color: cornflowerblue;
      color: white;
 }
+ .badge-type-stage3 {
+     background-color: orange;
+     color: white;
+}
  .badge-type-mega {
      background-color: mediumvioletred;
      color: white;
@@ -86,5 +90,5 @@
 }
  .badge-type-fairy {
      background-color: lightpink;
-     color: white;
+     color: black;
 }

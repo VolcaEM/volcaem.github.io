@@ -22,13 +22,6 @@ export function getYgoBadgeRules() {
         { key: 'link', cssClass: 'badge-type-link' },
         { key: 'tuner', cssClass: 'badge-type-tuner' },
         { key: 'toon', cssClass: 'badge-type-toon' },
-        { key: 'sleeves', cssClass: 'badge-type-sleeves' },
-
-        { key: 'structuredeck', cssClass: 'badge-type-structuredeck' },
-        { key: 'storage', cssClass: 'badge-type-storage' },
-        { key: 'fieldcentercard', cssClass: 'badge-type-fieldcentercard' },
-        { key: 'empty', cssClass: 'badge-type-empty' },
-        { key: 'album', cssClass: 'badge-type-album' }
     ];
 }
 
@@ -56,6 +49,7 @@ export const yugiohFilterOptions = [
     ['Spell (Continuous)', 'continuous'],
     ['Spell (Equip)', 'equip'],
     ['Spell (Terrain)', 'terrain'],
+    ['Spell (Ritual)', 'spell-ritual'],
     ['───── TRAPS ─────', null],
     ['Trap', 'traps'],
     ['Trap (Normal)', 'normal'],

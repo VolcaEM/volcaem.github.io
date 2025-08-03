@@ -232,11 +232,21 @@ export class CardManager {
 
                     // Each badge in the filter must be present in the card.
                     for (const token of filterBadges) {
-                        // Special handling in case you use "xyz" as shorthand.
-                        if (token === "xyz") {
-                            if (!cardTypeStr.includes("xyz)")) return false;
-                        } else {
-                            if (!cardBadges.includes(token)) return false;
+                        switch (currentGame) {
+                            case "Yu-Gi-Oh":
+                                // Special handling in case you use "xyz" as shorthand.
+                                if (token === "xyz") {
+                                    if (!cardTypeStr.includes("xyz)")) return false;
+                                } else {
+                                    if (token === "link") {
+                                        if (!cardTypeStr.includes("(link")) return false;
+                                    } else {
+                                        if (!cardBadges.includes(token)) return false;
+                                    }
+                                }
+                                break;
+                            default:
+                                break;
                         }
                     }
                 } else {

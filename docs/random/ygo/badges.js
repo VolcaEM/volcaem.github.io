@@ -47,12 +47,14 @@ var languageDict = {
 export const sharedBadgeRules = [
     { key: 'sleeves', cssClass: 'badge-type-sleeves' },
     { key: 'structuredeck', cssClass: 'badge-type-structuredeck' },
+    { key: 'starterdeck', cssClass: 'badge-type-starterdeck' },
     { key: 'storage', cssClass: 'badge-type-storage' },
     { key: 'fieldcentercard', cssClass: 'badge-type-fieldcentercard' },
     { key: 'empty', cssClass: 'badge-type-empty' },
     { key: 'album', cssClass: 'badge-type-album' },
     { key: 'separator', cssClass: 'badge-type-separator' },
-    { key: 'deckcase', cssClass: 'badge-type-deckcase' }
+    { key: 'deckcase', cssClass: 'badge-type-deckcase' },
+    { key: 'playmat', cssClass: 'badge-type-playmat' },
 ];
 
 export function getLanguageBadge(language) {

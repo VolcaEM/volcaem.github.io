@@ -83,14 +83,17 @@ export const baseTranslations = {
     loadcsv: ['Load CSV', 'Carica CSV'],
     totalSpent: ['Total spent: ', 'Totale speso: '],
 
+    products: ['Products', 'Prodotti'],
     product: ['Product', 'Prodotto'],
     sleeves: ['Sleeves', 'Buste'],
     structuredeck: ['Structure Deck', 'Structure Deck'],
+    starterdeck: ['Starter Deck', 'Starter Deck'],
     storage: ['Storage', 'Storage'],
     fieldcentercard: ['Field Center Card', 'Field Center Card'],
     empty: ['Empty', 'Vuoto'],
     album: ['Album', 'Album'],
     separator: ['Separators', 'Divisori'],
     deckcase: ['Deck Case', 'Porta-mazzo'],
+    playmat: ['Playmat', 'Tappetino'],
     none: ['', ''],
 };

@@ -134,6 +134,19 @@ export class CardManager {
                                 console.warn(`Unsupported game: ${currentGame}`);
                                 break;
                         }
+
+                        const option1 = document.createElement('option');
+                        option1.textContent = "───── COMMON ─────";
+                        option1.value = "";
+                        option1.disabled = true;
+
+                        const option2 = document.createElement('option');
+                        option2.textContent = translations[langIndex]['products'];
+                        option2.value = "product";
+
+                        filterSelect.appendChild(option1);
+                        filterSelect.appendChild(option2);
+
                         break;
                     }
                 }

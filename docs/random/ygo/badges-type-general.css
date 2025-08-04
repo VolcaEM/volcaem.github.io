@@ -15,7 +15,7 @@
      white-space: var(--badge-white-space);
 }
 
-.badge-type-album, .badge-type-fieldcentercard, .badge-type-sleeves, .badge-type-storage, .badge-type-structuredeck, .badge-type-separator, .badge-type-deckcase {
+ .badge-type-album, .badge-type-fieldcentercard, .badge-type-sleeves, .badge-type-storage, .badge-type-structuredeck, .badge-type-separator, .badge-type-deckcase, .badge-type-playmat, .badge-type-starterdeck {
      background-color: beige;
      color: black;
 }

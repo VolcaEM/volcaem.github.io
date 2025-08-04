@@ -70,31 +70,43 @@ export function populateFilterTypeSelect(selectElement, options, translate, curr
 }
 
 export function updateTotalSpent() {
-    // Filter cards with pricePaid > 0
+    // 1. Only cards with a paid price
     const cardsWithPrice = currentDisplayedCards.filter(card => card.pricePaid > 0);
 
-    // Sum of pricePaid from cards with actual payment
-    let total = cardsWithPrice.reduce((sum, card) => sum + card.pricePaid, 0);
+    // 2. Sum of all item prices (regardless of position)
+    const itemsTotal = cardsWithPrice.reduce((sum, card) => sum + card.pricePaid, 0);
 
-    // Add 5% fee only to valid purchases
-    total += total * 0.05;
+    // 3. Filter only CTZ cards for tax calculations
+    const ctzCards = cardsWithPrice.filter(card => card.location.includes('CTZ'));
 
-    // Collect unique dates with at least one valid purchase
-    const validDates = new Set(cardsWithPrice
+    // 4. 5% fee on each CTZ card’s price
+    const feeOnCtzPrices = ctzCards.reduce((sum, card) => sum + card.pricePaid * 0.05, 0);
+
+    // 5. €0.35 fee per unique date that has at least one CTZ card
+    const uniqueCtzDates = new Set(
+        ctzCards
         .map(card => card.dateObtained)
-        .filter(date => date) // Avoid undefined/null dates
+        .filter(date => date) // drop undefined/null
     );
+    const dateFee = uniqueCtzDates.size * 0.35;
 
-    // Add €0.35 per unique valid date
-    total += validDates.size * 0.35;
+    // 6. Total taxes = percentage fee + date‐based fee
+    const taxesTotal = feeOnCtzPrices + dateFee;
 
-    // Format using browser’s locale; force EUR or change as needed
-    const formatted = new Intl.NumberFormat(undefined, {
-            style: "currency",
-            currency: "EUR"
-        })
-        .format(total);
+    // 7. Grand total
+    const grandTotal = itemsTotal + taxesTotal;
 
-    document.getElementById("totalSpentValue")
-        .textContent = formatted;
+    // 8. Format everything as EUR
+    const formatter = new Intl.NumberFormat(undefined, {
+        style: "currency",
+        currency: "EUR"
+    });
+
+    const formattedTotal = formatter.format(grandTotal);
+    const formattedItems = formatter.format(itemsTotal);
+    const formattedTaxes = formatter.format(taxesTotal);
+
+    // 9. Inject the breakdown string
+    document.getElementById("totalSpentValue").textContent =
+        `Total spent: ${formattedTotal} (${formattedItems} for the items, ${formattedTaxes} in taxes)`;
 }

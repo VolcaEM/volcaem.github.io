@@ -1,4 +1,8 @@
- .badge-cond-near-mint {
+.badge-cond-mint {
+     color: #ffffff;
+     background-color: #17a2b8;
+}
+.badge-cond-near-mint {
      color: #ffffff;
      background-color: #87b726;
 }

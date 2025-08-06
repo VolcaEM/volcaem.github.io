@@ -23,6 +23,7 @@
             </select>
             <select id="filterQuality">
                <option value="" data-translation-key="qualityAll"></option>
+               <option value="Mint" data-translation-key="mint"></option>
                <option value="Near Mint" data-translation-key="nearmint"></option>
                <option value="Slightly Played" data-translation-key="slightlyplayed"></option>
                <option value="Moderately Played" data-translation-key="moderatelyplayed"></option>
@@ -138,8 +139,8 @@
          import { applyTranslations } from "./translations.js";
          
          if(localMode === false) {
-			let csvload = document.getElementById("loadCSV");
-			csvload.style.display = "block";
+			 let csvload = document.getElementById("loadCSV");
+			 csvload.style.display = "block";
          }
          
          initCollectionPage();

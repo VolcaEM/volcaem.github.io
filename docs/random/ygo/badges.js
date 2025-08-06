@@ -68,17 +68,19 @@ export function getQualityBadge(quality) {
     let q = quality.toLowerCase();
 
     if (q === translations[0]["unknowngood"].toLowerCase()) {
-        return '<span class="badge" data-original-title="Near Mint">✅</span>';
+        return '<span class="badge" data-original-title="UnknownGood">✅</span>';
     }
     if (q === translations[0]["unknownbad"].toLowerCase()) {
-        return '<span class="badge" data-original-title="Near Mint">❌</span>';
+        return '<span class="badge" data-original-title="UnknownBad">❌</span>';
     }
 
     if (q === "none") {
         return "";
     }
 
-    if (q === translations[0]["nearmint"].toLowerCase()) {
+    if (q === translations[0]["mint"].toLowerCase()) {
+        return '<span class="badge badge-cond-mint" data-original-title="Mint">MT</span>';
+    } else if (q === translations[0]["nearmint"].toLowerCase()) {
         return '<span class="badge badge-cond-near-mint" data-original-title="Near Mint">NM</span>';
     } else if (q === translations[0]["slightlyplayed"].toLowerCase()) {
         return '<span class="badge badge-cond-slightly-played" data-original-title="Slightly Played">SP</span>';

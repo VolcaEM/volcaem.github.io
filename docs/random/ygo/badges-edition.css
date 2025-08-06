@@ -2,7 +2,7 @@
      --edition-color-default: white;
      --edition-color-0: gold;
 }
- .edition-badge {
+.edition-badge {
      display: inline-block;
      background-color: black;
      color: white;
@@ -14,13 +14,13 @@
      font-size: 0.8em;
      margin-left: 4px;
 }
- .edition-badge-0 {
+.edition-badge-0 {
      color: var(--edition-color-0);
 }
- .edition-badge-2 {
+.edition-badge-2 {
      color: var(--edition-color-default);
 }
- .edition-badge-3 {
+.edition-badge-3 {
      color: var(--edition-color-default);
 }
  

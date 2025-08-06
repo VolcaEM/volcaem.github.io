@@ -7,6 +7,7 @@ export const baseTranslations = {
     rarityAll: ['All Rarities', 'Tutte le Rarità'],
 
     qualityAll: ['All Conditions', 'Tutte le Condizioni'],
+    mint: ['Mint', 'Mint'],
     nearmint: ['Near Mint', 'Near Mint'],
     slightlyplayed: ['Slightly Played', 'Slightly Played'],
     moderatelyplayed: ['Moderately Played', 'Moderately Played'],

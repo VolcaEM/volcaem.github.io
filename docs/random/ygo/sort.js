@@ -95,7 +95,8 @@ export function compareById(a, b) {
 // Normalize and compare names (Italian numeric locale)
 export function compareByName(a, b) {
     const clean = str =>
-        str.replace(/CXyz |Number [CSF]|Numero [CSF]/g, translations[langIndex]["number"])
+        str.replace("CXyz ", "")
+        .replace(/Number [CSF]|Numero [CSF]/g, translations[langIndex]["number"])
         .trim();
 
     return clean(a.name)
@@ -122,15 +123,16 @@ export function compareByType(a, b) {
 // Custom condition ordering
 export const qualityOrder = {
     "": 0,
-    "Near Mint": 1,
-    "Slightly Played": 2,
-    "Moderately Played": 3,
-    "Played": 4,
-    "Poor": 5,
-    "Unknown (good)": 6,
-    "Unknown (bad)": 7,
-    "Fake": 8,
-    "None": 9
+    "Mint": 1,
+    "Near Mint": 2,
+    "Slightly Played": 3,
+    "Moderately Played": 4,
+    "Played": 5,
+    "Poor": 6,
+    "Unknown (good)": 7,
+    "Unknown (bad)": 8,
+    "Fake": 9,
+    "None": 10,
 };
 
 export function compareByCondition(a, b) {

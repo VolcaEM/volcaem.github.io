@@ -11,6 +11,11 @@ export const useTallTr = false;
 
 export const useSmallTr = false;
 
+export const usePieChart = true;
+
+// Fixed chart size (500×500)
+export const CANVAS_SIZE = 500;
+
 export function setLangIndex(val) {
     langIndex = val;
 }

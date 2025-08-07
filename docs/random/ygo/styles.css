@@ -250,3 +250,11 @@ li {
 .results {
 	margin-left: 8px;
 }
+
+#chartsContainer {
+	display: block;
+}
+
+.canvasclass {
+	border: 3px solid black;
+}

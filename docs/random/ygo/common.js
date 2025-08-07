@@ -48,6 +48,10 @@ import {
     getCardSortIndexChanges,
 } from './sort.js';
 
+import {
+    renderAllCharts
+} from './canvas.js';
+
 export const cardId = getQueryParam("id");
 
 ////////////////////////////////
@@ -93,6 +97,7 @@ export function resetFilters() {
 }
 
 export function handleApplyFilters() {
+
     if (!loadedFile) return;
 
     ensureTranslationsReady();
@@ -101,28 +106,25 @@ export function handleApplyFilters() {
     const filters = collectFiltersFromDOM();
     let cards = manager.filterCards(filters);
 
+    // Determine sorting
     const sortBy = document.getElementById("sortBy").value;
-    //console.log("🧮 Sorting triggered with sortBy:", sortBy);
 
-    // Precompute numeric fields
+    // Precompute numeric fields for every card
     cards.forEach(precomputeNumericFields);
 
     const comparator = comparators[sortBy];
-
     if (comparator && typeof comparator === "function") {
         cards.sort(comparator);
-        //console.log("🔃 Sorted using comparator:", sortBy);
     } else if (sortBy === "rarity") {
         const changes = getCardSortIndexChanges(cards);
-        const sortedCards = changes.map(change => cards[change.from]);
-        cards = sortedCards;
-        //console.log("✅ Cards sorted by rarity and name");
+        cards = changes.map(change => cards[change.from]);
     }
 
-
+    // Render card grid/table
     displayCards(cards);
-}
 
+    renderAllCharts(currentDisplayedCards || []);
+}
 
 // Apply translation if the selected language changed
 function maybeApplyLanguage() {

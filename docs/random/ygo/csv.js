@@ -46,6 +46,10 @@ import {
     updateDebugOptions,
 } from './debug.js';
 
+import {
+    renderAllCharts,
+} from './canvas.js';
+
 // Function to load CSV data and display cards
 export function loadCSVAndDisplayCards(myfile) {
 
@@ -71,6 +75,7 @@ export function loadCSVAndDisplayCards(myfile) {
             } else {
                 //console.log("CSV load button is null");
             }
+            renderAllCharts(currentDisplayedCards || []);
         })
         .catch(err => {
             console.error("Error loading CSV file:", err);

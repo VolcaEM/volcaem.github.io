@@ -1,113 +1,148 @@
 /* Card categories */
 .badge-type-digimon {
-  background-color: #f39c12; /* amber */
-  color: white;
+	background-color: #f39c12;
+	/* amber */
+	color: white;
 }
+
 .badge-type-digi-egg {
-  background-color: #f1c40f; /* yellow */
-  color: black;
+	background-color: #f1c40f;
+	/* yellow */
+	color: black;
 }
+
 .badge-type-tamer {
-  background-color: #27ae60; /* green */
-  color: white;
+	background-color: #27ae60;
+	/* green */
+	color: white;
 }
+
 .badge-type-option {
-  background-color: #2980b9; /* blue */
-  color: white;
+	background-color: #2980b9;
+	/* blue */
+	color: white;
 }
+
 .badge-type-token {
-  background-color: #8e44ad; /* purple */
-  color: white;
+	background-color: #8e44ad;
+	/* purple */
+	color: white;
 }
 
 /* Forms / subtypes */
 .badge-form-intraining {
-  background-color: #95a5a6; /* gray */
-  color: white;
+	background-color: #95a5a6;
+	/* gray */
+	color: white;
 }
+
 .badge-form-rookie {
-  background-color: #2ecc71; /* light green */
-  color: white;
+	background-color: #2ecc71;
+	/* light green */
+	color: white;
 }
+
 .badge-form-champion {
-  background-color: #3498db; /* sky blue */
-  color: white;
+	background-color: #3498db;
+	/* sky blue */
+	color: white;
 }
+
 .badge-form-ultimate {
-  background-color: #9b59b6; /* medium purple */
-  color: white;
+	background-color: #9b59b6;
+	/* medium purple */
+	color: white;
 }
+
 .badge-form-mega {
-  background-color: #c0392b; /* dark red */
-  color: white;
+	background-color: #c0392b;
+	/* dark red */
+	color: white;
 }
 
 /* Colors / attributes */
 .badge-color-red {
-  background-color: red;
-  color: white;
+	background-color: red;
+	color: white;
 }
+
 .badge-color-blue {
-  background-color: deepskyblue;
-  color: black;
+	background-color: deepskyblue;
+	color: black;
 }
+
 .badge-color-yellow {
-  background-color: yellow;
-  color: black;
+	background-color: yellow;
+	color: black;
 }
+
 .badge-color-green {
-  background-color: limegreen;
-  color: black;
+	background-color: limegreen;
+	color: black;
 }
+
 .badge-color-black {
-  background-color: dimgray;
-  color: white;
+	background-color: dimgray;
+	color: white;
 }
+
 .badge-color-purple {
-  background-color: mediumorchid;
-  color: white;
+	background-color: mediumorchid;
+	color: white;
 }
+
 .badge-color-white {
-  background-color: whitesmoke;
-  color: black;
+	background-color: whitesmoke;
+	color: black;
 }
 
 /* Rarities */
 .badge-rarity-common {
-  background-color: lightgray;
-  color: black;
+	background-color: lightgray;
+	color: black;
 }
+
 .badge-rarity-uncommon {
-  background-color: mediumseagreen;
-  color: white;
+	background-color: mediumseagreen;
+	color: white;
 }
+
 .badge-rarity-rare {
-  background-color: deepskyblue;
-  color: white;
+	background-color: deepskyblue;
+	color: white;
 }
+
 .badge-rarity-superrare {
-  background-color: #c27eff; /* lavender */
-  color: white;
+	background-color: #c27eff;
+	/* lavender */
+	color: white;
 }
+
 .badge-rarity-secretrare {
-  background-color: gold;
-  color: black;
+	background-color: gold;
+	color: black;
 }
+
 .badge-rarity-promo {
-  background-color: slategray;
-  color: white;
+	background-color: slategray;
+	color: white;
 }
+
 .badge-rarity-parallelart {
-  background-color: #d35400; /* orange */
-  color: white;
+	background-color: #d35400;
+	/* orange */
+	color: white;
 }
 
 /* Traits / series badges */
 .badge-trait-cs {
-  background-color: #16a085; /* teal-ish */
-  color: white;
+	background-color: #16a085;
+	/* teal-ish */
+	color: white;
 }
+
 .badge-trait-accel {
-  background-color: #d35400; /* dark orange */
-  color: white;
+	background-color: #d35400;
+	/* dark orange */
+	color: white;
 }

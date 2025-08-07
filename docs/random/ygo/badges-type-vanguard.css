@@ -1,472 +1,570 @@
 /* ============================= Vanguard Badge Styles ============================= */
 /* Main / Sub Types */
- .badge-type-unit {
-     background-color: #42A5F5;
-    /* steel blue */
-     color: white;
+.badge-type-unit {
+	background-color: #42A5F5;
+	/* steel blue */
+	color: white;
 }
- .badge-type-trigger {
-     background-color: #FFD54F;
-    /* amber lighten */
-     color: black;
+
+.badge-type-trigger {
+	background-color: #FFD54F;
+	/* amber lighten */
+	color: black;
 }
- .badge-type-g-unit {
-     background-color: #AB47BC;
-    /* purple */
-     color: white;
+
+.badge-type-g-unit {
+	background-color: #AB47BC;
+	/* purple */
+	color: white;
 }
- .badge-type-g-guardian {
-     background-color: #FF7043;
-    /* deep orange lighten */
-     color: white;
+
+.badge-type-g-guardian {
+	background-color: #FF7043;
+	/* deep orange lighten */
+	color: white;
 }
- .badge-type-order {
-     background-color: #66BB6A;
-    /* green lighten */
-     color: white;
+
+.badge-type-order {
+	background-color: #66BB6A;
+	/* green lighten */
+	color: white;
 }
- .badge-type-token {
-     background-color: #BDBDBD;
-    /* grey lighten */
-     color: black;
+
+.badge-type-token {
+	background-color: #BDBDBD;
+	/* grey lighten */
+	color: black;
 }
+
 /* Grades */
- .badge-grade-0 {
-     background-color: #CFD8DC;
-    /* blue-grey lighten */
-     color: black;
+.badge-grade-0 {
+	background-color: #CFD8DC;
+	/* blue-grey lighten */
+	color: black;
 }
- .badge-grade-1 {
-     background-color: #A5D6A7;
-    /* green lighten */
-     color: black;
+
+.badge-grade-1 {
+	background-color: #A5D6A7;
+	/* green lighten */
+	color: black;
 }
- .badge-grade-2 {
-     background-color: #FFF59D;
-    /* yellow lighten */
-     color: black;
+
+.badge-grade-2 {
+	background-color: #FFF59D;
+	/* yellow lighten */
+	color: black;
 }
- .badge-grade-3 {
-     background-color: #FF8A65;
-    /* deep orange lighten */
-     color: white;
+
+.badge-grade-3 {
+	background-color: #FF8A65;
+	/* deep orange lighten */
+	color: white;
 }
- .badge-grade-4 {
-     background-color: #E57373;
-    /* red lighten */
-     color: white;
+
+.badge-grade-4 {
+	background-color: #E57373;
+	/* red lighten */
+	color: white;
 }
+
 /* Special Mechanics */
- .badge-stride {
-     background-color: #7E57C2;
-    /* deep purple lighten */
-     color: white;
+.badge-stride {
+	background-color: #7E57C2;
+	/* deep purple lighten */
+	color: white;
 }
- .badge-imaginary-gift {
-     background-color: #81D4FA;
-    /* light blue lighten */
-     color: black;
+
+.badge-imaginary-gift {
+	background-color: #81D4FA;
+	/* light blue lighten */
+	color: black;
 }
- .badge-overdress {
-     background-color: #F06292;
-    /* pink lighten */
-     color: white;
+
+.badge-overdress {
+	background-color: #F06292;
+	/* pink lighten */
+	color: white;
 }
- .badge-persona-ride {
-     background-color: #26A69A;
-    /* teal lighten */
-     color: white;
+
+.badge-persona-ride {
+	background-color: #26A69A;
+	/* teal lighten */
+	color: white;
 }
+
 /* Nations */
- .badge-nation-dragon-empire {
-     background-color: #D32F2F;
-    /* red darken */
-     color: white;
+.badge-nation-dragon-empire {
+	background-color: #D32F2F;
+	/* red darken */
+	color: white;
 }
- .badge-nation-dark-states {
-     background-color: #424242;
-    /* grey darken */
-     color: white;
+
+.badge-nation-dark-states {
+	background-color: #424242;
+	/* grey darken */
+	color: white;
 }
- .badge-nation-brandt-gate {
-     background-color: #F57C00;
-    /* orange darken */
-     color: white;
+
+.badge-nation-brandt-gate {
+	background-color: #F57C00;
+	/* orange darken */
+	color: white;
 }
- .badge-nation-keter-sanctuary {
-     background-color: #7B1FA2;
-    /* purple darken */
-     color: white;
+
+.badge-nation-keter-sanctuary {
+	background-color: #7B1FA2;
+	/* purple darken */
+	color: white;
 }
- .badge-nation-stoicheia {
-     background-color: #00838F;
-    /* teal darken */
-     color: white;
+
+.badge-nation-stoicheia {
+	background-color: #00838F;
+	/* teal darken */
+	color: white;
 }
- .badge-nation-lyrical-monasterio {
-     background-color: #1565C0;
-    /* blue darken */
-     color: white;
+
+.badge-nation-lyrical-monasterio {
+	background-color: #1565C0;
+	/* blue darken */
+	color: white;
 }
+
 /* Clans */
- .badge-clan-royal-paladin {
-     background-color: #1976D2;
-    /* royal blue */
-     color: white;
+.badge-clan-royal-paladin {
+	background-color: #1976D2;
+	/* royal blue */
+	color: white;
 }
- .badge-clan-kagero {
-     background-color: #C62828;
-    /* red darken */
-     color: white;
+
+.badge-clan-kagero {
+	background-color: #C62828;
+	/* red darken */
+	color: white;
 }
- .badge-clan-aqua-force {
-     background-color: #4FC3F7;
-    /* light blue */
-     color: black;
+
+.badge-clan-aqua-force {
+	background-color: #4FC3F7;
+	/* light blue */
+	color: black;
 }
- .badge-clan-shadow-paladin {
-     background-color: #4527A0;
-    /* indigo darken */
-     color: white;
+
+.badge-clan-shadow-paladin {
+	background-color: #4527A0;
+	/* indigo darken */
+	color: white;
 }
- .badge-clan-genesis {
-     background-color: #6A1B9A;
-    /* purple darken */
-     color: white;
+
+.badge-clan-genesis {
+	background-color: #6A1B9A;
+	/* purple darken */
+	color: white;
 }
- .badge-clan-gold-paladin {
-     background-color: #F9A825;
-    /* gold darken */
-     color: black;
+
+.badge-clan-gold-paladin {
+	background-color: #F9A825;
+	/* gold darken */
+	color: black;
 }
- .badge-clan-oracle-think-tank {
-     background-color: #2E7D32;
-    /* green darken */
-     color: white;
+
+.badge-clan-oracle-think-tank {
+	background-color: #2E7D32;
+	/* green darken */
+	color: white;
 }
- .badge-clan-dark-irregulars {
-     background-color: #212121;
-    /* almost black */
-     color: white;
+
+.badge-clan-dark-irregulars {
+	background-color: #212121;
+	/* almost black */
+	color: white;
 }
- .badge-clan-narukami {
-     background-color: #FFA000;
-    /* amber darken */
-     color: black;
+
+.badge-clan-narukami {
+	background-color: #FFA000;
+	/* amber darken */
+	color: black;
 }
- .badge-clan-bermuda-triangle {
-     background-color: #E91E63;
-    /* pink darken */
-     color: white;
+
+.badge-clan-bermuda-triangle {
+	background-color: #E91E63;
+	/* pink darken */
+	color: white;
 }
- .badge-clan-great-nature {
-     background-color: #7CB342;
-    /* light green */
-     color: white;
+
+.badge-clan-great-nature {
+	background-color: #7CB342;
+	/* light green */
+	color: white;
 }
- .badge-clan-neo-nectar {
-     background-color: #388E3C;
-    /* green darken */
-     color: white;
+
+.badge-clan-neo-nectar {
+	background-color: #388E3C;
+	/* green darken */
+	color: white;
 }
- .badge-clan-megacolony {
-     background-color: #F4511E;
-    /* orange darken */
-     color: white;
+
+.badge-clan-megacolony {
+	background-color: #F4511E;
+	/* orange darken */
+	color: white;
 }
- .badge-clan-granblue {
-     background-color: #42A5F5;
-    /* sky blue */
-     color: white;
+
+.badge-clan-granblue {
+	background-color: #42A5F5;
+	/* sky blue */
+	color: white;
 }
- .badge-clan-dimension-police {
-     background-color: #0D47A1;
-    /* blue darken */
-     color: white;
+
+.badge-clan-dimension-police {
+	background-color: #0D47A1;
+	/* blue darken */
+	color: white;
 }
- .badge-clan-spike-brothers {
-     background-color: #FF6F00;
-    /* orange */
-     color: white;
+
+.badge-clan-spike-brothers {
+	background-color: #FF6F00;
+	/* orange */
+	color: white;
 }
- .badge-clan-angel-feather {
-     background-color: #EC407A;
-    /* pink lighten */
-     color: white;
+
+.badge-clan-angel-feather {
+	background-color: #EC407A;
+	/* pink lighten */
+	color: white;
 }
- .badge-clan-nubatama {
-     background-color: #5D4037;
-    /* brown darken */
-     color: white;
+
+.badge-clan-nubatama {
+	background-color: #5D4037;
+	/* brown darken */
+	color: white;
 }
- .badge-clan-link-joker {
-     background-color: #455A64;
-    /* blue-grey darken */
-     color: white;
+
+.badge-clan-link-joker {
+	background-color: #455A64;
+	/* blue-grey darken */
+	color: white;
 }
- .badge-clan-tachikaze {
-     background-color: #D84315;
-    /* red-orange darken */
-     color: white;
+
+.badge-clan-tachikaze {
+	background-color: #D84315;
+	/* red-orange darken */
+	color: white;
 }
- .badge-clan-pale-moon {
-     background-color: #6A1B9A;
-    /* deep purple */
-     color: white;
+
+.badge-clan-pale-moon {
+	background-color: #6A1B9A;
+	/* deep purple */
+	color: white;
 }
- .badge-clan-murakumo {
-     background-color: #4E342E;
-    /* earthy brown */
-     color: white;
+
+.badge-clan-murakumo {
+	background-color: #4E342E;
+	/* earthy brown */
+	color: white;
 }
- .badge-clan-nova-grappler {
-     background-color: #0288D1;
-    /* electric blue */
-     color: white;
+
+.badge-clan-nova-grappler {
+	background-color: #0288D1;
+	/* electric blue */
+	color: white;
 }
- .badge-clan-gear-chronicle {
-     background-color: #8D6E63;
-    /* steampunk bronze */
-     color: white;
+
+.badge-clan-gear-chronicle {
+	background-color: #8D6E63;
+	/* steampunk bronze */
+	color: white;
 }
- .badge-clan-cray-elemental {
-     background-color: #B2DFDB;
-    /* ethereal teal */
-     color: black;
+
+.badge-clan-cray-elemental {
+	background-color: #B2DFDB;
+	/* ethereal teal */
+	color: black;
 }
+
 /* ============================= Race Badge Styles ============================= */
- .badge-race-human {
-     background-color: #90A4AE;
-    /* blue-grey lighten */
-     color: white;
+.badge-race-human {
+	background-color: #90A4AE;
+	/* blue-grey lighten */
+	color: white;
 }
- .badge-race-beast-deity {
-     background-color: #FFC107;
-    /* amber */
-     color: black;
+
+.badge-race-beast-deity {
+	background-color: #FFC107;
+	/* amber */
+	color: black;
 }
- .badge-race-beast {
-     background-color: #8BC34A;
-    /* light green */
-     color: black;
+
+.badge-race-beast {
+	background-color: #8BC34A;
+	/* light green */
+	color: black;
 }
- .badge-race-machine-deity {
-     background-color: #ECEFF1;
-    /* grey lighten */
-     color: black;
+
+.badge-race-machine-deity {
+	background-color: #ECEFF1;
+	/* grey lighten */
+	color: black;
 }
- .badge-race-machine {
-     background-color: #78909C;
-    /* blue-grey darken */
-     color: white;
+
+.badge-race-machine {
+	background-color: #78909C;
+	/* blue-grey darken */
+	color: white;
 }
- .badge-race-angel {
-     background-color: #E1F5FE;
-    /* light blue lighten */
-     color: black;
+
+.badge-race-angel {
+	background-color: #E1F5FE;
+	/* light blue lighten */
+	color: black;
 }
- .badge-race-demon {
-     background-color: #E53935;
-    /* red darken */
-     color: white;
+
+.badge-race-demon {
+	background-color: #E53935;
+	/* red darken */
+	color: white;
 }
- .badge-race-succubus {
-     background-color: #EC407A;
-    /* pink lighten */
-     color: white;
+
+.badge-race-succubus {
+	background-color: #EC407A;
+	/* pink lighten */
+	color: white;
 }
- .badge-race-vampire {
-     background-color: #6A1B9A;
-    /* purple darken */
-     color: white;
+
+.badge-race-vampire {
+	background-color: #6A1B9A;
+	/* purple darken */
+	color: white;
 }
- .badge-race-dragon {
-     background-color: #EF6C00;
-    /* deep orange */
-     color: white;
+
+.badge-race-dragon {
+	background-color: #EF6C00;
+	/* deep orange */
+	color: white;
 }
- .badge-race-undead {
-     background-color: #455A64;
-    /* blue-grey darken */
-     color: white;
+
+.badge-race-undead {
+	background-color: #455A64;
+	/* blue-grey darken */
+	color: white;
 }
- .badge-race-psychic {
-     background-color: #7E57C2;
-    /* deep purple lighten */
-     color: white;
+
+.badge-race-psychic {
+	background-color: #7E57C2;
+	/* deep purple lighten */
+	color: white;
 }
- .badge-race-mermaid {
-     background-color: #00ACC1;
-    /* cyan darken */
-     color: white;
+
+.badge-race-mermaid {
+	background-color: #00ACC1;
+	/* cyan darken */
+	color: white;
 }
- .badge-race-elf {
-     background-color: #4CAF50;
-    /* green */
-     color: white;
+
+.badge-race-elf {
+	background-color: #4CAF50;
+	/* green */
+	color: white;
 }
- .badge-race-quintuplet {
-     background-color: #F48FB1;
-    /* pink lighten */
-     color: white;
+
+.badge-race-quintuplet {
+	background-color: #F48FB1;
+	/* pink lighten */
+	color: white;
 }
- .badge-race-dragoroid {
-     background-color: #673AB7;
-    /* deep purple */
-     color: white;
+
+.badge-race-dragoroid {
+	background-color: #673AB7;
+	/* deep purple */
+	color: white;
 }
- .badge-race-ghost {
-     background-color: #B0BEC5;
-    /* misty gray-blue */
-     color: white;
-    /* spectral white */
+
+.badge-race-ghost {
+	background-color: #B0BEC5;
+	/* misty gray-blue */
+	color: white;
+	/* spectral white */
 }
- .badge-race-bioroid {
-     background-color: #00796B;
-     color: white;
+
+.badge-race-bioroid {
+	background-color: #00796B;
+	color: white;
 }
- .badge-race-battleroid {
-     background-color: #37474F;
-     color: white;
+
+.badge-race-battleroid {
+	background-color: #37474F;
+	color: white;
 }
- .badge-race-workeroid {
-     background-color: #546E7A;
-     color: white;
+
+.badge-race-workeroid {
+	background-color: #546E7A;
+	color: white;
 }
- .badge-race-cyberoid {
-     background-color: #283593;
-     color: white;
+
+.badge-race-cyberoid {
+	background-color: #283593;
+	color: white;
 }
- .badge-race-cyberDragon {
-     background-color: #3F51B5;
-     color: white;
+
+.badge-race-cyberDragon {
+	background-color: #3F51B5;
+	color: white;
 }
- .badge-race-cyberBeast {
-     background-color: #5C6BC0;
-     color: white;
+
+.badge-race-cyberBeast {
+	background-color: #5C6BC0;
+	color: white;
 }
- .badge-race-cyberFairy {
-     background-color: #7986CB;
-     color: white;
+
+.badge-race-cyberFairy {
+	background-color: #7986CB;
+	color: white;
 }
- .badge-race-cyberGolem {
-     background-color: #1A237E;
-     color: white;
+
+.badge-race-cyberGolem {
+	background-color: #1A237E;
+	color: white;
 }
- .badge-race-gearoid {
-     background-color: #4E342E;
-     color: white;
+
+.badge-race-gearoid {
+	background-color: #4E342E;
+	color: white;
 }
- .badge-race-gearBeast {
-     background-color: #6D4C41;
-     color: white;
+
+.badge-race-gearBeast {
+	background-color: #6D4C41;
+	color: white;
 }
- .badge-race-gearDragon {
-     background-color: #8D6E63;
-     color: white;
+
+.badge-race-gearDragon {
+	background-color: #8D6E63;
+	color: white;
 }
- .badge-race-gearColossus {
-     background-color: #A1887F;
-     color: white;
+
+.badge-race-gearColossus {
+	background-color: #A1887F;
+	color: white;
 }
- .badge-race-dryad {
-     background-color: #388E3C;
-     color: white;
+
+.badge-race-dryad {
+	background-color: #388E3C;
+	color: white;
 }
- .badge-race-elemental {
-     background-color: #EF6C00;
-     color: white;
+
+.badge-race-elemental {
+	background-color: #EF6C00;
+	color: white;
 }
- .badge-race-gnome {
-     background-color: #689F38;
-     color: white;
+
+.badge-race-gnome {
+	background-color: #689F38;
+	color: white;
 }
- .badge-race-sylph {
-     background-color: #43A047;
-     color: white;
+
+.badge-race-sylph {
+	background-color: #43A047;
+	color: white;
 }
- .badge-race-goblin {
-     background-color: #33691E;
-     color: white;
+
+.badge-race-goblin {
+	background-color: #33691E;
+	color: white;
 }
- .badge-race-ogre {
-     background-color: #B71C1C;
-     color: white;
+
+.badge-race-ogre {
+	background-color: #B71C1C;
+	color: white;
 }
- .badge-race-chimera {
-     background-color: #E65100;
-     color: white;
+
+.badge-race-chimera {
+	background-color: #E65100;
+	color: white;
 }
- .badge-race-skeleton {
-     background-color: #757575;
-     color: white;
+
+.badge-race-skeleton {
+	background-color: #757575;
+	color: white;
 }
- .badge-race-zombie {
-     background-color: #607D8B;
-     color: white;
+
+.badge-race-zombie {
+	background-color: #607D8B;
+	color: white;
 }
- .badge-race-kraken {
-     background-color: #4527A0;
-     color: white;
+
+.badge-race-kraken {
+	background-color: #4527A0;
+	color: white;
 }
- .badge-race-alien {
-     background-color: #00838F;
-     color: white;
+
+.badge-race-alien {
+	background-color: #00838F;
+	color: white;
 }
- .badge-race-angelroid {
-     background-color: #FBC02D;
-     color: white;
+
+.badge-race-angelroid {
+	background-color: #FBC02D;
+	color: white;
 }
- .badge-race-demonLord {
-     background-color: #C62828;
-     color: white;
+
+.badge-race-demonLord {
+	background-color: #C62828;
+	color: white;
 }
- .badge-race-astralDeity {
-     background-color: #9C27B0;
-     color: white;
+
+.badge-race-astralDeity {
+	background-color: #9C27B0;
+	color: white;
 }
- .badge-race-astralPoet {
-     background-color: #7B1FA2;
-     color: white;
+
+.badge-race-astralPoet {
+	background-color: #7B1FA2;
+	color: white;
 }
- .badge-race-maskOfDomination {
-     background-color: #212121;
-     color: white;
+
+.badge-race-maskOfDomination {
+	background-color: #212121;
+	color: white;
 }
- .badge-race-shadowArmy {
-     background-color: #263238;
-     color: white;
+
+.badge-race-shadowArmy {
+	background-color: #263238;
+	color: white;
 }
- .badge-race-valkyrie {
-     background-color: #C2185B;
-     color: white;
+
+.badge-race-valkyrie {
+	background-color: #C2185B;
+	color: white;
 }
- .badge-race-hero {
-     background-color: #FF8F00;
-     color: white;
+
+.badge-race-hero {
+	background-color: #FF8F00;
+	color: white;
 }
- .badge-race-noble {
-     background-color: #9E9E9E;
-     color: white;
+
+.badge-race-noble {
+	background-color: #9E9E9E;
+	color: white;
 }
- .badge-race-royalBeast {
-     background-color: #F57C00;
-     color: white;
+
+.badge-race-royalBeast {
+	background-color: #F57C00;
+	color: white;
 }
- .badge-race-warBeast {
-     background-color: #D84315;
-     color: white;
+
+.badge-race-warBeast {
+	background-color: #D84315;
+	color: white;
 }
- .badge-race-highBeast {
-     background-color: #AFB42B;
-     color: white;
+
+.badge-race-highBeast {
+	background-color: #AFB42B;
+	color: white;
 }
- .badge-race-zodiacTimeBeast {
-     background-color: #0097A7;
-     color: white;
+
+.badge-race-zodiacTimeBeast {
+	background-color: #0097A7;
+	color: white;
 }
- .badge-race-zerothDragon {
-     background-color: #D50000;
-     color: white;
+
+.badge-race-zerothDragon {
+	background-color: #D50000;
+	color: white;
 }
- 

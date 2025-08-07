@@ -1,77 +1,94 @@
 /* Beige group */
 .badge-type-toon {
-     background-color: beige;
-     color: black;
+	background-color: beige;
+	color: black;
 }
+
 /* Purple group */
- .badge-type-continuous, .badge-type-counter {
-     background-color: purple;
-     color: white;
+.badge-type-continuous,
+.badge-type-counter {
+	background-color: purple;
+	color: white;
 }
+
 /* CXYZ */
- .badge-type-cxyz {
-     background-color: black;
-     color: yellow;
+.badge-type-cxyz {
+	background-color: black;
+	color: yellow;
 }
+
 /* Effect */
- .badge-type-effect {
-     background-color: orange;
-     color: black;
+.badge-type-effect {
+	background-color: orange;
+	color: black;
 }
+
 /* Empty */
- .badge-type-empty {
-     background-color: lightcoral;
-     color: black;
+.badge-type-empty {
+	background-color: lightcoral;
+	color: black;
 }
+
 /* Equip, Quick-Play & Terrain */
- .badge-type-equip, .badge-type-quickplay, .badge-type-terrain {
-     background-color: darkcyan;
-     color: white;
+.badge-type-equip,
+.badge-type-quickplay,
+.badge-type-terrain {
+	background-color: darkcyan;
+	color: white;
 }
+
 /* Fake */
- .badge-type-fake {
-     background-color: red;
-     color: white;
-     font-size: 1em;
+.badge-type-fake {
+	background-color: red;
+	color: white;
+	font-size: 1em;
 }
+
 /* Fusion */
- .badge-type-fusion {
-     background-color: plum;
-     color: black;
+.badge-type-fusion {
+	background-color: plum;
+	color: black;
 }
+
 /* Link */
- .badge-type-link {
-     background-color: cornflowerblue;
-     color: white;
+.badge-type-link {
+	background-color: cornflowerblue;
+	color: white;
 }
+
 /* Normal */
- .badge-type-normal {
-     background-color: gainsboro;
-     color: black;
+.badge-type-normal {
+	background-color: gainsboro;
+	color: black;
 }
+
 /* Pendulum */
- .badge-type-pendulum {
-     background-color: darkkhaki;
-     color: black;
+.badge-type-pendulum {
+	background-color: darkkhaki;
+	color: black;
 }
+
 /* Ritual */
- .badge-type-ritual {
-     background-color: paleturquoise;
-     color: black;
+.badge-type-ritual {
+	background-color: paleturquoise;
+	color: black;
 }
+
 /* Synchro & Tuner */
- .badge-type-synchro, .badge-type-tuner {
-     background-color: silver;
-     color: black;
+.badge-type-synchro,
+.badge-type-tuner {
+	background-color: silver;
+	color: black;
 }
+
 /* Vanilla */
- .badge-type-vanilla {
-     background-color: bisque;
-     color: black;
+.badge-type-vanilla {
+	background-color: bisque;
+	color: black;
 }
+
 /* XYZ */
- .badge-type-xyz {
-     background-color: black;
-     color: white;
+.badge-type-xyz {
+	background-color: black;
+	color: white;
 }
- 

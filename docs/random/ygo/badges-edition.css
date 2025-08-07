@@ -1,26 +1,29 @@
 :root {
-     --edition-color-default: white;
-     --edition-color-0: gold;
+	--edition-color-default: var(--bg-color) !important;
+	--edition-color-0: gold;
 }
+
 .edition-badge {
-     display: inline-block;
-     background-color: black;
-     color: white;
-     border-radius: 50%;
-     width: 20px;
-     height: 20px;
-     text-align: center;
-     line-height: 20px;
-     font-size: 0.8em;
-     margin-left: 4px;
+	display: inline-block;
+	background-color: var(--text-color) !important;
+	color: var(--bg-color) !important;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+	text-align: center;
+	line-height: 20px;
+	font-size: 0.8em;
+	margin-left: 4px;
 }
+
 .edition-badge-0 {
-     color: var(--edition-color-0);
+	color: var(--edition-color-0);
 }
+
 .edition-badge-2 {
-     color: var(--edition-color-default);
+	color: var(--edition-color-default);
 }
+
 .edition-badge-3 {
-     color: var(--edition-color-default);
+	color: var(--edition-color-default);
 }
- 

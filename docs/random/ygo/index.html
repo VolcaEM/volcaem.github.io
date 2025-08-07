@@ -11,75 +11,76 @@
    <body>
       <header>
          <h1 data-translation-key="collectionheader"></h1>
-      </header>
-      <p id="detectedgame" style="text-align: center;"></p>
-      <!-- Filter Section -->
-      <section id="filters">
-         <div class="topmenu">
-            <input type="text" id="filterName" class="textboxinput" placeholder="" data-translation-key="filterNamePlaceholder">
-            <select id="filterType">
-            </select>
-            <select id="filterRarity">
-            </select>
-            <select id="filterQuality">
-               <option value="" data-translation-key="qualityAll"></option>
-               <option value="Mint" data-translation-key="mint"></option>
-               <option value="Near Mint" data-translation-key="nearmint"></option>
-               <option value="Slightly Played" data-translation-key="slightlyplayed"></option>
-               <option value="Moderately Played" data-translation-key="moderatelyplayed"></option>
-               <option value="Played" data-translation-key="played"></option>
-               <option value="Poor" data-translation-key="poor"></option>
-               <option value="Unknown (good)" data-translation-key="unknowngood"></option>
-               <option value="Unknown (bad)" data-translation-key="unknownbad"></option>
-            </select>
-            <select id="filterLanguage">
-               <option value="" data-translation-key="languageAll"></option>
-               <option value="IT" data-translation-key="IT"></option>
-               <option value="EN" data-translation-key="EN"></option>
-               <option value="JP" data-translation-key="JP"></option>
-               <option value="DE" data-translation-key="DE"></option>
-               <option value="ES" data-translation-key="ES"></option>
-               <option value="FR" data-translation-key="FR"></option>
-            </select>
-            <select id="filterEdition">
-               <option value="" data-translation-key="editionAll"></option>
-               <option value="First Edition" data-translation-key="firstedition"></option>
-               <option value="Limited Edition" data-translation-key="limitededition"></option>
-               <option value="Standard Edition" data-translation-key="standardedition"></option>
-            </select>
-            <select id="sortBy">
-               <!-- <option value="" data-translation-key="sortNone"></option> -->
-               <option value="name" data-translation-key="sortName"></option>
-               <option value="type" data-translation-key="sortType"></option>
-               <option value="rarity" data-translation-key="sortRarity"></option>
-               <option value="condition" data-translation-key="sortCondition"></option>
-               <option value="language" data-translation-key="sortLanguage"></option>
-               <option value="edition" data-translation-key="sortEdition"></option>
-               <option value="pricePaid" data-translation-key="sortPricePaid"></option>
-               <option value="marketPrice" data-translation-key="sortMarketPrice"></option>
-               <option value="stonks" data-translation-key="sortStonks"></option>
-               <option value="Id" data-translation-key="sortId"></option>
-               <option value="dateObtained" data-translation-key="sortDateObtained"></option>
-               <option value="location" data-translation-key="sortLocation"></option>
-               <option value="comments" data-translation-key="sortComments"></option>
-            </select>
-            <div class="break"></div>
-            <div class="bottommenu">
-               <button id="loadCSV" class="topbutton" style="display:none;" data-translation-key="loadcsv"></button>
-               <label data-translation-key="pageLanguage"></label>
-               <select id="selectedLanguage">
-                  <option value="EN" data-translation-key="EN"></option>
-                  <option value="IT" data-translation-key="IT"></option>
+         <p id="detectedgame" style="text-align: center;"></p>
+         <!-- Filter Section -->
+         <section id="filters">
+            <div class="topmenu">
+               <input type="text" id="filterName" class="textboxinput" placeholder="" data-translation-key="filterNamePlaceholder">
+               <select id="filterType">
                </select>
-               <button id="applyFilters" class="topbutton" data-translation-key="applyFilters"></button>
-               <button id="reverseOrder" class="topbutton" data-translation-key="reverseOrder"></button>
-               <span id="debugControl">
-               <input type="checkbox" id="debugCheckbox"> <span data-translation-key="showDebug"></span>
-               </span>
-               <span id="resultCount"></span>
+               <select id="filterRarity">
+               </select>
+               <select id="filterQuality">
+                  <option value="" data-translation-key="qualityAll"></option>
+                  <option value="Mint" data-translation-key="mint"></option>
+                  <option value="Near Mint" data-translation-key="nearmint"></option>
+                  <option value="Slightly Played" data-translation-key="slightlyplayed"></option>
+                  <option value="Moderately Played" data-translation-key="moderatelyplayed"></option>
+                  <option value="Played" data-translation-key="played"></option>
+                  <option value="Poor" data-translation-key="poor"></option>
+                  <option value="Unknown (good)" data-translation-key="unknowngood"></option>
+                  <option value="Unknown (bad)" data-translation-key="unknownbad"></option>
+               </select>
+               <select id="filterLanguage">
+                  <option value="" data-translation-key="languageAll"></option>
+                  <option value="IT" data-translation-key="IT"></option>
+                  <option value="EN" data-translation-key="EN"></option>
+                  <option value="JP" data-translation-key="JP"></option>
+                  <option value="DE" data-translation-key="DE"></option>
+                  <option value="ES" data-translation-key="ES"></option>
+                  <option value="FR" data-translation-key="FR"></option>
+               </select>
+               <select id="filterEdition">
+                  <option value="" data-translation-key="editionAll"></option>
+                  <option value="First Edition" data-translation-key="firstedition"></option>
+                  <option value="Limited Edition" data-translation-key="limitededition"></option>
+                  <option value="Standard Edition" data-translation-key="standardedition"></option>
+               </select>
+               <select id="sortBy">
+                  <!-- <option value="" data-translation-key="sortNone"></option> -->
+                  <option value="name" data-translation-key="sortName"></option>
+                  <option value="type" data-translation-key="sortType"></option>
+                  <option value="rarity" data-translation-key="sortRarity"></option>
+                  <option value="condition" data-translation-key="sortCondition"></option>
+                  <option value="language" data-translation-key="sortLanguage"></option>
+                  <option value="edition" data-translation-key="sortEdition"></option>
+                  <option value="pricePaid" data-translation-key="sortPricePaid"></option>
+                  <option value="marketPrice" data-translation-key="sortMarketPrice"></option>
+                  <option value="stonks" data-translation-key="sortStonks"></option>
+                  <option value="Id" data-translation-key="sortId"></option>
+                  <option value="dateObtained" data-translation-key="sortDateObtained"></option>
+                  <option value="location" data-translation-key="sortLocation"></option>
+                  <option value="comments" data-translation-key="sortComments"></option>
+               </select>
+               <div class="break"></div>
+               <div class="bottommenu">
+                  <button id="loadCSV" class="topbutton" style="display:none;" data-translation-key="loadcsv"></button>
+                  <label data-translation-key="pageLanguage"></label>
+                  <select id="selectedLanguage">
+                     <option value="EN" data-translation-key="EN"></option>
+                     <option value="IT" data-translation-key="IT"></option>
+                  </select>
+                  <button id="applyFilters" class="topbutton" data-translation-key="applyFilters"></button>
+                  <button id="reverseOrder" class="topbutton" data-translation-key="reverseOrder"></button>
+                  <button id="theme-toggle" class="topbutton">✨ 🔜</button>
+                  <span id="debugControl">
+                  <input type="checkbox" id="debugCheckbox"> <span data-translation-key="showDebug"></span>
+                  </span>
+                  <span id="resultCount"></span>
+               </div>
             </div>
-         </div>
-      </section>
+         </section>
+      </header>
       <!-- Table Headers -->
       <table>
          <thead>
@@ -133,20 +134,9 @@
          <br>
       </div>
       <script type="module">
-         // Import functions from your common and translation modules
-         import { langIndex, localMode } from "./config.js";
-         import { initCollectionPage } from "./common.js";
-         import { applyTranslations } from "./translations.js";
+         import { doInit } from "./common.js";
          
-         if(localMode === false) {
-			 let csvload = document.getElementById("loadCSV");
-			 csvload.style.display = "block";
-         }
-         
-         initCollectionPage();
-         
-         // Apply translations using the selected language.
-         applyTranslations(langIndex);
+         window.addEventListener("DOMContentLoaded", doInit);
       </script>
       <!-- NEW: Reusable full-image overlay element -->
       <div id="fullImageOverlay">

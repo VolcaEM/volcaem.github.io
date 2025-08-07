@@ -235,9 +235,14 @@ export function initCardDetailsPage(myfile) {
     }
 }
 
+export function updateThemeButtonLabel(mybutton, theme) {
+    console.log("Updating theme button label to " + theme);
+    mybutton.textContent =
+        theme === "dark" ? "✨ ☀️" : "✨ 🌑";
+    console.log("toggleBtn.textContent is now: " + mybutton.textContent);
+}
 
 export function initCollectionPage() {
-
     resetFilters();
 
     if (allowNewlines === false) {
@@ -245,9 +250,7 @@ export function initCollectionPage() {
     }
 
     if (localMode) {
-        document.addEventListener("DOMContentLoaded", () => {
-            loadCSVAndDisplayCards('cards.csv');
-        });
+        loadCSVAndDisplayCards('cards.csv');
     }
 
     const applyFiltersBtn = document.getElementById("applyFilters");
@@ -259,11 +262,8 @@ export function initCollectionPage() {
     const reverseBtn = document.getElementById("reverseOrder");
     if (reverseBtn) {
         reverseBtn.addEventListener("click", () => {
-            if (!loadedFile) {
-                return;
-            }
+            if (!loadedFile) return;
             if (currentDisplayedCards && currentDisplayedCards.length) {
-                // Reverse the order in-place and re-display.
                 reverseCurrentDisplayedCards();
                 displayCards(currentDisplayedCards);
             }
@@ -273,36 +273,20 @@ export function initCollectionPage() {
     if (!localMode) {
         const loadCSVButton = document.getElementById("loadCSV");
         if (loadCSVButton) {
-            //console.log("OK");
             const fileInput = document.createElement("input");
             fileInput.type = "file";
-            fileInput.accept = ".csv"; // only CSV files
-            fileInput.style.display = "none"; // hide it
-            // Why?
-            //document.body.appendChild(fileInput);
-            loadCSVButton.addEventListener("click", () => {
-                fileInput.click();
-                //console.log("Clicked");
-            });
-            // Listen for changes to the file input (i.e. when a file is selected)
+            fileInput.accept = ".csv";
+            fileInput.style.display = "none";
+            loadCSVButton.addEventListener("click", () => fileInput.click());
             fileInput.addEventListener("change", () => {
-                //console.log("Changed");
-                // Check if a file was selected; if not, show an alert and exit
                 if (!fileInput.files || fileInput.files.length === 0) {
                     alert("You must select a CSV file!");
                     return;
                 }
-
-                // Get the selected file (note: full file path is not available)
-
                 const file = fileInput.files[0];
-                //console.log("Loading file: " + file.name);
                 const fileURL = URL.createObjectURL(file);
                 loadCSVAndDisplayCards(fileURL);
-
             });
-        } else {
-            //console.log("LoadCSV button is null!");
         }
     }
 
@@ -315,4 +299,43 @@ export function initCollectionPage() {
         });
     }
 
+    const root = document.documentElement;
+    const toggleBtn = document.getElementById("theme-toggle");
+
+    // Read stored theme, default to light
+    const storedTheme = localStorage.getItem("theme") || "light";
+    console.log("Initializing theme:", storedTheme);
+    root.setAttribute("data-theme", storedTheme);
+}
+
+export function doInit() {
+    if (localMode === false) {
+        let csvload = document.getElementById("loadCSV");
+        csvload.style.display = "block";
+    }
+
+    initCollectionPage();
+
+    // Apply translations using the selected language.
+    applyTranslations(langIndex);
+
+    const toggleBtn = document.getElementById("theme-toggle");
+
+    if (!toggleBtn) {
+        console.warn("#theme-toggle button not found.");
+        return;
+    }
+
+    const storedTheme = localStorage.getItem("theme") || "light";
+    updateThemeButtonLabel(toggleBtn, storedTheme);
+
+    toggleBtn.addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme");
+        const nextTheme = current === "dark" ? "light" : "dark";
+        console.log("Switching theme:", current, "→", nextTheme);
+
+        document.documentElement.setAttribute("data-theme", nextTheme);
+        localStorage.setItem("theme", nextTheme);
+        updateThemeButtonLabel(toggleBtn, nextTheme);
+    });
 }

@@ -23,7 +23,8 @@ export const gameDetectors = {
     "Yu-Gi-Oh": /\b(Monster|Spell|Trap)\b/i,
     "Pokémon": /\b(Pokémon|Pokemon|Base|Stage|GX|V|EX|Trainer|Energy)\b/i,
     "Vanguard": /\b(Grade\s?[0-4]|Unit|Trigger|G-Unit|G-Guardian|Stride|Order|Guard(ian)?|Imaginary Gift|Overdress|Persona Ride)\b/i,
-    "Digimon": /\b(Digimon|Digi[- ]Egg|Tamer|Option|Token)\b/i
+    "Digimon": /\b(Digimon|Digi[- ]Egg|Tamer|Option|Token)\b/i,
+    "Magic: The Gathering": /\b(MTG|Magic:?\s*The\s*Gathering|Creature|Enchant\s+Creature|Enchantment|Artifact|Planeswalker|Land(?:\s+Base)?|Instant|Sorcery|Legendary|Saga|Commander)\b/i
 };
 
 export function loadGameTranslations(game) {

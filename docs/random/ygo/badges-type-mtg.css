@@ -1,0 +1,102 @@
+/* === CARD TYPES === */
+
+/* Green group: Creatures & Commander */
+.badge-type-creature,
+.badge-type-commander {
+    background-color: darkseagreen;
+    color: black;
+}
+
+/* Blue group: Instants & Sorceries */
+.badge-type-instant,
+.badge-type-sorcery {
+    background-color: lightsteelblue;
+    color: black;
+}
+
+/* Purple group: Enchantments & Sagas */
+.badge-type-enchantment,
+.badge-type-saga {
+    background-color: mediumorchid;
+    color: white;
+}
+
+/* Gray group: Artifacts & Legendary */
+.badge-type-artifact,
+.badge-type-legendary {
+    background-color: dimgray;
+    color: white;
+}
+
+/* Gold group: Planeswalkers */
+.badge-type-planeswalker {
+    background-color: gold;
+    color: black;
+    font-weight: bold;
+}
+
+/* Brown group: Land */
+.badge-type-land {
+    background-color: burlywood;
+    color: black;
+}
+
+/* Teal group: Token */
+.badge-type-token {
+    background-color: lightseagreen;
+    color: white;
+}
+
+/* Coral group: None */
+.badge-type-none {
+    background-color: lightcoral;
+    color: black;
+}
+
+/* Enchantment Subtype: Aura */
+.badge-type-aura {
+    background-color: mediumpurple;
+    color: white;
+}
+
+
+/* === COLOR IDENTITY === */
+
+/* Mana-based color styling */
+.badge-color-white {
+    background-color: ghostwhite;
+    color: black;
+    border: 1px solid black;
+}
+
+.badge-color-blue {
+    background-color: dodgerblue;
+    color: white;
+}
+
+.badge-color-black {
+    background-color: black;
+    color: white;
+}
+
+.badge-color-red {
+    background-color: firebrick;
+    color: white;
+}
+
+.badge-color-green {
+    background-color: forestgreen;
+    color: white;
+}
+
+/* Multicolor — gradient flair */
+.badge-color-multicolor {
+    background: linear-gradient(to right, red, blue, green, white, black);
+    color: white;
+}
+
+/* Colorless — soft neutral */
+.badge-color-colorless {
+    background-color: lightgray;
+    color: black;
+}

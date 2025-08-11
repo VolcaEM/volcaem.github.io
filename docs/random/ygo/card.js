@@ -38,6 +38,11 @@ import {
     digimonRarityOptions,
 } from './digimon.js';
 
+import {
+    mtgFilterOptions,
+    mtgRarityOptions,
+} from './mtg.js';
+
 ////////////////////////////////
 // Card Classes
 ////////////////////////////////
@@ -129,6 +134,10 @@ export class CardManager {
                                 populateFilterTypeSelect(filterSelect, digimonFilterOptions, key => translations[langIndex][key]);
                                 populateFilterTypeSelect(filterRarity, digimonRarityOptions, key => translations[langIndex][key]);
                                 break;
+
+                            case "Magic: The Gathering":
+                                populateFilterTypeSelect(filterSelect, mtgFilterOptions, key => translations[langIndex][key]);
+                                populateFilterTypeSelect(filterRarity, mtgRarityOptions, key => translations[langIndex][key]);
 
                             default:
                                 console.warn(`Unsupported game: ${currentGame}`);

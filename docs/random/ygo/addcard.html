@@ -88,6 +88,7 @@
             <option value="pkm">Pokémon</option>
             <option value="vg">Cardfight Vanguard</option>
             <option value="digimon">Digimon</option>
+            <option value="mtg">Magic: The Gathering</option>
          </select>
       </div>
       <form id="cardForm" autocomplete="off">
@@ -132,6 +133,23 @@
             <select id="digimon_color"></select>
             <label for="digimon_trait">Trait:</label>
             <select id="digimon_trait"></select>
+         </div>
+         <!-- Magic: The Gathering Typing -->
+         <div id="mtgTypeWrapper" class="hidden">
+            <label for="mtg_type">Type:</label>
+            <select id="mtg_type"></select>
+         </div>
+         <!-- Magic: The Gathering Color Identity -->
+         <div id="mtgColorWrapper">
+            <label>Color Identity:</label>
+            <div id="mtgColors">
+               <label><input type="checkbox" id="mtg_white" />White</label>
+               <label><input type="checkbox" id="mtg_blue" />Blue</label>
+               <label><input type="checkbox" id="mtg_black" />Black</label>
+               <label><input type="checkbox" id="mtg_red" />Red</label>
+               <label><input type="checkbox" id="mtg_green" />Green</label>
+               <label><input type="checkbox" id="mtg_colorless" />Colorless</label>
+            </div>
          </div>
          <!-- (Generic) RARITY for CSV export -->
          <label for="rarity">Rarity:</label>
@@ -202,322 +220,386 @@
          placeholder="CSV line will appear here…"
          ></textarea>
       <script>
-         // ID lists loaded from TXT files
-         const idLists = {
-           ygo: [],
-           pkm: [],
-           vg: [],
-           digimon: []
-         };
-         
-         // Dynamic rarity options
-         const rarityLists = {
-           ygo: [
-				'Common', 'Rare', 'Super Rare', 'Ultra Rare',
-				'Secret Rare', 'Ghost Rare', "Collector's Rare",
-				'Ultimate Rare', 'Unknown', 'Fake'
-           ],
-           pkm: [
-				'Common', 'Uncommon', 'Rare', 'Holo Rare',
-				'Ultra Rare', 'Secret Rare', 'Unknown'
-           ],
-           vg: [
-				'Common', 'Rare', 'Double Rare', 'Triple Rare',
-				'Special Parallel', 'Special Rare', 'Super Rare',
-				'Unknown'
-           ],
-           digimon: [
-				'Common', 'Uncommon', 'Rare',
-				'Super Rare', 'Secret Rare',
-				'Promo', 'Parallel Art'
-           ]
-         };
-         
-         // Updated dynamic type lists for all games
-         const typeLists = {
-           ygo: [
-				"Monster (Vanilla)", "Monster (Effect)",
-				"Monster (Ritual)",
-				"Monster (Fusion)", "Monster (Synchro)", 
-				"Monster (XYZ)", "Monster (CXYZ)", "Monster (SXYZ)", "Monster (FXYZ)",
-				"Monster (Pendulum)", 
-				"Monster (Link-1)", "Monster (Link-2)", "Monster (Link-3)", "Monster (Link-4)", "Monster (Link-5)", "Monster (Link-6)",
-				"Spell (Normal)",
-				"Spell (Quick-Play)", "Spell (Continuous)", "Spell (Equip)", "Spell (Ritual)", "Spell (Terrain)", 
-				"Trap (Normal)", "Trap (Continuous)", "Trap (Counter)",
-				"Token"
-           ],
-         
-           pkmStage: [
-				"Pokémon - Base", "Pokémon - Stage 1",
-				"Pokémon - Stage 2", "Pokémon - Stage 3", "Pokémon - MEGA",
-				"Energy", "Special Energy", "Supporter", "Trainer",
-				"Item", "Stadium"
-           ],
-         
-           pkmType: [
-				"None", "Grass", "Fire", "Water",
-				"Lightning", "Psychic", "Fighting",
-				"Darkness", "Metal", "Dragon", "Fairy", "Colorless"
-           ],
-         
-           vgCardType: [
-				"Unit", "Trigger Unit", "G-Unit",
-				"G-Guardian", "Order", "Token"
-           ],
-         
-           vgRaces: [
-				"Human", "Angel", "Demon", "Elf",
-				"Succubus", "Vampire", "Dragoroid",
-				"Mermaid", "Quintuplet", "Cyberoid",
-				"Bioroid", "Warbeast", "Unknown"
-           ],
-         
-           vgClans: [
-				"Royal Paladin", "Kagero", "Aqua Force",
-				"Shadow Paladin", "Genesis", "Gold Paladin",
-				"Oracle Think Tank", "Dark Irregulars",
-				"Narukami", "Bermuda Triangle", "Great Nature",
-				"Neo Nectar", "Megacolony", "Granblue",
-				"Dimension Police", "Spike Brothers",
-				"Angel Feather", "Nubatama", "Link Joker",
-				"Tachikaze", "Unknown"
-           ],
-         
-           // Digimon-specific lists
-           digiCategory: [
-				'Digimon', 'Digi-Egg', 'Tamer',
-				'Option', 'Token'
-           ],
-           digiForm: [
-				'In-Training', 'Rookie',
-				'Champion', 'Ultimate', 'Mega', 'Unknown'
-           ],
-           digiColor: [
-				'Red', 'Blue', 'Yellow',
-				'Green', 'Black', 'Purple', 'White', 'Unknown'
-           ],
-           digiTrait: [
-				'CS', 'ACCEL', 'Unknown'
-           ]
-         };
-         
-         // Initialize: load ID files and setup UI
-         async function init() {
-           await Promise.all([
-             loadIds('ygo'),
-             loadIds('pkm'),
-             loadIds('vg'),
-             loadIds('digimon')
-           ]);
-           onGameChange();
-         }
-         
-         // Fetch .txt file into idLists[game]
-         async function loadIds(game) {
-           const urlMap = {
-             ygo: 'ygo_ids.txt',
-             pkm: 'pkm_ids.txt',
-             vg:  'vg_ids.txt',
-             digimon: 'digimon_ids.txt'
-           };
-           try {
-             const text = await fetch(urlMap[game]).then(r => r.text());
-             idLists[game] = text.split(/\r?\n/).filter(l => l.trim());
-           } catch (e) {
-             console.warn(`Failed to load ${urlMap[game]}`, e);
-           }
-         }
-         
-         // When game changes: toggle fields, repopulate everything
-         function onGameChange() {
-           const game = document.getElementById('gameSelect').value;
-         
-           // show/hide wrappers
-           document.getElementById('ygoTypeWrapper')
-             .classList.toggle('hidden', game !== 'ygo');
-           document.getElementById('pkmTypeWrapper')
-             .classList.toggle('hidden', game !== 'pkm');
-           document.getElementById('vgTypeWrapper')
-             .classList.toggle('hidden', game !== 'vg');
-           document.getElementById('digimonFiltersWrapper')
-             .classList.toggle('hidden', game !== 'digimon');
-         
-           // fill rarities, IDs & types
-           fillRarity(game);
-           fillIds(game);
-           fillTypeLists(game);
-         
-           // reset form & UI
-           document.getElementById('cardForm').reset();
-           document.getElementById('dateWrapper').classList.add('hidden');
-           document.getElementById('csvOutput').value = '';
-         }
-         
-         // Populate the Rarity dropdown (generic for CSV export)
-         function fillRarity(game) {
-           const sel = document.getElementById('rarity');
-           sel.innerHTML = '';
-           (rarityLists[game] || []).forEach(r => {
-             const o = document.createElement('option');
-             o.value = r;
-             o.textContent = r;
-             sel.appendChild(o);
-           });
-         }
-         
-         // Populate the Card ID datalist
-         function fillIds(game) {
-           const dl = document.getElementById('ids');
-           dl.innerHTML = '';
-           (idLists[game] || []).forEach(id => {
-             const o = document.createElement('option');
-             o.value = id.trim();
-             dl.appendChild(o);
-           });
-         }
-         
-         // Populate the various <select> elements for each game
-         function fillTypeLists(game) {
-           const fill = (id, arr) => {
-             const sel = document.getElementById(id);
-             sel.innerHTML = '';
-             arr.forEach(v => {
-               const o = document.createElement('option');
-               o.value = v;
-               o.textContent = v;
-               sel.appendChild(o);
-             });
-           };
-         
-           switch (game) {
-             case 'ygo':
-               fill('ygo_type', typeLists.ygo);
-               break;
-         
-             case 'pkm':
-               fill('pkm_stage', typeLists.pkmStage);
-               fill('pkm_type',  typeLists.pkmType);
-               break;
-         
-             case 'vg':
-               fill('vg_cardType', typeLists.vgCardType);
-               fill('vg_race',     typeLists.vgRaces);
-               fill('vg_clan',     typeLists.vgClans);
-               break;
-         
-             case 'digimon':
-               fill('digimon_category', typeLists.digiCategory);
-               fill('digimon_form',     typeLists.digiForm);
-               fill('digimon_color',    typeLists.digiColor);
-               fill('digimon_trait',    typeLists.digiTrait);
-               break;
-           }
-         }
-         
-         // Show or hide the date picker
-         function toggleDate() {
-           document.getElementById('dateWrapper')
-             .classList.toggle('hidden',
-               !document.getElementById('specifyDate').checked);
-         }
-         
-         // Helper to sanitize filenames
-         function sanitizeFileName(str) {
-           return str
-             .normalize('NFD')
-             .replace(/[\u0300-\u036f]/g, '')
-             .replace(/[\/\\:"#?%*|<>]/g, '')
-             .trim()
-             .replace(/\s+/g, '_')
-             .replace(/_+/g, '_');
-         }
-         
-         // Build and display the 15-column CSV line
-         function generateCSV() {
-           const G = id => (document.getElementById(id).value || '').trim();
-           const game = document.getElementById('gameSelect').value;
-           const name = G('name') || 'Unknown';
-         
-           let category = 'Unknown';
-           switch (game) {
-             case 'ygo':
-               category = G('ygo_type') || 'Unknown';
-               break;
-             case 'pkm':
-               category = G('pkm_stage') || 'Unknown';
-               if (category.includes('-')) {
-                 category = category.replace('- ', '(') + '/';
-               } else {
-                 category += ' (';
-               }
-               category += (G('pkm_type') || 'Unknown').replace('None', 'Normal');
-               if (category.includes('(')) category += ')';
-               break;
-             case 'vg':
-               const ct = G('vg_cardType') || 'Unknown';
-               const attrs = [ G('vg_race'), G('vg_clan'), G('vg_grade') ]
-                 .filter(x => x && x !== 'Unknown');
-               category = attrs.length ? `${ct}(${attrs.join('/')})` : ct;
-               break;
-             case 'digimon':
-               // build Digimon category with optional trait appended
-               const cat = G('digimon_category') || 'Unknown';
-               const trait = G('digimon_trait');
-               category = trait ? `${cat} (${trait})` : cat;
-               break;
-           }
-         
-           const rarity = G('rarity') || 'Unknown';
-           const quality = G('quality') || 'Unknown';
-           const lang = G('language') || 'Unknown';
-           const edition = G('editionType') || 'Unknown';
-           let price = 'Unknown';
-           const p = parseFloat(G('pricePaid'));
-           if (!isNaN(p)) price = p.toFixed(2);
-         
-           const cardId = (G('cardId').toUpperCase() || 'Unknown');
-           const pack = cardId.includes('-') ? cardId.split('-')[0] : 'Unknown';
-         
-           let date = '24/10/2006';
-           if (document.getElementById('specifyDate').checked) {
-             const [yy, mm, dd] = G('dateObtained').split('-');
-             date = `${dd}/${mm}/${yy}`;
-           }
-         
-           const location = G('location') || 'Unknown';
-           const comments = G('comments').replace(/\|/g, ' ') || '';
-           const idForFile = sanitizeFileName(cardId);
-         
-           // Photo & wiki URLs
-           let photo = '', wiki = '';
-           switch (game) {
-             case 'ygo':
-               photo = `images/cards/yugioh/${lang}/${idForFile}.png`;
-               wiki  = `https://yugipedia.com/wiki/${encodeURIComponent(cardId)}`;
-               break;
-             case 'pkm':
-               photo = `images/cards/pokemon/${lang}/${idForFile}.png`;
-               break;
-             case 'vg':
-               photo = `images/cards/vanguard/${lang}/${idForFile}.png`;
-               const slug = sanitizeFileName(name);
-               wiki = `https://cardfight.fandom.com/wiki/${slug}`;
-               break;
-             case 'digimon':
-               photo = `images/cards/digimon/${lang}/${idForFile}.png`;
-               wiki  = `https://digimoncardgame.fandom.com/wiki/${cardId}`;
-               break;
-           }
-         
-           const csv = [
-             name, category, rarity, quality, lang,
-             edition, price, '0.00', cardId, pack,
-             date, location, comments, photo, wiki
-           ].join('|');
-         
-           document.getElementById('csvOutput').value = csv;
-         }
+			// ID lists loaded from TXT files
+			const idLists = {
+				ygo: [],
+				pkm: [],
+				vg: [],
+				digimon: []
+			};
+
+			// Dynamic rarity options
+			const rarityLists = {
+				ygo: [
+					'Common', 'Rare', 'Super Rare', 'Ultra Rare',
+					'Secret Rare', 'Ghost Rare', "Collector's Rare",
+					'Ultimate Rare', 'Unknown', 'Fake'
+				],
+				pkm: [
+					'Common', 'Uncommon', 'Rare', 'Holo Rare',
+					'Ultra Rare', 'Secret Rare', 'Unknown'
+				],
+				vg: [
+					'Common', 'Rare', 'Double Rare', 'Triple Rare',
+					'Special Parallel', 'Special Rare', 'Super Rare',
+					'Unknown'
+				],
+				digimon: [
+					'Common', 'Uncommon', 'Rare',
+					'Super Rare', 'Secret Rare',
+					'Promo', 'Parallel Art'
+				],
+				mtg: [
+					"Common",
+					"Uncommon",
+					"Rare",
+					"Mythic Rare",
+					"Promo",
+					"Masterpiece",
+					"Special",
+					"Timeshifted",
+					"Bonus",
+					"Token",
+					"Unknown"
+				],
+			};
+
+			// Updated dynamic type lists for all games
+			const typeLists = {
+				ygo: [
+					"Monster (Vanilla)", "Monster (Effect)",
+					"Monster (Ritual)",
+					"Monster (Fusion)", "Monster (Synchro)",
+					"Monster (XYZ)", "- Monster (CXYZ)", "- Monster (SXYZ)", "- Monster (FXYZ)",
+					"Monster (Pendulum)",
+					"Monster (Link-1)", "- Monster (Link-2)", "-- Monster (Link-3)", "-- Monster (Link-4)", "-- Monster (Link-5)", "-- Monster (Link-6)",
+					"Spell (Normal)",
+					"Spell (Quick-Play)", "Spell (Continuous)", "Spell (Equip)", "Spell (Ritual)", "Spell (Terrain)",
+					"Trap (Normal)", "Trap (Continuous)", "Trap (Counter)",
+					"Token"
+				],
+
+				pkmStage: [
+					"Pokémon - Base", "Pokémon - Stage 1",
+					"Pokémon - Stage 2", "Pokémon - Stage 3", "Pokémon - MEGA",
+					"Energy", "Special Energy", "Supporter", "Trainer",
+					"Item", "Stadium"
+				],
+
+				pkmType: [
+					"None", "Grass", "Fire", "Water",
+					"Lightning", "Psychic", "Fighting",
+					"Darkness", "Metal", "Dragon", "Fairy", "Colorless"
+				],
+
+				vgCardType: [
+					"Unit", "Trigger Unit", "G-Unit",
+					"G-Guardian", "Order", "Token"
+				],
+
+				vgRaces: [
+					"Human", "Angel", "Demon", "Elf",
+					"Succubus", "Vampire", "Dragoroid",
+					"Mermaid", "Quintuplet", "Cyberoid",
+					"Bioroid", "Warbeast", "Unknown"
+				],
+
+				vgClans: [
+					"Royal Paladin", "Kagero", "Aqua Force",
+					"Shadow Paladin", "Genesis", "Gold Paladin",
+					"Oracle Think Tank", "Dark Irregulars",
+					"Narukami", "Bermuda Triangle", "Great Nature",
+					"Neo Nectar", "Megacolony", "Granblue",
+					"Dimension Police", "Spike Brothers",
+					"Angel Feather", "Nubatama", "Link Joker",
+					"Tachikaze", "Unknown"
+				],
+
+				// Digimon-specific lists
+				digiCategory: [
+					'Digimon', 'Digi-Egg', 'Tamer',
+					'Option', 'Token'
+				],
+				digiForm: [
+					'In-Training', 'Rookie',
+					'Champion', 'Ultimate', 'Mega', 'Unknown'
+				],
+				digiColor: [
+					'Red', 'Blue', 'Yellow',
+					'Green', 'Black', 'Purple', 'White', 'Unknown'
+				],
+				digiTrait: [
+					'CS', 'ACCEL', 'Unknown'
+				],
+				mtg: [
+					"Creature",
+					"Instant",
+					"Sorcery",
+					"Enchantment",
+					"- Aura",
+					"Artifact",
+					"Planeswalker",
+					"Land",
+					"Legendary",
+					"Saga",
+					"Commander",
+				],
+			};
+
+			// Initialize: load ID files and setup UI
+			async function init() {
+				await Promise.all([
+					loadIds('ygo'),
+					loadIds('pkm'),
+					loadIds('vg'),
+					loadIds('digimon'),
+					loadIds('mtg')
+				]);
+				onGameChange();
+			}
+
+			// Fetch .txt file into idLists[game]
+			async function loadIds(game) {
+				const urlMap = {
+					ygo: 'ygo_ids.txt',
+					pkm: 'pkm_ids.txt',
+					vg: 'vg_ids.txt',
+					digimon: 'digimon_ids.txt',
+					mtg: 'mtg_ids.txt'
+				};
+				try {
+					const text = await fetch(urlMap[game]).then(r => r.text());
+					idLists[game] = text.split(/\r?\n/).filter(l => l.trim());
+				} catch (e) {
+					console.warn(`Failed to load ${urlMap[game]}`, e);
+				}
+			}
+
+			// When game changes: toggle fields, repopulate everything
+			function onGameChange() {
+				const game = document.getElementById('gameSelect').value;
+
+				// show/hide wrappers
+				document.getElementById('ygoTypeWrapper')
+					.classList.toggle('hidden', game !== 'ygo');
+				document.getElementById('pkmTypeWrapper')
+					.classList.toggle('hidden', game !== 'pkm');
+				document.getElementById('vgTypeWrapper')
+					.classList.toggle('hidden', game !== 'vg');
+				document.getElementById('digimonFiltersWrapper')
+					.classList.toggle('hidden', game !== 'digimon');
+				document.getElementById('mtgTypeWrapper')
+					.classList.toggle('hidden', game !== 'mtg');
+				document.getElementById('mtgColorWrapper')
+					.classList.toggle('hidden', game !== 'mtg');
+
+
+
+				// fill rarities, IDs & types
+				fillRarity(game);
+				fillIds(game);
+				fillTypeLists(game);
+
+				// reset form & UI
+				document.getElementById('cardForm').reset();
+				document.getElementById('dateWrapper').classList.add('hidden');
+				document.getElementById('csvOutput').value = '';
+			}
+
+			// Populate the Rarity dropdown (generic for CSV export)
+			function fillRarity(game) {
+				const sel = document.getElementById('rarity');
+				sel.innerHTML = '';
+				(rarityLists[game] || []).forEach(r => {
+					const o = document.createElement('option');
+					o.value = r;
+					o.textContent = r;
+					sel.appendChild(o);
+				});
+			}
+
+			// Populate the Card ID datalist
+			function fillIds(game) {
+				const dl = document.getElementById('ids');
+				dl.innerHTML = '';
+				(idLists[game] || []).forEach(id => {
+					const o = document.createElement('option');
+					o.value = id.trim();
+					dl.appendChild(o);
+				});
+			}
+
+			// Populate the various <select> elements for each game
+			function fillTypeLists(game) {
+				const fill = (id, arr) => {
+					const sel = document.getElementById(id);
+					sel.innerHTML = '';
+					arr.forEach(v => {
+						const o = document.createElement('option');
+						o.value = v;
+						o.textContent = v;
+						sel.appendChild(o);
+					});
+				};
+
+				switch (game) {
+					case 'ygo':
+						fill('ygo_type', typeLists.ygo);
+						break;
+
+					case 'pkm':
+						fill('pkm_stage', typeLists.pkmStage);
+						fill('pkm_type', typeLists.pkmType);
+						break;
+
+					case 'vg':
+						fill('vg_cardType', typeLists.vgCardType);
+						fill('vg_race', typeLists.vgRaces);
+						fill('vg_clan', typeLists.vgClans);
+						break;
+
+					case 'digimon':
+						fill('digimon_category', typeLists.digiCategory);
+						fill('digimon_form', typeLists.digiForm);
+						fill('digimon_color', typeLists.digiColor);
+						fill('digimon_trait', typeLists.digiTrait);
+						break;
+					case 'mtg':
+						fill('mtg_type', typeLists.mtg);
+						break;
+
+
+				}
+			}
+
+			// Show or hide the date picker
+			function toggleDate() {
+				document.getElementById('dateWrapper')
+					.classList.toggle('hidden',
+						!document.getElementById('specifyDate').checked);
+			}
+
+			// Helper to sanitize filenames
+			function sanitizeFileName(str) {
+				return str
+					.normalize('NFD')
+					.replace(/[\u0300-\u036f]/g, '')
+					.replace(/[\/\\:"#?%*|<>]/g, '')
+					.trim()
+					.replace(/\s+/g, '_')
+					.replace(/_+/g, '_');
+			}
+
+			// Build and display the 15-column CSV line
+			function generateCSV() {
+				const G = id => (document.getElementById(id).value || '').trim();
+				const game = document.getElementById('gameSelect').value;
+				const name = G('name') || 'Unknown';
+
+				let category = 'Unknown';
+				switch (game) {
+					case 'ygo':
+						category = G('ygo_type') || 'Unknown';
+						break;
+					case 'pkm':
+						category = G('pkm_stage') || 'Unknown';
+						if (category.includes('-')) {
+							category = category.replace('- ', '(') + '/';
+						} else {
+							category += ' (';
+						}
+						category += (G('pkm_type') || 'Unknown').replace('None', 'Normal');
+						if (category.includes('(')) category += ')';
+						break;
+					case 'vg':
+						const ct = G('vg_cardType') || 'Unknown';
+						const attrs = [G('vg_race'), G('vg_clan'), G('vg_grade')]
+							.filter(x => x && x !== 'Unknown');
+						category = attrs.length ? `${ct}(${attrs.join('/')})` : ct;
+						break;
+					case 'digimon':
+						// build Digimon category with optional trait appended
+						const cat = G('digimon_category') || 'Unknown';
+						const trait = G('digimon_trait');
+						category = trait ? `${cat} (${trait})` : cat;
+						break;
+					case 'mtg':
+						const baseType = G('mtg_type') || 'Unknown';
+						const mtgColors = [];
+
+						if (document.getElementById('mtg_white').checked) mtgColors.push('White');
+						if (document.getElementById('mtg_blue').checked) mtgColors.push('Blue');
+						if (document.getElementById('mtg_black').checked) mtgColors.push('Black');
+						if (document.getElementById('mtg_red').checked) mtgColors.push('Red');
+						if (document.getElementById('mtg_green').checked) mtgColors.push('Green');
+						if (document.getElementById('mtg_colorless').checked) mtgColors.push('Colorless');
+
+						let colorString = mtgColors.join('/');
+
+						if (mtgColors.length > 1 && !mtgColors.includes('Colorless')) {
+							colorString = 'Multicolor/' + colorString;
+						}
+
+						category = mtgColors.length > 0 ? `${baseType} (${colorString})` : baseType;
+
+						break;
+
+				}
+
+				category = category.replaceAll("--", "-");
+				category = category.replaceAll("- ", "")
+
+				const rarity = G('rarity') || 'Unknown';
+				const quality = G('quality') || 'Unknown';
+				const lang = G('language') || 'Unknown';
+				const edition = G('editionType') || 'Unknown';
+				let price = 'Unknown';
+				const p = parseFloat(G('pricePaid'));
+				if (!isNaN(p)) price = p.toFixed(2);
+
+				const cardId = (G('cardId').toUpperCase() || 'Unknown');
+				const pack = cardId.includes('-') ? cardId.split('-')[0] : 'Unknown';
+
+				let date = '24/10/2006';
+				if (document.getElementById('specifyDate').checked) {
+					const [yy, mm, dd] = G('dateObtained').split('-');
+					date = `${dd}/${mm}/${yy}`;
+				}
+
+				const location = G('location') || 'Unknown';
+				const comments = G('comments').replace(/\|/g, ' ') || '';
+				const idForFile = sanitizeFileName(cardId);
+
+				// Photo & wiki URLs
+				let photo = '',
+					wiki = '';
+				switch (game) {
+					case 'ygo':
+						photo = `images/cards/yugioh/${lang}/${idForFile}.png`;
+						wiki = `https://yugipedia.com/wiki/${encodeURIComponent(cardId)}`;
+						break;
+					case 'pkm':
+						photo = `images/cards/pokemon/${lang}/${idForFile}.png`;
+						break;
+					case 'vg':
+						photo = `images/cards/vanguard/${lang}/${idForFile}.png`;
+						const slug = sanitizeFileName(name);
+						wiki = `https://cardfight.fandom.com/wiki/${slug}`;
+						break;
+					case 'digimon':
+						photo = `images/cards/digimon/${lang}/${idForFile}.png`;
+						wiki = `https://digimoncardgame.fandom.com/wiki/${cardId}`;
+						break;
+				}
+
+				const csv = [
+					name, category, rarity, quality, lang,
+					edition, price, '0.00', cardId, pack,
+					date, location, comments, photo, wiki
+				].join('|');
+
+				document.getElementById('csvOutput').value = csv;
+			}
       </script>
    </body>
 </html>

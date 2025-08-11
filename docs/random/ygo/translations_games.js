@@ -265,4 +265,47 @@ export const gameTranslations = {
         ['cs', 'CS', 'CS'],
         ['accel', 'ACCEL', 'ACCEL'],
     ],
+
+    // MTG
+
+    "magic: the gathering": [
+        // 🔹 Card Types
+        ['creature', 'Creature', 'Creatura'],
+        ['instant', 'Instant', 'Istantaneo'],
+        ['sorcery', 'Sorcery', 'Stregoneria'],
+        ['enchantment', 'Enchantment', 'Incantesimo'],
+        ['artifact', 'Artifact', 'Artefatto'],
+        ['creature-artifact', 'Creature Artifact', 'Creatura Artefatto'],
+        ['aura', '— Aura', '— Aura'],
+        ['planeswalker', 'Planeswalker', 'Viandante Planare'],
+        ['land', 'Land', 'Terra'],
+
+        // 🔸 Subtypes
+        ['legendary', '— Legendary', '— Leggendario'],
+        ['saga', '— Saga', '— Saga'],
+        ['commander', '— Commander', '— Comandante'],
+        ['token', 'Token', 'Segnalino'],
+        ['none', 'None', 'Nessuno'],
+
+        // 🌈 Color Identity
+        ['white', '— White', '— Bianco'],
+        ['blue', '— Blue', '— Blu'],
+        ['black', '— Black', '— Nero'],
+        ['red', '— Red', '— Rosso'],
+        ['green', '— Green', '— Verde'],
+        ['multicolor', '— Multicolor', '— Multicolore'],
+        ['colorless', '— Colorless', '— Incolore'],
+
+        // 🔶 Rarities
+        ['common', 'Common', 'Comune'],
+        ['uncommon', 'Uncommon', 'Non Comune'],
+        ['rare', 'Rare', 'Rara'],
+        ['mythicrare', 'Mythic Rare', 'Rara Mitica'],
+        ['promo', 'Promo', 'Promo'],
+        ['masterpiece', 'Masterpiece', 'Capolavoro'],
+        ['special', 'Special', 'Speciale'],
+        ['timeshifted', 'Timeshifted', 'Fuori dal Tempo'],
+        ['bonus', 'Bonus', 'Bonus'],
+        ['unknown', 'Unknown', 'Sconosciuto']
+    ],
 };

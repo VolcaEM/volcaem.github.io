@@ -31,6 +31,10 @@ import {
 } from './digimon.js';
 
 import {
+    getMTGBadgeRules,
+} from './mtg.js';
+
+import {
     clean,
 } from './utils.js';
 
@@ -154,6 +158,9 @@ export function getTypeDisplay(typeText) {
                 break;
             case "Digimon":
                 rules.push(...getDigimonBadgeRules());
+                break;
+            case "Magic: The Gathering":
+                rules.push(...getMTGBadgeRules());
                 break;
         }
 

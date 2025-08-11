@@ -158,12 +158,19 @@ export function compareByEdition(a, b) {
     return oa - ob;
 }
 
-// ONLY FOR SORTING BY RARITY
 export function getRarityOrder(game) {
     const map = new Map();
 
+    const addOrder = (order) => {
+        order.forEach((entry, i) => {
+            entry.forEach(alias =>
+                map.set(alias.toLowerCase().replace(/\s+/g, ""), i)
+            );
+        });
+    };
+
     if (game === "Yu-Gi-Oh") {
-        const order = [
+        addOrder([
             ["Collectors Rare", "collectorsrare"],
             ["Ultimate Rare", "ultimaterare"],
             ["Secret Rare", "secretrare"],
@@ -175,15 +182,11 @@ export function getRarityOrder(game) {
             ["Unknown", "unknown"],
             ["None", "none"],
             ["Fake", "fake"]
-        ];
-        order.forEach((entry, i) => {
-            entry.forEach(alias => map.set(alias.toLowerCase()
-                .replace(/\s+/g, ""), i));
-        });
+        ]);
     }
 
     if (game === "Pokémon") {
-        const order = [
+        addOrder([
             ["Secret Rare", "secretrare"],
             ["Ultra Rare", "ultrarare"],
             ["Holo Rare", "holorare"],
@@ -193,15 +196,11 @@ export function getRarityOrder(game) {
             ["Unknown", "unknown"],
             ["None", "none"],
             ["Fake", "fake"]
-        ];
-        order.forEach((entry, i) => {
-            entry.forEach(alias => map.set(alias.toLowerCase()
-                .replace(/\s+/g, ""), i));
-        });
+        ]);
     }
 
     if (game === "Vanguard") {
-        const order = [
+        addOrder([
             ["Secret Rare", "sec"],
             ["Zeroth Rare", "zr"],
             ["Wedding SP", "wsp"],
@@ -221,11 +220,36 @@ export function getRarityOrder(game) {
             ["Unknown", "unknown"],
             ["None", "none"],
             ["Fake", "fake"]
-        ];
-        order.forEach((entry, i) => {
-            entry.forEach(alias => map.set(alias.toLowerCase()
-                .replace(/\s+/g, ""), i));
-        });
+        ]);
+    }
+
+    if (game === "Digimon") {
+        addOrder([
+            ["Secret Rare", "secretrare"],
+            ["Super Rare", "superrare"],
+            ["Rare", "rare"],
+            ["Uncommon", "uncommon"],
+            ["Common", "common"],
+            ["Promo", "promo"],
+            ["Parallel Art", "parallelart"],
+            ["Unknown", "unknown"]
+        ]);
+    }
+
+    if (game === "Magic: The Gathering") {
+        addOrder([
+            ["Mythic Rare", "mythicrare"],
+            ["Rare", "rare"],
+            ["Uncommon", "uncommon"],
+            ["Common", "common"],
+            ["Promo", "promo"],
+            ["Masterpiece", "masterpiece"],
+            ["Special", "special"],
+            ["Timeshifted", "timeshifted"],
+            ["Bonus", "bonus"],
+            ["Token", "token"],
+            ["Unknown", "unknown"]
+        ]);
     }
 
     return map;

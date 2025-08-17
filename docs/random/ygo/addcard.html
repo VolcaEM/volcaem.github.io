@@ -89,6 +89,8 @@
             <option value="vg">Cardfight Vanguard</option>
             <option value="digimon">Digimon</option>
             <option value="mtg">Magic: The Gathering</option>
+            <option value="onepiece">One Piece</option>
+            <option value="dbs">Dragon Ball Super</option>
          </select>
       </div>
       <form id="cardForm" autocomplete="off">
@@ -150,6 +152,29 @@
                <label><input type="checkbox" id="mtg_green" />Green</label>
                <label><input type="checkbox" id="mtg_colorless" />Colorless</label>
             </div>
+         </div>
+         <!-- One Piece Filters -->
+         <!-- One Piece Filters -->
+         <div id="onepieceFiltersWrapper" class="hidden">
+            <label for="onepiece_cardType">Card Type:</label>
+            <select id="onepiece_cardType"></select>
+            <label for="onepiece_attributes">Attributes:</label>
+            <select id="onepiece_attributes" multiple size="5"></select>
+            <label for="onepiece_traits">Traits / Factions:</label>
+            <select id="onepiece_traits" multiple size="10"></select>
+         </div>
+         <!-- Dragon Ball Super Filters -->
+         <div id="dbsFiltersWrapper" class="hidden">
+            <label for="dbs_cardType">Card Type:</label>
+            <select id="dbs_cardType"></select>
+            <label for="dbs_color">Color:</label>
+            <select id="dbs_color"></select>
+            <label for="dbs_races">Races:</label>
+            <select id="dbs_races" multiple size="8"></select>
+            <label for="dbs_universe">Universe:</label>
+            <select id="dbs_universe"></select>
+            <label for="dbs_event">Event:</label>
+            <select id="dbs_event"></select>
          </div>
          <!-- (Generic) RARITY for CSV export -->
          <label for="rarity">Rarity:</label>
@@ -225,7 +250,9 @@
 				ygo: [],
 				pkm: [],
 				vg: [],
-				digimon: []
+				digimon: [],
+				onepiece: [],
+				dbs: [],
 			};
 
 			// Dynamic rarity options
@@ -262,6 +289,11 @@
 					"Token",
 					"Unknown"
 				],
+				onepiece: [
+					'Common', 'Uncommon', 'Rare', 'Super Rare', 'Secret Rare',
+					'Leader (L)', 'Promo', 'Parallel / Alt Art', 'Special (SP / Manga)', 'DON!!', 'Unknown'
+				],
+				dbs: ['Common', 'Uncommon', 'Rare', 'Super Rare', 'Special Rare', 'Secret Rare', 'Promo', 'PR'],
 			};
 
 			// Updated dynamic type lists for all games
@@ -344,6 +376,28 @@
 					"Saga",
 					"Commander",
 				],
+				onepieceTypes: ['Leader', 'Character', 'Event', 'Stage', 'DON!!', 'Token'],
+				onepieceAttributes: ['Slash', 'Strike', 'Ranged', 'Special', 'Wisdom'],
+				onepieceTraits: [
+					'Straw Hat Crew', 'Supernovas', 'Navy', 'Revolutionary Army',
+					'Animal Kingdom Pirates', 'Big Mom Pirates', 'Whitebeard Pirates', 'Red-Hair Pirates',
+					'Donquixote Pirates', 'Heart Pirates', 'Kid Pirates', 'Baroque Works', 'CP9', 'CP0',
+					'Seven Warlords of the Sea', 'Fish-Man', 'Merfolk', 'Mink Tribe', 'Skypiea', 'Wano', 'Dressrosa',
+					'Cross Guild', "Buggy's Delivery", 'Blackbeard Pirates', 'East Blue', 'Alabasta',
+					'Thriller Bark Pirates', 'Firetank Pirates', 'Sun Pirates', 'Kuja Pirates',
+					'Roger Pirates', 'Spade Pirates', 'Flying Six', 'Impel Down', 'World Pirates', 'Straw Hat Grand Fleet'
+				],
+				dbsCardType: ['Battle', 'Extra', 'Unison', 'Leader', 'Z-Leader', 'Z-Battle', 'Z-Extra'],
+				dbsColor: ['Red', 'Blue', 'Green', 'Yellow', 'Black', 'Multicolor'],
+				dbsRaces: [
+					'Saiyan', 'Earthling', 'Namekian', 'Frieza Race', 'Android',
+					'Majin', 'God', 'Angel', 'Demon Realm Race', 'Monster', 'Alien'
+				],
+				dbsUniverses: [
+					'Universe 1', 'Universe 2', 'Universe 3', 'Universe 4', 'Universe 5', 'Universe 6',
+					'Universe 7', 'Universe 8', 'Universe 9', 'Universe 10', 'Universe 11', 'Universe 12'
+				],
+				dbsEvents: ['Tournament of Power'],
 			};
 
 			// Initialize: load ID files and setup UI
@@ -353,7 +407,9 @@
 					loadIds('pkm'),
 					loadIds('vg'),
 					loadIds('digimon'),
-					loadIds('mtg')
+					loadIds('mtg'),
+					loadIds('onepiece'),
+					loadIds('dbs'),
 				]);
 				onGameChange();
 			}
@@ -365,7 +421,9 @@
 					pkm: 'pkm_ids.txt',
 					vg: 'vg_ids.txt',
 					digimon: 'digimon_ids.txt',
-					mtg: 'mtg_ids.txt'
+					mtg: 'mtg_ids.txt',
+					onepiece: 'onepiece_ids.txt',
+					dbs: 'dbs_ids.txt',
 				};
 				try {
 					const text = await fetch(urlMap[game]).then(r => r.text());
@@ -392,7 +450,9 @@
 					.classList.toggle('hidden', game !== 'mtg');
 				document.getElementById('mtgColorWrapper')
 					.classList.toggle('hidden', game !== 'mtg');
-
+				document.getElementById('onepieceFiltersWrapper')
+					.classList.toggle('hidden', game !== 'onepiece');
+				document.getElementById('dbsFiltersWrapper').classList.toggle('hidden', game !== 'dbs');
 
 
 				// fill rarities, IDs & types
@@ -428,6 +488,20 @@
 					dl.appendChild(o);
 				});
 			}
+
+			function fillSelect(selectId, items, multi = false) {
+				const sel = document.getElementById(selectId);
+				sel.innerHTML = '';
+				sel.multiple = !!multi;
+				sel.size = multi ? Math.min(items.length, multi ? 8 : 1) : 1;
+				items.forEach(txt => {
+					const opt = document.createElement('option');
+					opt.value = txt;
+					opt.textContent = txt;
+					sel.appendChild(opt);
+				});
+			}
+
 
 			// Populate the various <select> elements for each game
 			function fillTypeLists(game) {
@@ -468,6 +542,18 @@
 						fill('mtg_type', typeLists.mtg);
 						break;
 
+					case 'onepiece':
+						fillSelect('onepiece_cardType', typeLists.onepieceTypes);
+						fillSelect('onepiece_attributes', typeLists.onepieceAttributes, true); // multi
+						fillSelect('onepiece_traits', typeLists.onepieceTraits, true); // multi
+						break;
+					case 'dbs':
+						fillSelect('dbs_cardType', typeLists.dbsCardType);
+						fillSelect('dbs_color', typeLists.dbsColor);
+						fillSelect('dbs_races', typeLists.dbsRaces, true);
+						fillSelect('dbs_universe', [''].concat(typeLists.dbsUniverses)); // allow blank
+						fillSelect('dbs_event', [''].concat(typeLists.dbsEvents)); // allow blank
+						break;
 
 				}
 			}
@@ -498,10 +584,12 @@
 
 				let category = 'Unknown';
 				switch (game) {
-					case 'ygo':
+					case 'ygo': {
 						category = G('ygo_type') || 'Unknown';
 						break;
-					case 'pkm':
+					}
+
+					case 'pkm': {
 						category = G('pkm_stage') || 'Unknown';
 						if (category.includes('-')) {
 							category = category.replace('- ', '(') + '/';
@@ -511,19 +599,24 @@
 						category += (G('pkm_type') || 'Unknown').replace('None', 'Normal');
 						if (category.includes('(')) category += ')';
 						break;
-					case 'vg':
+					}
+
+					case 'vg': {
 						const ct = G('vg_cardType') || 'Unknown';
-						const attrs = [G('vg_race'), G('vg_clan'), G('vg_grade')]
-							.filter(x => x && x !== 'Unknown');
+						const attrs = [G('vg_race'), G('vg_clan'), G('vg_grade')].filter(x => x && x !== 'Unknown');
 						category = attrs.length ? `${ct}(${attrs.join('/')})` : ct;
 						break;
-					case 'digimon':
+					}
+
+					case 'digimon': {
 						// build Digimon category with optional trait appended
 						const cat = G('digimon_category') || 'Unknown';
 						const trait = G('digimon_trait');
 						category = trait ? `${cat} (${trait})` : cat;
 						break;
-					case 'mtg':
+					}
+
+					case 'mtg': {
 						const baseType = G('mtg_type') || 'Unknown';
 						const mtgColors = [];
 
@@ -541,10 +634,38 @@
 						}
 
 						category = mtgColors.length > 0 ? `${baseType} (${colorString})` : baseType;
-
 						break;
+					}
 
+					case 'onepiece': {
+						const typeVal = document.getElementById('onepiece_cardType').value || 'Unknown';
+						const attrs = Array.from(document.getElementById('onepiece_attributes').selectedOptions).map(o => o.value);
+						const traits = Array.from(document.getElementById('onepiece_traits').selectedOptions).map(o => o.value);
+						const extras = [...traits, ...attrs];
+						category = extras.length ? `${typeVal}(${extras.join('/')})` : typeVal;
+						break;
+					}
+
+					// ADD THIS
+					case 'dbs': {
+						const typeVal = G('dbs_cardType') || 'Unknown';
+						const color = G('dbs_color');
+						const races = Array.from(document.getElementById('dbs_races').selectedOptions).map(o => o.value);
+						const universe = G('dbs_universe');
+						const event = G('dbs_event');
+
+						const pieces = [
+							color,
+							...races,
+							universe,
+							event,
+						].filter(x => x && x !== 'Unknown');
+
+						category = pieces.length ? `${typeVal}(${pieces.join('/')})` : typeVal;
+						break;
+					}
 				}
+
 
 				category = category.replaceAll("--", "-");
 				category = category.replaceAll("- ", "")
@@ -559,6 +680,7 @@
 
 				const cardId = (G('cardId').toUpperCase() || 'Unknown');
 				const pack = cardId.includes('-') ? cardId.split('-')[0] : 'Unknown';
+				const id_in_pack = cardId.includes('-') ? cardId.split('-')[1] : 'Unknown';
 
 				let date = '24/10/2006';
 				if (document.getElementById('specifyDate').checked) {
@@ -590,6 +712,18 @@
 						photo = `images/cards/digimon/${lang}/${idForFile}.png`;
 						wiki = `https://digimoncardgame.fandom.com/wiki/${cardId}`;
 						break;
+					case 'mtg':
+						photo = `images/cards/magic_the_gathering/${lang}/${idForFile}.png`;
+						wiki = `https://scryfall.com/card/${pack}/${id_in_pack}`;
+						break;
+					case 'onepiece':
+						photo = `images/cards/one_piece/${lang}/${sanitizeFileName(cardId)}.png`;
+						wiki = `https://onepiece.limitlesstcg.com/cards/${cardId}`;
+						break;
+					case 'dbs':
+						photo = `images/cards/dbs/${lang}/${idForFile}.png`;
+						wiki = `https://spellmana.com/dbsf-cards/${cardId.toLowerCase()}/`;
+						break;
 				}
 
 				const csv = [
@@ -600,6 +734,7 @@
 
 				document.getElementById('csvOutput').value = csv;
 			}
+            
       </script>
    </body>
 </html>

@@ -1,0 +1,225 @@
+/* ===== One Piece Card Types ===== */
+ .badge-type-leader {
+     background-color: #333366;
+     color: white;
+}
+ .badge-type-character {
+     background-color: #444;
+     color: white;
+}
+ .badge-type-event {
+     background-color: #8B008B;
+     color: white;
+}
+ .badge-type-stage {
+     background-color: #006400;
+     color: white;
+}
+ .badge-type-don {
+     background-color: gold;
+     color: black;
+}
+ .badge-type-token {
+     background-color: #888888;
+     color: white;
+}
+ .badge-type-none {
+     background-color: lightgray;
+     color: black;
+}
+/* ===== One Piece Colors ===== */
+ .badge-color-red {
+     background-color: crimson;
+     color: white;
+}
+ .badge-color-green {
+     background-color: forestgreen;
+     color: white;
+}
+ .badge-color-blue {
+     background-color: royalblue;
+     color: white;
+}
+ .badge-color-purple {
+     background-color: purple;
+     color: white;
+}
+ .badge-color-black {
+     background-color: black;
+     color: white;
+}
+ .badge-color-yellow {
+     background-color: gold;
+     color: black;
+}
+ .badge-color-multicolor {
+     background: linear-gradient(45deg, crimson, gold, royalblue, forestgreen, purple, black);
+     color: white;
+}
+/* ===== One Piece Attributes ===== */
+ .badge-attr-slash {
+     background-color: darkred;
+     color: white;
+}
+ .badge-attr-strike {
+     background-color: sienna;
+     color: white;
+}
+ .badge-attr-ranged {
+     background-color: teal;
+     color: white;
+}
+ .badge-attr-special {
+     background-color: darkorange;
+     color: white;
+}
+ .badge-attr-wisdom {
+     background-color: mediumslateblue;
+     color: white;
+}
+/* ===== One Piece Traits (Crews / Factions / Worlds) ===== */
+ .badge-trait-straw-hat-crew {
+     background-color: #e25822;
+     color: white;
+}
+ .badge-trait-supernovas {
+     background-color: #4682b4;
+     color: white;
+}
+ .badge-trait-navy {
+     background-color: #000080;
+     color: white;
+}
+ .badge-trait-revolutionary-army {
+     background-color: #556b2f;
+     color: white;
+}
+ .badge-trait-animal-kingdom-pirates {
+     background-color: #2e8b57;
+     color: white;
+}
+ .badge-trait-big-mom-pirates {
+     background-color: #da70d6;
+     color: white;
+}
+ .badge-trait-whitebeard-pirates {
+     background-color: #d2b48c;
+     color: black;
+}
+ .badge-trait-red-hair-pirates {
+     background-color: #b22222;
+     color: white;
+}
+ .badge-trait-donquixote-pirates {
+     background-color: #ff69b4;
+     color: white;
+}
+ .badge-trait-heart-pirates {
+     background-color: #ffcc00;
+     color: black;
+}
+ .badge-trait-kid-pirates {
+     background-color: #8b0000;
+     color: white;
+}
+ .badge-trait-baroque-works {
+     background-color: #708090;
+     color: white;
+}
+ .badge-trait-cp9 {
+     background-color: #191970;
+     color: white;
+}
+ .badge-trait-cp0 {
+     background-color: #696969;
+     color: white;
+}
+ .badge-trait-seven-warlords-of-the-sea {
+     background-color: #00008b;
+     color: white;
+}
+ .badge-trait-fish-man {
+     background-color: #00ced1;
+     color: black;
+}
+ .badge-trait-merfolk {
+     background-color: #20b2aa;
+     color: white;
+}
+ .badge-trait-mink-tribe {
+     background-color: #deb887;
+     color: black;
+}
+ .badge-trait-skypiea {
+     background-color: #add8e6;
+     color: black;
+}
+ .badge-trait-wano {
+     background-color: #cd5c5c;
+     color: white;
+}
+ .badge-trait-dressrosa {
+     background-color: #f08080;
+     color: black;
+}
+ .badge-trait-cross-guild {
+     background-color: #9400d3;
+     color: white;
+}
+ .badge-trait-buggys-delivery {
+     background-color: #ffa07a;
+     color: black;
+}
+ .badge-trait-blackbeard-pirates {
+     background-color: #000000;
+     color: white;
+}
+ .badge-trait-east-blue {
+     background-color: #1e90ff;
+     color: white;
+}
+ .badge-trait-alabasta {
+     background-color: #f4a460;
+     color: black;
+}
+ .badge-trait-thriller-bark-pirates {
+     background-color: #4b0082;
+     color: white;
+}
+ .badge-trait-firetank-pirates {
+     background-color: #ff4500;
+     color: white;
+}
+ .badge-trait-sun-pirates {
+     background-color: #ffd700;
+     color: black;
+}
+ .badge-trait-kuja-pirates {
+     background-color: #db7093;
+     color: white;
+}
+ .badge-trait-roger-pirates {
+     background-color: #daa520;
+     color: black;
+}
+ .badge-trait-spade-pirates {
+     background-color: #a52a2a;
+     color: white;
+}
+ .badge-trait-flying-six {
+     background-color: #2f4f4f;
+     color: white;
+}
+ .badge-trait-impel-down {
+     background-color: #191970;
+     color: white;
+}
+ .badge-trait-world-pirates {
+     background-color: #228b22;
+     color: white;
+}
+ .badge-trait-straw-hat-grand-fleet {
+     background-color: #ff8c00;
+     color: black;
+}
+ 

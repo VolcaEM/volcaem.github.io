@@ -252,8 +252,44 @@ export function getRarityOrder(game) {
         ]);
     }
 
+    // One Piece Card Game
+    if (game === "One Piece") {
+        // Order: SEC > SP/Manga > SR > L > R > UC > C > Promo > Parallel/Alt > DON!! > Unknown > None > Fake
+        addOrder([
+            ["Secret Rare", "secretrare", "SEC", "sec"],
+            ["Special (SP / Manga)", "special", "SP", "sp", "Manga", "manga"],
+            ["Super Rare", "superrare", "SR", "sr"],
+            ["Leader (L)", "leader", "L", "l"],
+            ["Rare", "rare", "R", "r"],
+            ["Uncommon", "uncommon", "UC", "uc"],
+            ["Common", "common", "C", "c"],
+            ["Promo", "promo", "P", "pr", "PR"],
+            ["Parallel / Alt Art", "parallel", "altart", "parallelart", "aa", "alt"],
+            ["DON!!", "don", "don!!"],
+            ["Unknown", "unknown"],
+            ["None", "none"],
+            ["Fake", "fake"]
+        ]);
+    }
+
+    // Dragon Ball Super Card Game
+    if (game === "Dragon Ball Super") {
+        // PR > Promo > Secret Rare > Special Rare > Super Rare > Rare > Uncommon > Common
+        addOrder([
+            ["PR", "pr"],
+            ["Promo", "promo", "P", "p"],
+            ["Secret Rare", "secret-rare", "secretrare", "SCR", "scr"],
+            ["Special Rare", "special-rare", "specialrare", "SPR", "spr"],
+            ["Super Rare", "super-rare", "superrare", "SR", "sr"],
+            ["Rare", "rare", "R", "r"],
+            ["Uncommon", "uncommon", "UC", "uc"],
+            ["Common", "common", "C", "c"]
+        ]);
+    }
+
     return map;
 }
+
 
 export function getCardSortIndexChanges(cards) {
     const rarityOrder = getRarityOrder(currentGame);

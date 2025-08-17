@@ -1,0 +1,218 @@
+/* === Universes === */
+ .badge-universe-1 {
+     background-color: #8e44ad;
+     color: white;
+}
+ .badge-universe-2 {
+     background-color: #9b59b6;
+     color: white;
+}
+ .badge-universe-3 {
+     background-color: #2980b9;
+     color: white;
+}
+ .badge-universe-4 {
+     background-color: #3498db;
+     color: white;
+}
+ .badge-universe-5 {
+     background-color: #16a085;
+     color: white;
+}
+ .badge-universe-6 {
+     background-color: #27ae60;
+     color: white;
+}
+ .badge-universe-7 {
+     background-color: #f39c12;
+     color: black;
+}
+ .badge-universe-8 {
+     background-color: #d35400;
+     color: white;
+}
+ .badge-universe-9 {
+     background-color: #c0392b;
+     color: white;
+}
+ .badge-universe-10 {
+     background-color: #7f8c8d;
+     color: white;
+}
+ .badge-universe-11 {
+     background-color: #2c3e50;
+     color: white;
+}
+ .badge-universe-12 {
+     background-color: #34495e;
+     color: white;
+}
+/* === Race === */
+ .badge-race-saiyan {
+     background-color: #ff9800;
+     color: black;
+}
+ .badge-race-earthling {
+     background-color: #a1887f;
+     color: white;
+}
+ .badge-race-namekian {
+     background-color: #4caf50;
+     color: white;
+}
+ .badge-race-frieza {
+     background-color: #ab47bc;
+     color: white;
+}
+ .badge-race-android {
+     background-color: #90a4ae;
+     color: black;
+}
+ .badge-race-majin {
+     background-color: #ec407a;
+     color: white;
+}
+ .badge-race-god {
+     background-color: gold;
+     color: black;
+}
+ .badge-race-angel {
+     background-color: aliceblue;
+     color: black;
+}
+ .badge-race-demonrealm {
+     background-color: #6a1b9a;
+     color: white;
+}
+ .badge-race-monster {
+     background-color: #8d6e63;
+     color: white;
+}
+ .badge-race-alien {
+     background-color: #26c6da;
+     color: black;
+}
+/* === Card Types === */
+ .badge-type-battle {
+     background-color: crimson;
+     color: white;
+}
+ .badge-type-extra {
+     background-color: teal;
+     color: white;
+}
+ .badge-type-unison {
+     background-color: indigo;
+     color: white;
+}
+ .badge-type-leader {
+     background-color: darkorange;
+     color: black;
+}
+ .badge-type-zleader {
+     background-color: darkred;
+     color: white;
+}
+ .badge-type-zbattle {
+     background-color: darkgreen;
+     color: white;
+}
+ .badge-type-zextra {
+     background-color: darkslateblue;
+     color: white;
+}
+/* === Keywords === */
+ .badge-keyword-awaken {
+     background-color: limegreen;
+     color: black;
+}
+ .badge-keyword-sparking {
+     background-color: lightyellow;
+     color: black;
+}
+ .badge-keyword-doublestrike {
+     background-color: red;
+     color: white;
+}
+ .badge-keyword-triplestrike {
+     background-color: orangered;
+     color: white;
+}
+ .badge-keyword-critical {
+     background-color: maroon;
+     color: white;
+}
+ .badge-keyword-deflect {
+     background-color: lightblue;
+     color: black;
+}
+ .badge-keyword-blocker {
+     background-color: mediumblue;
+     color: white;
+}
+ .badge-keyword-barrier {
+     background-color: khaki;
+     color: black;
+}
+ .badge-keyword-unique {
+     background-color: purple;
+     color: white;
+}
+ .badge-keyword-offering {
+     background-color: pink;
+     color: black;
+}
+ .badge-keyword-successor {
+     background-color: steelblue;
+     color: white;
+}
+ .badge-keyword-arrival {
+     background-color: darkturquoise;
+     color: black;
+}
+ .badge-keyword-union {
+     background-color: yellowgreen;
+     color: black;
+}
+ .badge-keyword-overlord {
+     background-color: firebrick;
+     color: white;
+}
+ .badge-keyword-overrealm {
+     background-color: mediumseagreen;
+     color: white;
+}
+ .badge-keyword-darkoverrealm {
+     background-color: midnightblue;
+     color: white;
+}
+/* === Colors === */
+ .badge-color-red {
+     background-color: red;
+     color: white;
+}
+ .badge-color-blue {
+     background-color: blue;
+     color: white;
+}
+ .badge-color-green {
+     background-color: green;
+     color: white;
+}
+ .badge-color-yellow {
+     background-color: yellow;
+     color: black;
+}
+ .badge-color-black {
+     background-color: black;
+     color: white;
+}
+ .badge-color-multicolor {
+     background: linear-gradient(45deg, red, blue, green, yellow, black);
+     color: white;
+}
+
+.badge-event-tournamentofpower {
+  background-color: #e91e63; /* pink‑red */
+  color: white;
+}

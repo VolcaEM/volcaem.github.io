@@ -43,6 +43,16 @@ import {
     mtgRarityOptions,
 } from './mtg.js';
 
+import {
+    onepieceFilterOptions,
+    onepieceRarityOptions,
+} from './onepiece.js';
+
+import {
+    dbsFilterOptions,
+    dbsRarityOptions,
+} from './dbs.js';
+
 ////////////////////////////////
 // Card Classes
 ////////////////////////////////
@@ -114,47 +124,60 @@ export class CardManager {
                             currentgamehtml.innerText = "Detected game: " + currentGame;
                         }
                         loadGameTranslations(currentGame);
-                        switch (currentGame) {
-                            case "Yu-Gi-Oh":
-                                populateFilterTypeSelect(filterSelect, yugiohFilterOptions, key => translations[langIndex][key]);
-                                populateFilterTypeSelect(filterRarity, yugiohRarityOptions, key => translations[langIndex][key]);
-                                break;
 
-                            case "Pokémon":
-                                populateFilterTypeSelect(filterSelect, pokemonFilterOptions, key => translations[langIndex][key]);
-                                populateFilterTypeSelect(filterRarity, pokemonRarityOptions, key => translations[langIndex][key]);
-                                break;
+                        if (filterSelect != null && filterRarity != null) {
+                            switch (currentGame) {
+                                case "Yu-Gi-Oh":
+                                    populateFilterTypeSelect(filterSelect, yugiohFilterOptions, key => translations[langIndex][key]);
+                                    populateFilterTypeSelect(filterRarity, yugiohRarityOptions, key => translations[langIndex][key]);
+                                    break;
 
-                            case "Vanguard":
-                                populateFilterTypeSelect(filterSelect, vanguardFilterOptions, key => translations[langIndex][key]);
-                                populateFilterTypeSelect(filterRarity, vanguardRarityOptions, key => translations[langIndex][key]);
-                                break;
+                                case "Pokémon":
+                                    populateFilterTypeSelect(filterSelect, pokemonFilterOptions, key => translations[langIndex][key]);
+                                    populateFilterTypeSelect(filterRarity, pokemonRarityOptions, key => translations[langIndex][key]);
+                                    break;
 
-                            case "Digimon":
-                                populateFilterTypeSelect(filterSelect, digimonFilterOptions, key => translations[langIndex][key]);
-                                populateFilterTypeSelect(filterRarity, digimonRarityOptions, key => translations[langIndex][key]);
-                                break;
+                                case "Vanguard":
+                                    populateFilterTypeSelect(filterSelect, vanguardFilterOptions, key => translations[langIndex][key]);
+                                    populateFilterTypeSelect(filterRarity, vanguardRarityOptions, key => translations[langIndex][key]);
+                                    break;
 
-                            case "Magic: The Gathering":
-                                populateFilterTypeSelect(filterSelect, mtgFilterOptions, key => translations[langIndex][key]);
-                                populateFilterTypeSelect(filterRarity, mtgRarityOptions, key => translations[langIndex][key]);
+                                case "Digimon":
+                                    populateFilterTypeSelect(filterSelect, digimonFilterOptions, key => translations[langIndex][key]);
+                                    populateFilterTypeSelect(filterRarity, digimonRarityOptions, key => translations[langIndex][key]);
+                                    break;
 
-                            default:
-                                console.warn(`Unsupported game: ${currentGame}`);
-                                break;
+                                case "Magic: The Gathering":
+                                    populateFilterTypeSelect(filterSelect, mtgFilterOptions, key => translations[langIndex][key]);
+                                    populateFilterTypeSelect(filterRarity, mtgRarityOptions, key => translations[langIndex][key]);
+                                    break;
+
+                                case "One Piece":
+                                    populateFilterTypeSelect(filterSelect, onepieceFilterOptions, key => translations[langIndex][key]);
+                                    populateFilterTypeSelect(filterRarity, onepieceRarityOptions, key => translations[langIndex][key]);
+                                    break;
+
+                                case "Dragon Ball Super":
+                                    populateFilterTypeSelect(filterSelect, dbsFilterOptions, key => translations[langIndex][key]);
+                                    populateFilterTypeSelect(filterRarity, dbsRarityOptions, key => translations[langIndex][key]);
+
+                                default:
+                                    console.warn(`Unsupported game: ${currentGame}`);
+                                    break;
+                            }
+
+                            const option1 = document.createElement('option');
+                            option1.textContent = "───── COMMON ─────";
+                            option1.value = "";
+                            option1.disabled = true;
+
+                            const option2 = document.createElement('option');
+                            option2.textContent = translations[langIndex]['products'];
+                            option2.value = "product";
+
+                            filterSelect.appendChild(option1);
+                            filterSelect.appendChild(option2);
                         }
-
-                        const option1 = document.createElement('option');
-                        option1.textContent = "───── COMMON ─────";
-                        option1.value = "";
-                        option1.disabled = true;
-
-                        const option2 = document.createElement('option');
-                        option2.textContent = translations[langIndex]['products'];
-                        option2.value = "product";
-
-                        filterSelect.appendChild(option1);
-                        filterSelect.appendChild(option2);
 
                         break;
                     }
@@ -318,6 +341,26 @@ export class CardManager {
     findCardsById(cardId) {
         return this.cards.filter(card => card.id === cardId);
     }
+
+    findCardsByIdOrName(cardId) {
+        const params = new URLSearchParams(window.location.search);
+        const checkName = params.has('checkname');
+
+        // Find the reference card for this ID
+        const referenceCard = this.cards.find(c => c.id === cardId);
+
+        return this.cards.filter(card => {
+            const idMatches = card.id === cardId;
+            const nameMatches =
+                checkName &&
+                referenceCard &&
+                card.name === referenceCard.name;
+
+            return idMatches || nameMatches;
+        });
+    }
+
+
 }
 
 export const manager = new CardManager();

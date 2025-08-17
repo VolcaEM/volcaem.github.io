@@ -17,7 +17,14 @@
          import { localMode } from "./config.js";
          
          if(localMode) {
-			initCardDetailsPage('cards.csv');
+			 // Read ?file=... from URL
+			const params = new URLSearchParams(window.location.search);
+			const csvFileParam = params.get("file");
+
+			// Fallback if no param provided
+			const csvFile = csvFileParam ? decodeURIComponent(csvFileParam) : 'cards.csv';
+		
+			initCardDetailsPage(csvFile);
          }
       </script>
       </script>

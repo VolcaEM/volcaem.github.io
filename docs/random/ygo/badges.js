@@ -35,6 +35,14 @@ import {
 } from './mtg.js';
 
 import {
+    getOnePieceBadgeRules,
+} from './onepiece.js';
+
+import {
+    getDBSBadgeRules,
+} from './dbs.js';
+
+import {
     clean,
 } from './utils.js';
 
@@ -161,6 +169,12 @@ export function getTypeDisplay(typeText) {
                 break;
             case "Magic: The Gathering":
                 rules.push(...getMTGBadgeRules());
+                break;
+            case "One Piece":
+                rules.push(...getOnePieceBadgeRules());
+                break;
+            case "Dragon Ball Super":
+                rules.push(...getDBSBadgeRules());
                 break;
         }
 

@@ -50,6 +50,10 @@ import {
     renderAllCharts,
 } from './canvas.js';
 
+import {
+    clickHandler,
+} from './common.js';
+
 // Function to load CSV data and display cards
 export function loadCSVAndDisplayCards(myfile) {
 
@@ -149,11 +153,6 @@ export function displayCards(cards) {
             // img.alt = card.name;
             img.alt = "X";
 
-            // Define the event handler functions so they can be removed later
-            function clickHandler() {
-                window.location.href = `card.html?id=${encodeURIComponent(card.id)}`;
-            }
-
             function mouseEnterHandler(e) {
                 showOverlay(e, card, img);
             }
@@ -206,7 +205,7 @@ export function displayCards(cards) {
 
                 // Add the event listeners
                 if (localMode) {
-                    img.addEventListener("click", clickHandler);
+                    img.addEventListener('click', () => clickHandler(card));
                 }
                 img.addEventListener("mouseenter", mouseEnterHandler);
                 img.addEventListener("mousemove", mouseMoveHandler);

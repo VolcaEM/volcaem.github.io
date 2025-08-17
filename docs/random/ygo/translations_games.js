@@ -308,4 +308,159 @@ export const gameTranslations = {
         ['bonus', 'Bonus', 'Bonus'],
         ['unknown', 'Unknown', 'Sconosciuto']
     ],
+
+    // ONE PIECE
+    // ONE PIECE
+    "one piece": [
+        // Card Types
+        ['leader', 'Leader', 'Leader'],
+        ['character', 'Character', 'Personaggio'],
+        ['event', 'Event', 'Evento'],
+        ['stage', 'Stage', 'Scena'],
+        ['don', 'DON!!', 'DON!!'],
+        ['token', 'Token', 'Segnalino'],
+        ['none', 'None', 'Nessuno'],
+
+        // Colors
+        ['red', 'Red', 'Rosso'],
+        ['green', 'Green', 'Verde'],
+        ['blue', 'Blue', 'Blu'],
+        ['purple', 'Purple', 'Viola'],
+        ['black', 'Black', 'Nero'],
+        ['yellow', 'Yellow', 'Giallo'],
+        ['multicolor', 'Multicolor', 'Multicolore'],
+
+        // Attributes
+        ['slash', 'Slash', 'Taglio'],
+        ['strike', 'Strike', 'Colpo'],
+        ['ranged', 'Ranged', 'Distanza'],
+        ['special', 'Special', 'Speciale'],
+        ['wisdom', 'Wisdom', 'Saggezza'],
+
+        // Traits (Crews / Factions / Worlds)
+        ['straw-hat-crew', 'Straw Hat Crew', 'Ciurma di Cappello di Paglia'],
+        ['supernovas', 'Supernovas', 'Supernove'],
+        ['navy', 'Navy', 'Marina'],
+        ['revolutionary-army', 'Revolutionary Army', 'Armata Rivoluzionaria'],
+        ['animal-kingdom-pirates', 'Animal Kingdom Pirates', 'Pirati delle Cento Bestie'],
+        ['big-mom-pirates', 'Big Mom Pirates', 'Pirati di Big Mom'],
+        ['whitebeard-pirates', 'Whitebeard Pirates', 'Pirati di Barbabianca'],
+        ['red-hair-pirates', 'Red-Hair Pirates', 'Pirati di Shanks'],
+        ['donquixote-pirates', 'Donquixote Pirates', 'Pirati di Donquijote'],
+        ['heart-pirates', 'Heart Pirates', 'Pirati di Heart'],
+        ['kid-pirates', 'Kid Pirates', 'Pirati di Kid'],
+        ['baroque-works', 'Baroque Works', 'Baroque Works'],
+        ['cp9', 'CP9', 'CP9'],
+        ['cp0', 'CP0', 'CP0'],
+        ['seven-warlords-of-the-sea', 'Seven Warlords of the Sea', 'Sette Corsari del Mare'],
+        ['fish-man', 'Fish-Man', 'Uomo‑Pesce'],
+        ['merfolk', 'Merfolk', 'Uomini‑Pesce'],
+        ['mink-tribe', 'Mink Tribe', 'Tribu dei Mink'],
+        ['skypiea', 'Skypiea', 'Skypiea'],
+        ['wano', 'Wano', 'Wano'],
+        ['dressrosa', 'Dressrosa', 'Dressrosa'],
+        ['cross-guild', 'Cross Guild', 'Cross Guild'],
+        ['buggys-delivery', "Buggy's Delivery", "Buggy's Delivery"],
+        ['blackbeard-pirates', 'Blackbeard Pirates', 'Pirati di Barbanera'],
+        ['east-blue', 'East Blue', 'East Blue'],
+        ['alabasta', 'Alabasta', 'Alabasta'],
+        ['thriller-bark-pirates', 'Thriller Bark Pirates', 'Pirati di Thriller Bark'],
+        ['firetank-pirates', 'Firetank Pirates', 'Pirati Firetank'],
+        ['sun-pirates', 'Sun Pirates', 'Pirati del Sole'],
+        ['kuja-pirates', 'Kuja Pirates', 'Pirati Kuja'],
+        ['roger-pirates', 'Roger Pirates', 'Pirati di Roger'],
+        ['spade-pirates', 'Spade Pirates', 'Pirati di Spade'],
+        ['flying-six', 'Flying Six', 'Flying Six'],
+        ['impel-down', 'Impel Down', 'Impel Down'],
+        ['world-pirates', 'World Pirates', 'Pirati del Mondo'],
+        ['straw-hat-grand-fleet', 'Straw Hat Grand Fleet', 'Grande Flotta di Cappello di Paglia'],
+
+        // Rarities
+        ['common', 'Common', 'Comune'],
+        ['uncommon', 'Uncommon', 'Non Comune'],
+        ['rare', 'Rare', 'Rara'],
+        ['superrare', 'Super Rare', 'Super Rara'],
+        ['secretrare', 'Secret Rare', 'Rara Segreta'],
+        ['promo', 'Promo', 'Promo'],
+        ['parallel', 'Parallel / Alt Art', 'Parallela / Arte Alternativa'],
+        ['special', 'Special (SP / Manga)', 'Speciale (SP / Manga)'],
+        ['unknown', 'Unknown', 'Sconosciuto']
+    ],
+
+    // DRAGON BALL SUPER
+    "dragon ball super": [
+        // Universes
+        ['universe-1', 'Universe 1', 'Universo 1'],
+        ['universe-2', 'Universe 2', 'Universo 2'],
+        ['universe-3', 'Universe 3', 'Universo 3'],
+        ['universe-4', 'Universe 4', 'Universo 4'],
+        ['universe-5', 'Universe 5', 'Universo 5'],
+        ['universe-6', 'Universe 6', 'Universo 6'],
+        ['universe-7', 'Universe 7', 'Universo 7'],
+        ['universe-8', 'Universe 8', 'Universo 8'],
+        ['universe-9', 'Universe 9', 'Universo 9'],
+        ['universe-10', 'Universe 10', 'Universo 10'],
+        ['universe-11', 'Universe 11', 'Universo 11'],
+        ['universe-12', 'Universe 12', 'Universo 12'],
+
+        // Races
+        ['saiyan', 'Saiyan', 'Sayan'],
+        ['earthling', 'Earthling', 'Terrestre'],
+        ['namekian', 'Namekian', 'Namecciano'],
+        ['frieza-race', 'Frieza Race', 'Razza di Freezer'],
+        ['android', 'Android', 'Android'],
+        ['majin', 'Majin', 'Majin'],
+        ['god', 'God', 'Dio'],
+        ['angel', 'Angel', 'Angelo'],
+        ['demon-realm-race', 'Demon Realm Race', 'Razza del Regno dei Demoni'],
+        ['monster', 'Monster', 'Mostro'],
+        ['alien', 'Alien', 'Alieno'],
+
+        // Card Types
+        ['battle', 'Battle', 'Battaglia'],
+        ['extra', 'Extra', 'Extra'],
+        ['unison', 'Unison', 'Unisono'],
+        ['leader', 'Leader', 'Leader'],
+        ['z-leader', 'Z-Leader', 'Z-Leader'],
+        ['z-battle', 'Z-Battle', 'Z-Battle'],
+        ['z-extra', 'Z-Extra', 'Z-Extra'],
+
+        // Keywords
+        ['awaken', 'Awaken', 'Risveglio'],
+        ['sparking', 'Sparking', 'Scintilla'],
+        ['double-strike', 'Double Strike', 'Doppio Colpo'],
+        ['triple-strike', 'Triple Strike', 'Triplo Colpo'],
+        ['critical', 'Critical', 'Critico'],
+        ['deflect', 'Deflect', 'Devia'],
+        ['blocker', 'Blocker', 'Bloccante'],
+        ['barrier', 'Barrier', 'Barriera'],
+        ['unique', 'Unique', 'Unico'],
+        ['offering', 'Offering', 'Offerta'],
+        ['successor', 'Successor', 'Successore'],
+        ['arrival', 'Arrival', 'Arrivo'],
+        ['union', 'Union', 'Unione'],
+        ['overlord', 'Overlord', 'Dominatore'],
+        ['over-realm', 'Over Realm', 'Oltre Reame'],
+        ['dark-over-realm', 'Dark Over Realm', 'Oscuro Oltre Reame'],
+
+        ['tournament-of-power', 'Tournament of Power', 'Torneo del Potere'],
+
+        // Colors
+        ['red', 'Red', 'Rosso'],
+        ['blue', 'Blue', 'Blu'],
+        ['green', 'Green', 'Verde'],
+        ['yellow', 'Yellow', 'Giallo'],
+        ['black', 'Black', 'Nero'],
+        ['multicolor', 'Multicolor', 'Multicolore'],
+
+        // Rarities
+        ['common', 'Common', 'Comune'],
+        ['uncommon', 'Uncommon', 'Non Comune'],
+        ['rare', 'Rare', 'Rara'],
+        ['super-rare', 'Super Rare', 'Super Rara'],
+        ['special-rare', 'Special Rare', 'Rara Speciale'],
+        ['secret-rare', 'Secret Rare', 'Rara Segreta'],
+        ['promo', 'Promo', 'Promo'],
+        ['pr', 'PR', 'PR'],
+    ],
 };

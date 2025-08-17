@@ -6,6 +6,8 @@
 @import "badges-type-vanguard.css";
 @import "badges-type-digimon.css";
 @import "badges-type-mtg.css";
+@import "badges-type-onepiece.css";
+@import "badges-type-dbs.css";
 
 :root {
 	--multiplier: 1.2;

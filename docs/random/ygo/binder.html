@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Binder View</title>
+      <link rel="stylesheet" href="styles.css" />
+      <style>
+         html {
+			 background: #191919;
+		}
+		 body {
+			 background: transparent;
+		}
+		 .binder-container {
+			 display: flex;
+			 justify-content: center;
+			 gap: 40px;
+			 padding: 40px;
+			 background-color: #191919;
+		}
+		 .binder-page {
+			 display: grid;
+			 grid-template-columns: repeat(3, 1fr);
+			 grid-template-rows: repeat(3, auto);
+			 gap: 10px;
+			 background: #111;
+			 padding: 15px;
+			 border-radius: 8px;
+			 border: 2px solid white;
+		}
+		 .binder-page img {
+			 width: 223px;
+			/* Yu-Gi-Oh card width in pixels */
+			 height: 325px;
+			/* Yu-Gi-Oh card height in pixels */
+			 object-fit: cover;
+			/* crop/center if needed */
+			 cursor: pointer;
+			 border: 2px solid #555;
+			 border-radius: 4px;
+			 transition: transform 0.2s;
+			 background-color: #000;
+			/* optional: avoids flicker before load */
+		}
+		 .binder-page img:hover {
+			 transform: scale(1.05);
+			 border-color: gold;
+		}
+		 .nav-button {
+			 position: fixed;
+			 top: 50%;
+			 transform: translateY(-50%);
+			 width: 50px;
+			 height: 50px;
+			 cursor: pointer;
+			 z-index: 9999;
+			 background: rgba(0,0,0,0.5);
+			 border-radius: 50%;
+			 display: flex;
+			 align-items: center;
+			 justify-content: center;
+		}
+		 .nav-button img {
+			 max-width: 70%;
+		}
+		 .prev-button {
+			 left: 10px;
+		}
+		 .next-button {
+			 right: 10px;
+		}
+      </style>
+   </head>
+   <body>
+      <div class="nav-button prev-button" id="prevPage"><img src="prev.png" alt="Previous"></div>
+      <div class="nav-button next-button" id="nextPage"><img src="next.png" alt="Next"></div>
+      <div class="binder-container" id="binder">
+         <div class="binder-page" id="pageLeft"></div>
+         <div class="binder-page" id="pageRight"></div>
+      </div>
+      <div id="pageControls" style="text-align:center; margin: 20px; background-color: transparent; z-index: 999;">
+         <span id="pageIndicator"></span>
+         <label for="pageJump" style="margin-left:10px;">Go to page:</label>
+         <input type="number" id="pageJump" min="1" style="width:60px;">
+         <button id="goToPageBtn">Go</button>
+      </div>
+      <script type="module">
+		import { localMode } from './config.js';
+		import { manager } from './card.js';
+		import { loadCSVAndDisplayCards } from './csv.js';
+		import { clickHandler } from './common.js';
+
+		let currentPageIndex = 0;
+		let cardsPerPage = 18;
+		let cards = [];
+
+		function renderBinderPage() {
+			const leftPage = document.getElementById('pageLeft');
+			const rightPage = document.getElementById('pageRight');
+			leftPage.innerHTML = '';
+			rightPage.innerHTML = '';
+
+			const startIndex = currentPageIndex * cardsPerPage;
+			let pageCards = cards.slice(startIndex, startIndex + cardsPerPage);
+
+			// Pad with null placeholders until we have exactly cardsPerPage entries
+			while (pageCards.length < cardsPerPage) {
+				pageCards.push(null);
+			}
+
+			const leftCards = pageCards.slice(0, 9);
+			const rightCards = pageCards.slice(9, 18);
+
+			leftCards.forEach(card => {
+				const img = document.createElement('img');
+				if (card) {
+					img.src = card.getImageUrl();
+					img.title = card.name;
+					img.addEventListener('click', () => clickHandler(card, true));
+				} else {
+					img.src = 'placeholder.png'; // your blank-slot image
+					img.title = '';
+				}
+				img.alt = '';
+				leftPage.appendChild(img);
+			});
+
+			rightCards.forEach(card => {
+				const img = document.createElement('img');
+				if (card) {
+					img.src = card.getImageUrl();
+					img.title = card.name;
+					img.addEventListener('click', () => clickHandler(card, true));
+				} else {
+					img.src = 'placeholder.png';
+					img.title = '';
+				}
+				img.alt = '';
+				rightPage.appendChild(img);
+			});
+
+			// Update page indicator (1-based)
+			const totalPages = Math.max(1, Math.ceil(cards.length / cardsPerPage));
+			document.getElementById('pageIndicator').textContent =
+				`Page ${currentPageIndex + 1} of ${totalPages}`;
+		}
+
+		document.getElementById('goToPageBtn').addEventListener('click', () => {
+			const totalPages = Math.ceil(cards.length / cardsPerPage);
+			let pageNum = parseInt(document.getElementById('pageJump').value, 10);
+			if (!isNaN(pageNum) && pageNum >= 1 && pageNum <= totalPages) {
+				currentPageIndex = pageNum - 1;
+				renderBinderPage();
+			}
+		});
+
+
+		// Toggle this to true if you want to remove duplicates by card name
+		const filterDuplicates = true;
+
+		function initBinder(csvFile) {
+			fetch(csvFile)
+				.then(res => {
+					if (!res.ok) {
+						throw new Error(`Failed to load CSV: ${res.status} ${res.statusText}`);
+					}
+					return res.text();
+				})
+				.then(csvText => {
+					if (!csvText.trim()) {
+						throw new Error("CSV file is empty or unreadable.");
+					}
+
+					manager.loadCards(csvText);
+
+					// Step 1: Remove any 'Product' type cards (case-insensitive)
+					let filtered = manager.cards.filter(
+						card => !card.type.toLowerCase().includes("product")
+					);
+
+					// Step 2: Optionally remove duplicates (same card.name)
+					if (filterDuplicates) {
+						const seenNames = new Set();
+						filtered = filtered.filter(card => {
+							if (seenNames.has(card.name)) {
+								return false;
+							}
+							seenNames.add(card.name);
+							return true;
+						});
+					}
+
+					cards = filtered;
+					renderBinderPage();
+				})
+				.catch(err => {
+					console.error("Error loading binder data:", err);
+					// Optional: show a message in the UI
+					const binderContainer = document.getElementById('binder');
+					if (binderContainer) {
+						binderContainer.innerHTML = `<p style="color:white; text-align:center;">
+				  Unable to load binder data.<br>${err.message}
+				</p>`;
+					}
+				});
+		}
+
+
+		document.getElementById('prevPage').addEventListener('click', () => {
+			if (currentPageIndex > 0) {
+				currentPageIndex--;
+				renderBinderPage();
+			}
+		});
+
+		document.getElementById('nextPage').addEventListener('click', () => {
+			if ((currentPageIndex + 1) * cardsPerPage < cards.length) {
+				currentPageIndex++;
+				renderBinderPage();
+			}
+		});
+
+		// Read ?file=... from URL
+		const params = new URLSearchParams(window.location.search);
+		const csvFileParam = params.get("file");
+
+		// Fallback if no param provided
+		const csvFile = csvFileParam ? decodeURIComponent(csvFileParam) : 'cards.csv';
+
+		// Then use it
+		if (localMode) initBinder(csvFile);
+      </script>
+   </body>
+</html>

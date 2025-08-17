@@ -162,80 +162,116 @@ export function displayCardDetails(cards) {
         const container = document.getElementById("cardDetails");
         container.innerHTML = ''; // Clear existing content
 
-        // Use the first card's common details (assumes they are the same across all entries)
+        // Use the first card's common details
         const commonCard = cards[0];
-        container.innerHTML += `
-            <div class="common-card">
-                <h2>${commonCard.name} (${cards.length} elements)</h2>
-				<br>
-                <img src="${commonCard.getImageUrl()}" alt="${commonCard.name}" onclick="window.location.href='index.html'"><br>
-				<br>
-                <div class="detail-row"><span class="detail-label">Type:</span> ${getTypeDisplay(commonCard.type)}</div>
-                <div class="detail-row"><span class="detail-label">ID:</span> ${commonCard.id}</div>
-                <div class="detail-row"><span class="detail-label">Pack ID:</span> ${commonCard.packId}</div>
-				${ commonCard.wikiUrl 
-            ? '<div class="detail-row"><button onclick="window.open(\'' 
-               + commonCard.wikiUrl 
-               + '\', \'_blank\')">Wiki</button></div>' 
-            : '' }
-            </div>
-			<br>
-        `;
 
-        // Now iterate over each card version to display variant-specific data.
-        cards.forEach((card, index) => {
-            let cleanedMarketPrice = card.marketPrice.replaceAll("⬆️", "")
+        // Collect all unique IDs and Pack IDs
+        const allIds = [...new Set(cards.map(c => c.id))].join(", ");
+        const allPackIds = [...new Set(cards.map(c => c.packId))].join(", ");
+
+        container.innerHTML += `
+      <div class="common-card">
+        <h2>${commonCard.name} (${cards.length} elements)</h2>
+        <br>
+        <img src="${commonCard.getImageUrl()}" alt="${commonCard.name}" onclick="window.location.href='index.html'"><br>
+        <br>
+        <div class="detail-row"><span class="detail-label">Type:</span> ${getTypeDisplay(commonCard.type)}</div>
+        <div class="detail-row"><span class="detail-label">IDs:</span> ${allIds}</div>
+        <div class="detail-row"><span class="detail-label">Pack IDs:</span> ${allPackIds}</div>
+        ${
+          commonCard.wikiUrl
+            ? '<div class="detail-row"><button onclick="window.open(\'' +
+              commonCard.wikiUrl +
+              '\', \'_blank\')">Wiki</button></div>'
+            : ''
+        }
+      </div>
+      <br>
+    `;
+
+        // Per-card details
+        cards.forEach((card) => {
+            let cleanedMarketPrice = (card.marketPrice || "")
+                .replaceAll("⬆️", "")
                 .replaceAll("⬇️", "")
                 .replaceAll("➡️", "")
-                .replaceAll("None", "");
+                .replaceAll("None", "")
+                .trim();
+
+            const marketPriceNumber = parseFloat(cleanedMarketPrice.replace(",", "."));
+
+            // Build optional fields
+            const marketPriceHTML =
+                marketPriceNumber && marketPriceNumber !== 0 ?
+                `<div class="detail-row"><span class="detail-label">Market Price:</span> €${cleanedMarketPrice}</div>` :
+                "";
+
+            const commentsHTML =
+                card.comments && card.comments.trim() !== "" ?
+                `<div class="detail-row"><span class="detail-label">Comments:</span> ${card.comments}</div>` :
+                "";
+
             container.innerHTML += `
-			            <hr>
-				<br>
-                <div class="version-entry">
-                    <div class="detail-row"><span class="detail-label">Rarity:</span> ${card.rarity}</div>
-                    <div class="detail-row"><span class="detail-label">Quality:</span> ${getQualityBadge(card.quality)}</div>
-                    <div class="detail-row"><span class="detail-label">Language:</span> ${getLanguageBadge(card.language)}</div>
-                    <div class="detail-row"><span class="detail-label">Edition:</span> ${getEditionBadge(card.edition)}</div>
-                    <div class="detail-row"><span class="detail-label">Price I Paid:</span> €${card.pricePaid.toFixed(2)}</div>
-                    <div class="detail-row"><span class="detail-label">Market Price:</span> €${cleanedMarketPrice}</div>
-                    <div class="detail-row"><span class="detail-label">Location:</span> ${card.location}</div>
-                    <div class="detail-row"><span class="detail-label">Comments:</span> ${card.comments}</div>
-					<br>
-                </div>
-            `;
+    <hr>
+    <br>
+    <div class="version-entry">
+      <div class="detail-row"><span class="detail-label">Rarity:</span> ${card.rarity}</div>
+      <div class="detail-row"><span class="detail-label">Quality:</span> ${getQualityBadge(card.quality)}</div>
+      <div class="detail-row"><span class="detail-label">Language:</span> ${getLanguageBadge(card.language)}</div>
+      <div class="detail-row"><span class="detail-label">Edition:</span> ${getEditionBadge(card.edition)}</div>
+      <div class="detail-row"><span class="detail-label">Price I Paid:</span> €${card.pricePaid.toFixed(2)}</div>
+      ${marketPriceHTML}
+      <div class="detail-row"><span class="detail-label">Obtained:</span> ${card.dateObtained}</div>
+      <div class="detail-row"><span class="detail-label">Location:</span> ${card.location}</div>
+      ${commentsHTML}
+      <br>
+    </div>
+  `;
         });
+
     }
 }
 
-
-
 export function initCardDetailsPage(myfile) {
     if (!cardId) {
-        document.getElementById("cardDetails")
-            .textContent = "No card ID provided.";
+        document.getElementById("cardDetails").textContent = "No card ID provided.";
         return;
     }
 
     if (localMode) {
         fetch(myfile)
-            .then(response => response.text())
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`Failed to load CSV: ${res.status} ${res.statusText}`);
+                }
+                return res.text();
+            })
             .then(csvText => {
+                if (!csvText.trim()) {
+                    throw new Error("CSV file is empty or unreadable.");
+                }
+
                 manager.loadCards(csvText);
-                const cards = manager.findCardsById(cardId); // Use the new method
+
+                const cards = manager.findCardsByIdOrName(cardId); // Your lookup method
                 if (!cards || cards.length === 0) {
-                    document.getElementById("cardDetails")
-                        .textContent = "Card not found.";
+                    document.getElementById("cardDetails").textContent = "Card not found.";
                 } else {
-                    displayCardDetails(cards); // Pass the array of cards
+                    displayCardDetails(cards);
                 }
             })
             .catch(err => {
                 console.error("Error loading CSV file:", err);
-                document.getElementById("cardDetails")
-                    .textContent = "Error loading card details.";
+                const el = document.getElementById("cardDetails");
+                if (el) {
+                    el.innerHTML = `<p style="color:white; text-align:center;">
+            Unable to load card details.<br>${err.message}
+          </p>`;
+                }
             });
     }
 }
+
 
 export function updateThemeButtonLabel(mybutton, theme) {
     console.log("Updating theme button label to " + theme);
@@ -252,7 +288,13 @@ export function initCollectionPage() {
     }
 
     if (localMode) {
-        loadCSVAndDisplayCards('cards.csv');
+        const params = new URLSearchParams(window.location.search);
+        const csvFileParam = params.get("file");
+
+        // Fallback if no param provided
+        const csvFile = csvFileParam ? decodeURIComponent(csvFileParam) : 'cards.csv';
+
+        loadCSVAndDisplayCards(csvFile);
     }
 
     const applyFiltersBtn = document.getElementById("applyFilters");
@@ -340,4 +382,28 @@ export function doInit() {
         localStorage.setItem("theme", nextTheme);
         updateThemeButtonLabel(toggleBtn, nextTheme);
     });
+}
+
+export function clickHandler(card, checkname = false) {
+    // Build the base URL
+    let url = `card.html?id=${encodeURIComponent(card.id)}`;
+
+    // If the caller passed true, add the checkname flag
+    if (checkname) {
+        url += "&checkname"; // or `&checkname=true` for explicit value
+    }
+
+    // See if current page URL has a ?file=... query
+    const params = new URLSearchParams(window.location.search);
+    const fileParam = params.get("file");
+    if (fileParam) {
+        // Append with proper encoding
+        url += `&file=${encodeURIComponent(fileParam)}`;
+    }
+
+    // Debug log to confirm
+    console.log("[clickHandler] Opening:", url);
+
+    // Open in a new tab/window
+    window.open(url, "_blank", "noopener");
 }

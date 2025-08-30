@@ -19,3 +19,10 @@ export const CANVAS_SIZE = 500;
 export function setLangIndex(val) {
     langIndex = val;
 }
+
+export const isUsingAndroidApp = false;
+
+export const isAndroidApp = (() => {
+    let cached = isUsingAndroidApp;
+    return () => cached;
+})();

@@ -1,235 +1,581 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <title>Binder View</title>
-      <link rel="stylesheet" href="styles.css" />
-      <style>
-         html {
-			 background: #191919;
-		}
-		 body {
-			 background: transparent;
-		}
-		 .binder-container {
-			 display: flex;
-			 justify-content: center;
-			 gap: 40px;
-			 padding: 40px;
-			 background-color: #191919;
-		}
-		 .binder-page {
-			 display: grid;
-			 grid-template-columns: repeat(3, 1fr);
-			 grid-template-rows: repeat(3, auto);
-			 gap: 10px;
-			 background: #111;
-			 padding: 15px;
-			 border-radius: 8px;
-			 border: 2px solid white;
-		}
-		 .binder-page img {
-			 width: 223px;
-			/* Yu-Gi-Oh card width in pixels */
-			 height: 325px;
-			/* Yu-Gi-Oh card height in pixels */
-			 object-fit: cover;
-			/* crop/center if needed */
-			 cursor: pointer;
-			 border: 2px solid #555;
-			 border-radius: 4px;
-			 transition: transform 0.2s;
-			 background-color: #000;
-			/* optional: avoids flicker before load */
-		}
-		 .binder-page img:hover {
-			 transform: scale(1.05);
-			 border-color: gold;
-		}
-		 .nav-button {
-			 position: fixed;
-			 top: 50%;
-			 transform: translateY(-50%);
-			 width: 50px;
-			 height: 50px;
-			 cursor: pointer;
-			 z-index: 9999;
-			 background: rgba(0,0,0,0.5);
-			 border-radius: 50%;
-			 display: flex;
-			 align-items: center;
-			 justify-content: center;
-		}
-		 .nav-button img {
-			 max-width: 70%;
-		}
-		 .prev-button {
-			 left: 10px;
-		}
-		 .next-button {
-			 right: 10px;
-		}
-      </style>
-   </head>
-   <body>
-      <div class="nav-button prev-button" id="prevPage"><img src="prev.png" alt="Previous"></div>
-      <div class="nav-button next-button" id="nextPage"><img src="next.png" alt="Next"></div>
-      <div class="binder-container" id="binder">
-         <div class="binder-page" id="pageLeft"></div>
-         <div class="binder-page" id="pageRight"></div>
-      </div>
-      <div id="pageControls" style="text-align:center; margin: 20px; background-color: transparent; z-index: 999;">
-         <span id="pageIndicator"></span>
-         <label for="pageJump" style="margin-left:10px;">Go to page:</label>
-         <input type="number" id="pageJump" min="1" style="width:60px;">
-         <button id="goToPageBtn">Go</button>
-      </div>
-      <script type="module">
-		import { localMode } from './config.js';
-		import { manager } from './card.js';
-		import { loadCSVAndDisplayCards } from './csv.js';
-		import { clickHandler } from './common.js';
-
-		let currentPageIndex = 0;
-		let cardsPerPage = 18;
-		let cards = [];
-
-		function renderBinderPage() {
-			const leftPage = document.getElementById('pageLeft');
-			const rightPage = document.getElementById('pageRight');
-			leftPage.innerHTML = '';
-			rightPage.innerHTML = '';
-
-			const startIndex = currentPageIndex * cardsPerPage;
-			let pageCards = cards.slice(startIndex, startIndex + cardsPerPage);
-
-			// Pad with null placeholders until we have exactly cardsPerPage entries
-			while (pageCards.length < cardsPerPage) {
-				pageCards.push(null);
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Binder View</title>
+		<link rel="stylesheet" href="styles.css" />
+		<style>
+			html {
+				background: #191919;
 			}
 
-			const leftCards = pageCards.slice(0, 9);
-			const rightCards = pageCards.slice(9, 18);
-
-			leftCards.forEach(card => {
-				const img = document.createElement('img');
-				if (card) {
-					img.src = card.getImageUrl();
-					img.title = card.name;
-					img.addEventListener('click', () => clickHandler(card, true));
-				} else {
-					img.src = 'placeholder.png'; // your blank-slot image
-					img.title = '';
-				}
-				img.alt = '';
-				leftPage.appendChild(img);
-			});
-
-			rightCards.forEach(card => {
-				const img = document.createElement('img');
-				if (card) {
-					img.src = card.getImageUrl();
-					img.title = card.name;
-					img.addEventListener('click', () => clickHandler(card, true));
-				} else {
-					img.src = 'placeholder.png';
-					img.title = '';
-				}
-				img.alt = '';
-				rightPage.appendChild(img);
-			});
-
-			// Update page indicator (1-based)
-			const totalPages = Math.max(1, Math.ceil(cards.length / cardsPerPage));
-			document.getElementById('pageIndicator').textContent =
-				`Page ${currentPageIndex + 1} of ${totalPages}`;
-		}
-
-		document.getElementById('goToPageBtn').addEventListener('click', () => {
-			const totalPages = Math.ceil(cards.length / cardsPerPage);
-			let pageNum = parseInt(document.getElementById('pageJump').value, 10);
-			if (!isNaN(pageNum) && pageNum >= 1 && pageNum <= totalPages) {
-				currentPageIndex = pageNum - 1;
-				renderBinderPage();
+			body {
+				background: transparent;
 			}
-		});
 
+			.binder-container {
+				display: flex;
+				justify-content: center;
+				gap: 40px;
+				padding: 40px;
+				background-color: #191919;
+			}
 
-		// Toggle this to true if you want to remove duplicates by card name
-		const filterDuplicates = true;
+			.binder-page {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				grid-template-rows: repeat(3, auto);
+				gap: 10px;
+				background: #111;
+				padding: 15px;
+				border-radius: 8px;
+				border: 2px solid white;
+			}
 
-		function initBinder(csvFile) {
-			fetch(csvFile)
-				.then(res => {
-					if (!res.ok) {
-						throw new Error(`Failed to load CSV: ${res.status} ${res.statusText}`);
+			.binder-page img {
+				width: 223px;
+				/* Yu-Gi-Oh card width in pixels */
+				height: 325px;
+				/* Yu-Gi-Oh card height in pixels */
+				object-fit: cover;
+				/* crop/center if needed */
+				cursor: pointer;
+				border: 2px solid #555;
+				border-radius: 4px;
+				transition: transform 0.2s;
+				background-color: #000;
+				/* optional: avoids flicker before load */
+			}
+
+			.binder-page img:hover {
+				transform: scale(1.05);
+				border-color: gold;
+			}
+
+			.nav-button {
+				position: fixed;
+				top: 50%;
+				transform: translateY(-50%);
+				width: 50px;
+				height: 50px;
+				cursor: pointer;
+				z-index: 9999;
+				background: rgba(0, 0, 0, 0.5);
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.nav-button img {
+				max-width: 70%;
+			}
+
+			.prev-button {
+				left: 10px;
+			}
+
+			.next-button {
+				right: 10px;
+			}
+
+			.binder-page {
+				overflow: hidden;
+				/* no scrollbars at all */
+				/* or, if you only want to hide vertical scrolling: */
+				/* overflow-y: hidden; */
+			}
+		</style>
+	</head>
+	<body>
+		<span class="sort-controls" id="sortControls" style="display:none;">
+			<label for="sortBy">Sort by:</label>
+			<select id="sortBy"></select>
+			<label for="sortOrder">Order:</label>
+			<select id="sortOrder">
+				<option value="asc">Ascending</option>
+				<option value="desc">Descending</option>
+			</select>
+			<button id="resetSortBtn" title="Restore original order">Reset</button>
+		</span>
+		<span id="sortNotice" style="margin-left:10px; color:#aaa;"></span>
+		</div>
+		<div class="nav-button prev-button" id="prevPage"><img src="prev.png" alt="Previous"></div>
+		<div class="nav-button next-button" id="nextPage"><img src="next.png" alt="Next"></div>
+		<div class="binder-container" id="binder">
+			<div class="binder-page" id="pageLeft"></div>
+			<div class="binder-page" id="pageRight"></div>
+		</div>
+		<div id="pageControls" style="text-align:center; margin: 20px; background-color: transparent; z-index: 999;">
+			<span id="pageIndicator"></span>
+			<label for="pageJump" style="margin-left:10px;">Go to page:</label>
+			<input type="number" id="pageJump" min="1" style="width:60px;">
+			<button id="goToPageBtn">Go</button>
+		</div>
+		<div id="stats"></div>
+		<button id="downloadBlacklistBtn">Download Blacklist</button>
+		<button id="downloadSleevesBtn">Download Sleeve States</button>
+		<script type="module">
+			import { localMode } from './config.js';
+			import { manager } from './card.js';
+			import { loadCSVAndDisplayCards } from './csv.js';
+			import * as common from './common.js';
+			import * as sorts from './sort.js';
+			
+			let currentPageIndex = 0;
+			let cardsPerPage = 18;
+			let cards = [];
+			// Preserve the original order (post-filtering) to allow Reset
+			let originalCards = [];
+			
+			const comparatorMap = new Map(); // key -> { label, fn }
+			let currentComparatorKey = '';
+			let currentOrder = 'asc';
+			
+			const sleeves_enabled = true;
+			
+			async function loadTextFiles() {
+				console.log("Loading text files");
+			
+				// Load blacklist.txt
+				try {
+					const resBL = await fetch('blacklist.txt');
+					if (resBL.ok) {
+						const text = await resBL.text();
+						blacklist = text.split('\n').map(l => l.trim()).filter(Boolean);
 					}
-					return res.text();
-				})
-				.then(csvText => {
-					if (!csvText.trim()) {
-						throw new Error("CSV file is empty or unreadable.");
+				} catch (err) {
+					console.warn('Could not load blacklist.txt', err);
+				}
+			
+				console.log("Blacklist loaded");
+			
+				// Load sleevestates.txt
+				try {
+					const resSL = await fetch('sleevestates.txt');
+					if (resSL.ok) {
+						const json = await resSL.text();
+						sleeveStates = JSON.parse(json);
+						console.log(sleeveStates);
 					}
-
-					manager.loadCards(csvText);
-
-					// Step 1: Remove any 'Product' type cards (case-insensitive)
-					let filtered = manager.cards.filter(
-						card => !card.type.toLowerCase().includes("product")
-					);
-
-					// Step 2: Optionally remove duplicates (same card.name)
-					if (filterDuplicates) {
-						const seenNames = new Set();
-						filtered = filtered.filter(card => {
-							if (seenNames.has(card.name)) {
-								return false;
+				} catch (err) {
+					console.warn('Could not load sleevestates.txt', err);
+				}
+			
+				console.log("Sleeved states loaded");
+			}
+			
+			function downloadFile(filename, content) {
+				const blob = new Blob([content], { type: 'text/plain' });
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = filename;
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+				URL.revokeObjectURL(url);
+			}
+			
+			document.getElementById('downloadBlacklistBtn').addEventListener('click', () => {
+				downloadFile('blacklist.txt', blacklist.join('\n'));
+			});
+			
+			document.getElementById('downloadSleevesBtn').addEventListener('click', () => {
+				downloadFile('sleevestates.txt', JSON.stringify(sleeveStates, null, 2));
+			});
+			
+			// --- BLACKLIST ---
+			let blacklist = [];
+			
+			// --- SLEEVE STATES ---
+			let sleeveStates = {}; // { cardName: 1|2 }
+			
+			// Utility to set/remove a state and persist
+			function setSleeveState(cardName, state) {
+				if (state === 0) {
+					// Remove entry entirely when un-sleeved
+					delete sleeveStates[cardName];
+				} else {
+					sleeveStates[cardName] = state;
+				}
+				saveSleeveStates();
+			}
+			
+			// Colors for states
+			const outlineColors = {
+				1: '2px solid yellow', // single sleeve
+				2: '2px solid red' // double sleeve
+			};
+			
+			function renderBinderPage() {
+				const leftPage = document.getElementById('pageLeft');
+				const rightPage = document.getElementById('pageRight');
+				leftPage.innerHTML = '';
+				rightPage.innerHTML = '';
+			
+				const startIndex = currentPageIndex * cardsPerPage;
+				let pageCards = cards.slice(startIndex, startIndex + cardsPerPage);
+			
+				// Pad with null placeholders until we have exactly cardsPerPage entries
+				while (pageCards.length < cardsPerPage) {
+					pageCards.push(null);
+				}
+			
+				const leftCards = pageCards.slice(0, 9);
+				const rightCards = pageCards.slice(9, 18);
+			
+				leftCards.forEach(card => {
+					const img = document.createElement('img');
+					applyOutlineBasedOnSleeveState(img, card.name);
+					if (card) {
+						img.src = card.getImageUrl();
+						img.title = card.name;
+						img.addEventListener('click', () => common.clickHandler(card, true));
+						// Context‑menu: toggle blacklist state in memory and update appearance
+						img.addEventListener('contextmenu', (e) => {
+							e.preventDefault();
+							const idx = blacklist.indexOf(card.name);
+							if (idx === -1) {
+								// Add to blacklist
+								blacklist.push(card.name);
+								img.style.filter = 'brightness(0)'; // visually blacked out
+							} else {
+								// Remove from blacklist
+								blacklist.splice(idx, 1);
+								img.style.filter = '';
 							}
-							seenNames.add(card.name);
-							return true;
+							// No save-to-disk here in browser mode — use Download Blacklist button to persist
 						});
+			
+						if (sleeves_enabled) {
+							// Wheel: cycle sleeve states 0→1→2→0
+							img.addEventListener('wheel', (e) => {
+								e.preventDefault();
+								const current = sleeveStates[card.name] || 0;
+								const next = (current + 1) % 3;
+								if (next === 0) {
+									delete sleeveStates[card.name];
+									img.style.outline = '';
+								} else {
+									sleeveStates[card.name] = next;
+									img.style.outline = outlineColors[next];
+								}
+							}, { passive: false });
+						}
+			
+					} else {
+						img.src = 'placeholder.png'; // your blank-slot image
+						img.title = '';
 					}
-
-					cards = filtered;
-					renderBinderPage();
-				})
-				.catch(err => {
-					console.error("Error loading binder data:", err);
-					// Optional: show a message in the UI
-					const binderContainer = document.getElementById('binder');
-					if (binderContainer) {
-						binderContainer.innerHTML = `<p style="color:white; text-align:center;">
-				  Unable to load binder data.<br>${err.message}
-				</p>`;
-					}
+					img.alt = '';
+					leftPage.appendChild(img);
 				});
-		}
-
-
-		document.getElementById('prevPage').addEventListener('click', () => {
-			if (currentPageIndex > 0) {
-				currentPageIndex--;
+			
+				rightCards.forEach(card => {
+					const img = document.createElement('img');
+					applyOutlineBasedOnSleeveState(img, card.name);
+					if (card) {
+						img.src = card.getImageUrl();
+						img.title = card.name;
+						img.addEventListener('click', () => common.clickHandler(card, true));
+						// Context‑menu: toggle blacklist state in memory and update appearance
+						img.addEventListener('contextmenu', (e) => {
+							e.preventDefault();
+							const idx = blacklist.indexOf(card.name);
+							if (idx === -1) {
+								// Add to blacklist
+								blacklist.push(card.name);
+								img.style.filter = 'brightness(0)'; // visually blacked out
+							} else {
+								// Remove from blacklist
+								blacklist.splice(idx, 1);
+								img.style.filter = '';
+							}
+							// No save-to-disk here in browser mode — use Download Blacklist button to persist
+						});
+			
+						if (sleeves_enabled) {
+							// Wheel: cycle sleeve states 0→1→2→0
+							img.addEventListener('wheel', (e) => {
+								e.preventDefault();
+								const current = sleeveStates[card.name] || 0;
+								const next = (current + 1) % 3;
+								if (next === 0) {
+									delete sleeveStates[card.name];
+									img.style.outline = '';
+								} else {
+									sleeveStates[card.name] = next;
+									img.style.outline = outlineColors[next];
+								}
+							}, { passive: false });
+						}
+			
+					} else {
+						img.src = 'placeholder.png';
+						img.title = '';
+					}
+					img.alt = '';
+					rightPage.appendChild(img);
+				});
+			
+				// Update page indicator (1-based)
+				const totalPages = Math.max(1, Math.ceil(cards.length / cardsPerPage));
+				document.getElementById('pageIndicator').textContent =
+					`Page ${currentPageIndex + 1} of ${totalPages}`;
+			}
+			
+			document.getElementById('goToPageBtn').addEventListener('click', () => {
+				const totalPages = Math.ceil(cards.length / cardsPerPage);
+				let pageNum = parseInt(document.getElementById('pageJump').value, 10);
+				if (!isNaN(pageNum) && pageNum >= 1 && pageNum <= totalPages) {
+					currentPageIndex = pageNum - 1;
+					renderBinderPage();
+				}
+			});
+			
+			function applyOutlineBasedOnSleeveState(img, cardName) {
+			
+				if (!sleeves_enabled) {
+					return;
+				}
+			
+				const state = sleeveStates[cardName] || 0;
+				img.style.outline = state > 0 ? outlineColors[state] : '';
+			}
+			
+			// Toggle this to true if you want to remove duplicates by card name
+			const filterDuplicates = true;
+			
+			function stableSortInPlace(arr, cmp) {
+				// decorate
+				const decorated = arr.map((v, i) => ({ v, i }));
+				decorated.sort((a, b) => {
+					const r = cmp(a.v, b.v);
+					return r !== 0 ? r : a.i - b.i; // stability
+				});
+				// undecorate
+				for (let i = 0; i < arr.length; i++) arr[i] = decorated[i].v;
+			}
+			
+			function normalizeLabel(key) {
+				// Create a nice label: "attack" -> "Attack", "ATK" preserved, "rarity" -> "Rarity"
+				if (!key) return '';
+				const pretty = key.replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim();
+				return pretty.charAt(0).toUpperCase() + pretty.slice(1);
+			}
+			
+			function buildComparatorMap() {
+				// 1) Collect from sorts.comparators (object of functions)
+				if (sorts && typeof sorts === 'object') {
+					if (sorts.comparators && typeof sorts.comparators === 'object') {
+						for (const [key, fn] of Object.entries(sorts.comparators)) {
+							if (typeof fn === 'function') {
+								comparatorMap.set(key, { label: normalizeLabel(key), fn });
+							}
+						}
+					}
+					// 2) If sort.js exposes a direct rarity comparator, add it if not present
+					if (typeof sorts.rarityComparator === 'function' && !comparatorMap.has('rarity')) {
+						comparatorMap.set('rarity', { label: 'Rarity', fn: sorts.rarityComparator });
+					}
+				}
+				// 3) If common.js exposes rarityComparator and we don't have it yet, add it
+				if (typeof common.rarityComparator === 'function' && !comparatorMap.has('rarity')) {
+					comparatorMap.set('rarity', { label: 'Rarity', fn: common.rarityComparator });
+				}
+			}
+			
+			function populateSortUI() {
+				const sortControls = document.getElementById('sortControls');
+				const sortBy = document.getElementById('sortBy');
+				const notice = document.getElementById('sortNotice');
+			
+				sortBy.innerHTML = '';
+			
+				if (comparatorMap.size === 0) {
+					sortControls.style.display = 'none';
+					notice.textContent = 'No comparators detected.';
+					return;
+				}
+			
+				// Show controls and fill options
+				sortControls.style.display = 'inline-flex';
+				notice.textContent = '';
+			
+				// Default option
+				const optDefault = document.createElement('option');
+				optDefault.value = '';
+				optDefault.textContent = '(Original order)';
+				sortBy.appendChild(optDefault);
+			
+				// Add one option per comparator
+				Array.from(comparatorMap.entries())
+					.sort((a, b) => a[0].localeCompare(b[0]))
+					.forEach(([key, meta]) => {
+						const opt = document.createElement('option');
+						opt.value = key;
+						opt.textContent = meta.label;
+						sortBy.appendChild(opt);
+					});
+			
+				// Restore selection if any
+				sortBy.value = currentComparatorKey || '';
+				document.getElementById('sortOrder').value = currentOrder || 'asc';
+			}
+			
+			function applySort() {
+				const sortBy = document.getElementById('sortBy').value;
+				const order = document.getElementById('sortOrder').value;
+			
+				currentComparatorKey = sortBy;
+				currentOrder = order;
+			
+				if (!sortBy) {
+					// Reset to original order
+					cards = originalCards.slice();
+				} else {
+					const meta = comparatorMap.get(sortBy);
+					if (!meta) return;
+					const baseCmp = meta.fn;
+					const cmp = (a, b) => {
+						const r = baseCmp(a, b);
+						// Ensure numeric sort contract and invert for desc
+						return order === 'desc' ? -r : r;
+					};
+					cards = originalCards.slice(); // sort from original baseline each time
+					stableSortInPlace(cards, cmp);
+				}
+				currentPageIndex = 0;
 				renderBinderPage();
 			}
-		});
-
-		document.getElementById('nextPage').addEventListener('click', () => {
-			if ((currentPageIndex + 1) * cardsPerPage < cards.length) {
-				currentPageIndex++;
+			
+			document.getElementById('sortBy').addEventListener('change', applySort);
+			document.getElementById('sortOrder').addEventListener('change', applySort);
+			document.getElementById('resetSortBtn').addEventListener('click', () => {
+				document.getElementById('sortBy').value = '';
+				document.getElementById('sortOrder').value = 'asc';
+				currentComparatorKey = '';
+				currentOrder = 'asc';
+				cards = originalCards.slice();
+				currentPageIndex = 0;
 				renderBinderPage();
+			});
+			
+			async function initBinder(csvFile) {
+				if (!localMode) {
+					return;
+				}
+					
+				await loadTextFiles();
+			
+				const res = await fetch(csvFile)
+					.then(res => {
+						if (!res.ok) {
+							throw new Error(`Failed to load CSV: ${res.status} ${res.statusText}`);
+						}
+						return res.text();
+					})
+					.then(csvText => {
+						if (!csvText.trim()) {
+							throw new Error("CSV file is empty or unreadable.");
+						}
+			
+						manager.loadCards(csvText);
+			
+						let filtered = manager.cards.filter(card => !blacklist.includes(card.name));
+			
+						// Step 1: Remove any 'Product' type cards (case-insensitive)
+						filtered = filtered.filter(
+							card => !card.type.toLowerCase().includes("product") && !card.rarity.toLowerCase().includes("fake")
+						);
+			
+						// Step 2: Optionally remove duplicates (same card.name)
+						if (filterDuplicates) {
+							const seenNames = new Set();
+							filtered = filtered.filter(card => {
+								if (seenNames.has(card.name)) {
+									return false;
+								}
+								seenNames.add(card.name);
+								return true;
+							});
+						}
+			
+						// After filtering and before originalCards assignment in initBinder
+						filtered.forEach(card => {
+							sorts.precomputeNumericFields(card);
+						});
+			
+			
+						// Set working and original arrays
+						originalCards = filtered.slice();
+						cards = filtered.slice();
+			
+						// Build comparators and UI
+						buildComparatorMap();
+						populateSortUI();
+			
+						renderBinderPage();
+						updateStats();
+					})
+					.catch(err => {
+						console.error("Error loading binder data:", err);
+						// Optional: show a message in the UI
+						const binderContainer = document.getElementById('binder');
+						if (binderContainer) {
+							binderContainer.innerHTML = `<p style="color:white; text-align:center;">Unable to load binder data.<br>${err.message}</p>`;
+						}
+					});
 			}
-		});
-
-		// Read ?file=... from URL
-		const params = new URLSearchParams(window.location.search);
-		const csvFileParam = params.get("file");
-
-		// Fallback if no param provided
-		const csvFile = csvFileParam ? decodeURIComponent(csvFileParam) : 'cards.csv';
-
-		// Then use it
-		if (localMode) initBinder(csvFile);
-      </script>
-   </body>
+			
+			function updateStats() {
+				const totalCards = cards.length;
+				const totalBlacklisted = blacklist.length;
+				let unsleeved = 0,
+					single = 0,
+					double = 0;
+				cards.forEach(c => {
+					const state = sleeveStates[c.name] || 0;
+					if (state === 0) unsleeved++;
+					if (state === 1) single++;
+					if (state === 2) double++;
+				});
+				document.getElementById('stats').textContent =
+					`Total: ${totalCards} | Blacklisted: ${totalBlacklisted} | Unsleeved: ${unsleeved} | Single: ${single} | Double: ${double}`;
+			}
+			
+			
+			document.getElementById('prevPage').addEventListener('click', () => {
+				if (currentPageIndex > 0) {
+					currentPageIndex--;
+					renderBinderPage();
+				}
+			});
+			
+			document.getElementById('nextPage').addEventListener('click', () => {
+				if ((currentPageIndex + 1) * cardsPerPage < cards.length) {
+					currentPageIndex++;
+					renderBinderPage();
+				}
+			});
+			
+			// Read ?file=... from URL
+			const params = new URLSearchParams(window.location.search);
+			const csvFileParam = params.get("file");
+			
+			// Fallback if no param provided
+			const csvFile = csvFileParam ? decodeURIComponent(csvFileParam) : 'cards.csv';
+			
+			// Then use it
+			initBinder(csvFile);
+			
+			document.querySelectorAll('.binder-page').forEach(page => {
+				page.addEventListener('wheel', e => {
+					e.preventDefault();
+				}, { passive: false });
+			});
+		</script>
+	</body>
 </html>

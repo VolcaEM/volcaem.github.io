@@ -5,6 +5,8 @@ import {
     allowNewlines,
     useTallTr,
     useSmallTr,
+    isUsingAndroidApp,
+    isAndroidApp
 
 } from './config.js';
 
@@ -94,6 +96,54 @@ export function loadCSVAndDisplayCards(myfile) {
         });
 }
 
+export function getLocalImagePath(card) {
+    const sanitizeFileName = (str) =>
+        str.normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+        .replace(/[:#"\/\\?%*|<>]/g, '') // Remove unsupported symbols
+        .trim()
+        .replace(/\s+/g, '_') // Collapse spaces to underscores
+        .replace(/_+/g, '_'); // Collapse multiple underscores
+
+    const gameDir = sanitizeFileName(currentGame.replaceAll("-", "")).toLowerCase();
+    const langDir = sanitizeFileName(card.language).toUpperCase();
+    const idFile = sanitizeFileName(card.id);
+
+    if (idFile.length === 0 && !card.getImageUrl().includes("common")) {
+        return "";
+    }
+
+    if (card.getImageUrl().includes("..")) {
+        return "";
+    }
+
+    if (isAndroidApp()) {
+        // Assumes images are stored in: /storage/emulated/0/TCGCollection/images/...
+        return `https://android.local/` + card.getImageUrl();
+    } else {
+        return card.getImageUrl();
+    }
+
+    return "";
+}
+
+function logMessage(msg) {
+    const should_log = false;
+    if (should_log) {
+        const panel = document.getElementById("logPanel");
+        if (panel) {
+            if (panel.style.display == "none") {
+                panel.style.display = "block";
+            }
+            const entry = document.createElement("div");
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            panel.appendChild(entry);
+            panel.scrollTop = panel.scrollHeight;
+        }
+    }
+}
+
+
 // Display cards in the table.
 export function displayCards(cards) {
     // Store a copy of the current displayed cards.
@@ -101,6 +151,8 @@ export function displayCards(cards) {
 
     const tbody = document.getElementById("cardBody");
     tbody.innerHTML = "";
+
+    logMessage(`isAndroidApp: ${isAndroidApp()}`);
 
     // Calculate the unique card names.
     const uniqueNames = new Set(cards.map(card => card.name));
@@ -148,7 +200,9 @@ export function displayCards(cards) {
             if (usetall_tr === true) imgTd.classList.add("tall-tr");
             if (usesmall_tr === true) imgTd.classList.add("small-tr");
             const img = document.createElement("img");
-            img.src = card.getImageUrl();
+            img.src = getLocalImagePath(card);
+
+            logMessage(`Trying to load image: ${img.src}`);
 
             // img.alt = card.name;
             img.alt = "X";
@@ -166,6 +220,7 @@ export function displayCards(cards) {
             }
 
             img.onerror = function() {
+
                 // helper scoped inside onerror: remove accents, unsupported chars, collapse spaces/underscores
                 function sanitizeFileName(str) {
                     return str
@@ -185,7 +240,8 @@ export function displayCards(cards) {
                 const idFile = sanitizeFileName(card.id);
 
                 // set tooltip to the exact path you're attempting to load
-                this.title = `Should be loaded from: images/cards/${gameDir}/${langDir}/${idFile}.png`;
+                logMessage(`❌ Failed to load image: ${img.src}`);
+                this.title = `Failed to load: ${img.src}`;
 
                 // revert styling
                 img.classList.remove("card-image");

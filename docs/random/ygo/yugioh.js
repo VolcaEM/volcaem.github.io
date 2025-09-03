@@ -84,6 +84,7 @@ export const yugiohRarityOptions = [
     ["Ghost Rare", "ghostrare"],
     ["Collectors Rare", "collectorsrare"],
     ["Ultimate Rare", "ultimaterare"],
+    ["Starlight Rare", "starlightrare"],
     ["Unknown", "unknown"],
     ["Fake", "fake"]
 ];

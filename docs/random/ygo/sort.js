@@ -171,6 +171,7 @@ export function getRarityOrder(game) {
 
     if (game === "Yu-Gi-Oh") {
         addOrder([
+            ["Starlight Rare", "starlightrare"],
             ["Collectors Rare", "collectorsrare"],
             ["Ultimate Rare", "ultimaterare"],
             ["Secret Rare", "secretrare"],

@@ -46,6 +46,7 @@ export const gameTranslations = {
         ['ghostrare', 'Ghost Rare', 'Rara Ghost'],
         ['collectorsrare', "Collector's Rare", 'Rara da Collezione'],
         ['ultimaterare', 'Ultimate Rare', 'Ultimate Rare'],
+        ['starlightrare', 'Starlight Rare', 'Starlight Rare'],
         ['fake', 'FAKE', 'FALSA'],
         ['number', 'Number ', 'Numero ']
     ],

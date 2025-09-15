@@ -1,0 +1,67 @@
+{
+  "gaming": {
+    "name": "Gaming",
+    "image": "/wishlist/images/CategoryGaming.png",
+    "children": {
+      "consoles": {
+        "name": "Consoles",
+        "image": "/wishlist/images/categories/gaming/ConsolesSubcategory.png",
+        "items": [
+          {
+            "id": "NSW2",
+            "name": "Nintendo Switch 2",
+            "image": "/wishlist/images/categories/gaming/consoles/switch2.png",
+            "price": 470,
+            "shipping": 0,
+			"url": "https://www.amazon.it/Nintendo-10015151-Console-Switch-2/dp/B0F2J4SYJ2"
+          },
+          {
+            "id": "PS5PRO",
+            "name": "PlayStation 5 Pro",
+            "image": "/wishlist/images/categories/gaming/consoles/ps5-pro.png",
+            "price": 770,
+            "shipping": 0,
+			"url": "https://www.amazon.it/Playstation-CFI-7021-PlayStation-5-PRO/dp/B0DHSV68YZ"
+          }
+        ]
+      },
+      "accessories": {
+        "name": "Accessories",
+        "image": "/wishlist/images/categories/gaming/AccessoriesSubcategory.png",
+        "items": [
+          {
+            "id": "XWC",
+            "name": "Xbox Wireless Controller",
+            "image": "/wishlist/images/categories/gaming/accessories/xbox-controller.png",
+            "price": 65,
+            "shipping": 0,
+			"url": "https://www.amazon.it/Xbox-Controller-Wireless-Windows-Android/dp/B0F2NCQYTX"
+          }
+        ]
+      },
+      "games": {
+        "name": "Games",
+        "image": "/wishlist/images/categories/gaming/GamesSubcategory.png",
+        "items": [
+          {
+            "id": "GGZTOK",
+            "name": "The Legend of Zelda: Tears of the Kingdom",
+            "image": "/wishlist/images/categories/gaming/games/totk.png",
+            "price": 60,
+            "shipping": 0,
+			"url": "https://www.amazon.it/Legend-Zelda-Videogioco-Nintendo-Italiana/dp/B0BLZMC461"
+          },
+		  {
+      "id": "XBOXWISHLIST",
+      "name": "My Xbox Wishlist",
+      "image": "/wishlist/images/categories/gaming/games/xbox-wishlist.png",
+      "price": 952380.95,
+      "shipping": 0,
+      "url": "https://www.xbox.com/it-IT/wishlist/860A7FE240F046A5FDAD3F181FE86D1C0E6B020EFCAF90CDD0AFCDF8709776720",
+	  "force_external": true
+    }
+        ]
+      }
+    }
+  }
+}

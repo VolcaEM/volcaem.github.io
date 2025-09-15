@@ -1,0 +1,15 @@
+{
+  "necessities": {
+    "name": "Necessities",
+    "image": "/wishlist/images/categories/CategoryNecessities.png",
+    "items": [
+          {
+            "id": "RENT",
+            "name": "Pay My Rent",
+            "image": "/wishlist/images/categories/necessities/rent.png",
+            "price": 600,
+            "shipping": 0
+          }
+        ]
+  }
+}

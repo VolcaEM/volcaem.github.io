@@ -204,6 +204,13 @@ async function showItems() {
     const root = segments[0];
     console.log('Root segment:', root);
 
+    if (root === 'supportMeForFree') {
+        let desc = document.getElementById("description");
+        if (desc) {
+            desc.innerHTML = "By doing some of these actions, I may earn a commission, at no extra cost to you. Thanks for your help!";
+        }
+    }
+
     // Strategy:
     // - Load the per-root tree at data/<root>.json (your deep tree like food.json)
     // - Fallback to categories.json if needed (not expected to contain deep children)

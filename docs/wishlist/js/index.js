@@ -10,7 +10,7 @@ async function loadCategories() {
             console.group(`Category: ${key}`);
 
             try {
-                const itemsRes = await fetch(`data/${key}.json`);
+                const itemsRes = await fetch(`data/${key.replaceAll(" ", "")}.json`);
                 const text = await itemsRes.text(); // Read raw text first
                 console.log(`Raw JSON for ${key}:`, text.slice(0, 100)); // Preview first 100 chars
 

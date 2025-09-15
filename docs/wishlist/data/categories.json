@@ -14,5 +14,9 @@
   "necessities": {
     "name": "Necessities",
     "image": "/wishlist/images/categories/CategoryNecessities.png"
+  },
+  "supportMeForFree": {
+    "name": "Support Me For Free",
+    "image": "/wishlist/images/categories/CategorySupportMeForFree.png"
   }
 }

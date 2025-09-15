@@ -78,7 +78,7 @@ async function showProduct() {
     </div>
   </div>
   ${
-    p.price >= 952380
+    p.price >= 952380 || p.price <= 0
       ? ''
       : `<a href="https://ko-fi.com/volca/${p.total}" target="_blank">
            Donate ${p.total}€ via Ko-Fi
@@ -92,16 +92,19 @@ async function showProduct() {
     backButton.className = 'back-button';
     detail.appendChild(backButton);
 
-    // Add donation note after back button
-    const note = document.createElement('p');
-    note.className = 'donation-note';
-    note.innerHTML = `
+    if (p.price < 952380 && p.price > 0.00) {
+
+        // Add donation note after back button
+        const note = document.createElement('p');
+        note.className = 'donation-note';
+        note.innerHTML = `
   <strong>Note:</strong> When donating, <b>please</b> include "<em>${p.name}</em>" or 
   <code><b id="copy-id" style="cursor:pointer;" title="Click to copy">ID ${p.id}</b></code> 
   in the message box so I know what it's for!
 `;
 
-    detail.appendChild(note);
+        detail.appendChild(note);
+    }
 
     document.getElementById('copy-id').addEventListener('click', () => {
         navigator.clipboard.writeText(`ID ${p.id}`).then(() => {

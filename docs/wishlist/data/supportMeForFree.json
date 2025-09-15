@@ -1,0 +1,63 @@
+{
+  "supportMeForFree": {
+    "name": "Support Me For Free",
+    "image": "/wishlist/images/categories/CategorySupportMeForFree.png",
+    "items": [
+      {
+        "id": "RegisterCardTrader",
+        "name": "Register on CardTrader and Buy Something",
+		"image": "/wishlist/images/categories/supportMeForFree/CardTrader.png",
+        "url": "https://www.cardtrader.com/invite/oldlace-island-430"
+      },
+      {
+        "id": "JoinTelegram",
+        "name": "Join my channel",
+		"image": "/wishlist/images/categories/supportMeForFree/TGLogo.png",
+        "url": "https://t.me/VolcaEM_Official",
+		"force_external": true
+      },
+      {
+        "id": "FollowTwitter",
+        "name": "Follow me on X",
+		"image": "/wishlist/images/categories/supportMeForFree/XLogo.png",
+        "url": "https://x.com/OfficialVolcaEM",
+		"force_external": true
+      },
+      {
+        "id": "LikeRepostTwitter",
+        "name": "Interact w/ my posts",
+		"image": "/wishlist/images/categories/supportMeForFree/XLogo.png",
+        "url": "https://x.com/OfficialVolcaEM/with_replies",
+		"force_external": true
+      },
+      {
+        "id": "SubscribeYouTube",
+        "name": "Subscribe on YouTube",
+		"image": "/wishlist/images/categories/supportMeForFree/YTLogo.png",
+        "url": "https://www.youtube.com/@VolcaEM",
+		"force_external": true
+      },
+	  {
+        "id": "SubscribeTwitch",
+        "name": "Follow me on Twitch",
+		"image": "/wishlist/images/categories/supportMeForFree/TwitchLogo.png",
+        "url": "https://twitch.tv/VolcaEM",
+		"force_external": true
+      },
+      {
+        "id": "ShareLinkTree",
+        "name": "Share my LinkTree",
+		"image": "/wishlist/images/categories/supportMeForFree/LinktreeLogo.png",
+        "url": "https://linktr.ee/volcaem",
+		"force_external": true
+      },
+	  {
+        "id": "ShareKoFi",
+        "name": "Share my Ko-Fi",
+		"image": "/wishlist/images/categories/supportMeForFree/KoFiLogo.png",
+        "url": "https://ko-fi.com/volca",
+		"force_external": true
+      }
+    ]
+  }
+}

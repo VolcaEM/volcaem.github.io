@@ -1,22 +1,22 @@
 {
-  "food": {
-    "name": "Food",
-    "image": "/wishlist/images/categories/CategoryFood.png"
-  },
-  "gaming": {
-    "name": "Gaming",
-    "image": "/wishlist/images/categories/CategoryGaming.png"
-  },
-  "tcg": {
-    "name": "TCG",
-    "image": "/wishlist/images/categories/CategoryTCG.png"
-  },
-  "necessities": {
-    "name": "Necessities",
-    "image": "/wishlist/images/categories/CategoryNecessities.png"
-  },
-  "supportMeForFree": {
-    "name": "Support Me For Free",
-    "image": "/wishlist/images/categories/CategorySupportMeForFree.png"
-  }
+	"food":{
+		"name":"Food",
+		"image":"/wishlist/images/categories/CategoryFood.png"
+	},
+	"gaming":{
+		"name":"Gaming",
+		"image":"/wishlist/images/categories/CategoryGaming.png"
+	},
+	"tcg":{
+		"name":"TCG",
+		"image":"/wishlist/images/categories/CategoryTCG.png"
+	},
+	"necessities":{
+		"name":"Necessities",
+		"image":"/wishlist/images/categories/CategoryNecessities.png"
+	},
+	"supportMeForFree":{
+		"name":"Support Me For Free",
+		"image":"/wishlist/images/categories/CategorySupportMeForFree.png"
+	}
 }

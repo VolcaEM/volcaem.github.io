@@ -1,38 +1,38 @@
 {
-  "food": {
-    "name": "Food",
-    "image": "/wishlist/images/food.png",
-    "children": {
-      "pizza": {
-        "name": "Pizza",
-        "image": "/wishlist/images/categories/food/pizza.png",
-        "items": [
-          {
-            "id": "PizzaMarinara",
-            "name": "Pizza Marinara",
-            "image": "/wishlist/images/categories/food/pizza/pizzamarinara.png",
-            "price": 5,
-            "shipping": 5,
-			"shipping_optional": true
-          },
-          {
-            "id": "PizzaMargherita",
-            "name": "Pizza Margherita",
-            "image": "/wishlist/images/categories/food/pizza/pizzamargherita.png",
-            "price": 6,
-            "shipping": 4,
-			"shipping_optional": true
-          },
-          {
-            "id": "PizzaQuattroFormaggi",
-            "name": "Pizza ai Quattro Formaggi",
-            "image": "/wishlist/images/categories/food/pizza/pizza4formaggi.png",
-            "price": 8,
-            "shipping": 2,
-			"shipping_optional": true
-          }
-        ]
-      }
-    }
-  }
+	"food":{
+		"name":"Food",
+		"image":"/wishlist/images/food.png",
+		"children":{
+			"pizza":{
+				"name":"Pizza",
+				"image":"/wishlist/images/categories/food/pizza.png",
+				"items":[
+					{
+						"id":"PizzaMarinara",
+						"name":"Pizza Marinara",
+						"image":"/wishlist/images/categories/food/pizza/pizzamarinara.png",
+						"price":5,
+						"shipping":5,
+						"shipping_optional":true
+					},
+					{
+						"id":"PizzaMargherita",
+						"name":"Pizza Margherita",
+						"image":"/wishlist/images/categories/food/pizza/pizzamargherita.png",
+						"price":6,
+						"shipping":4,
+						"shipping_optional":true
+					},
+					{
+						"id":"PizzaQuattroFormaggi",
+						"name":"Pizza ai Quattro Formaggi",
+						"image":"/wishlist/images/categories/food/pizza/pizza4formaggi.png",
+						"price":8,
+						"shipping":2,
+						"shipping_optional":true
+					}
+				]
+			}
+		}
+	}
 }

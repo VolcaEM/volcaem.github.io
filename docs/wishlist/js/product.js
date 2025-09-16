@@ -5,13 +5,15 @@ class Product {
         this.image = data.image;
         this.price = parseFloat(data.price) || 0;
         this.shipping = parseFloat(data.shipping) || 0;
+        this.shipping_optional = data.shipping_optional || false;
         this.url = data.url || null;
         this.force_external = data.force_external || null;
         this.paypal_tax = data.paypal_tax || false;
     }
 
     get subtotal() {
-        return this.price + this.shipping;
+        // If shipping is optional, don't include it in subtotal
+        return this.price + (this.shipping_optional ? 0 : this.shipping);
     }
 
     get baseTax() {
@@ -30,9 +32,10 @@ class Product {
     }
 
     get taxes() {
-        return +(this.total - this.subtotal).toFixed(2); // Reflect adjusted rounding
+        return +(this.total - this.subtotal).toFixed(2);
     }
 }
+
 
 async function showProduct() {
     const params = new URLSearchParams(window.location.search);
@@ -72,10 +75,18 @@ async function showProduct() {
   <div class="prices">
     <div class="prices-inner">
       <p>Price: ${p.price}€</p>
-      <p>Shipping: ${p.shipping}€</p>
+      <p>
+  ${p.shipping_optional && p.shipping > 0.00
+    ? `Shipping (optional): ${p.shipping}€` 
+    : `Shipping: ${p.shipping}€`}
+</p>
+
       <p>Taxes + rounding: ${p.taxes}€</p>
       <h3>Total: ${p.total}€</h3>
     </div>
+	${p.shipping_optional && p.shipping > 0.00 
+        ? `<p class="shipping-note">Shipping is <b>optional</b> for this item, and as such is <b>not</b> included in the total.</p>` 
+        : ''}
   </div>
   ${
     p.price >= 952380 || p.price <= 0
@@ -85,6 +96,7 @@ async function showProduct() {
          </a>`
   }
 `;
+
 
     const backButton = document.createElement('a');
     backButton.href = `items.html?path=${encodeURIComponent(path)}`;

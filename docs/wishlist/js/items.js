@@ -9,13 +9,15 @@ class Product {
         this.image = data.image;
         this.price = parseFloat(data.price) || 0;
         this.shipping = parseFloat(data.shipping) || 0;
+        this.shipping_optional = data.shipping_optional || false;
         this.url = data.url || null;
         this.force_external = data.force_external || null;
         this.paypal_tax = data.paypal_tax || false;
     }
 
     get subtotal() {
-        return this.price + this.shipping;
+        // If shipping is optional, don't include it in subtotal
+        return this.price + (this.shipping_optional ? 0 : this.shipping);
     }
 
     get baseTax() {
@@ -33,11 +35,11 @@ class Product {
         return rawTotal % 2 === 0 ? rawTotal : Math.ceil(rawTotal / 2) * 2;
     }
 
-
     get taxes() {
-        return +(this.total - this.subtotal).toFixed(2); // Reflect adjusted rounding
+        return +(this.total - this.subtotal).toFixed(2);
     }
 }
+
 
 
 function toTitleCase(str) {

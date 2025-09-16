@@ -241,16 +241,14 @@ header {
 }
 
 .prices {
-	display: flex;
+	display: block;
 	justify-content: center;
 	/* center the whole block horizontally */
 }
 
 .prices-inner {
 	text-align: right !important;
-	/* align text inside to the right */
-	transform: translateX(-35%) !important;
-	/* shift left by 20px */
+	transform: translateX(-45%) !important;
 }
 
 .item-card.has-custom-url,
@@ -267,6 +265,11 @@ header {
   word-break: keep-all;
 }
 
+.shipping-note {
+    text-align: center !important; /* override parent */
+    width: 100%; /* span full width so text-align works */
+    margin: 0.5em 0; /* some spacing */
+}
 
 /* Responsive tweaks */
 @media (max-width: 850px) {

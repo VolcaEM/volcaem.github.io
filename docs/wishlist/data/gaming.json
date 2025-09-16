@@ -13,7 +13,8 @@
             "image": "/wishlist/images/categories/gaming/consoles/switch2.png",
             "price": 470,
             "shipping": 0,
-			"url": "https://www.amazon.it/Nintendo-10015151-Console-Switch-2/dp/B0F2J4SYJ2"
+			"url": "https://www.amazon.it/Nintendo-10015151-Console-Switch-2/dp/B0F2J4SYJ2",
+			"shipping_optional": true
           },
           {
             "id": "PS5PRO",
@@ -21,7 +22,8 @@
             "image": "/wishlist/images/categories/gaming/consoles/ps5-pro.png",
             "price": 770,
             "shipping": 0,
-			"url": "https://www.amazon.it/Playstation-CFI-7021-PlayStation-5-PRO/dp/B0DHSV68YZ"
+			"url": "https://www.amazon.it/Playstation-CFI-7021-PlayStation-5-PRO/dp/B0DHSV68YZ",
+			"shipping_optional": true
           }
         ]
       },
@@ -35,7 +37,8 @@
             "image": "/wishlist/images/categories/gaming/accessories/xbox-controller.png",
             "price": 65,
             "shipping": 0,
-			"url": "https://www.amazon.it/Xbox-Controller-Wireless-Windows-Android/dp/B0F2NCQYTX"
+			"url": "https://www.amazon.it/Xbox-Controller-Wireless-Windows-Android/dp/B0F2NCQYTX",
+			"shipping_optional": true
           }
         ]
       },
@@ -49,7 +52,8 @@
             "image": "/wishlist/images/categories/gaming/games/totk.png",
             "price": 60,
             "shipping": 0,
-			"url": "https://www.amazon.it/Legend-Zelda-Videogioco-Nintendo-Italiana/dp/B0BLZMC461"
+			"url": "https://www.amazon.it/Legend-Zelda-Videogioco-Nintendo-Italiana/dp/B0BLZMC461",
+			"shipping_optional": true
           },
 		  {
       "id": "XBOXWISHLIST",

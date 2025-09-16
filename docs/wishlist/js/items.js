@@ -13,15 +13,20 @@ class Product {
         this.url = data.url || null;
         this.force_external = data.force_external || null;
         this.paypal_tax = data.paypal_tax || false;
+
+        // User choice: if optional, default to excluded; if not optional, include by necessity
+        this.includeShipping = this.shipping_optional ? false : true;
     }
 
     get subtotal() {
-        // If shipping is optional, don't include it in subtotal
-        return this.price + (this.shipping_optional ? 0 : this.shipping);
+        // If shipping is optional, include it only if the user opted in.
+        // If shipping is not optional, include it always.
+        const shouldInclude = this.shipping_optional ? this.includeShipping : true;
+        return this.price + (shouldInclude ? this.shipping : 0);
     }
 
     get baseTax() {
-        return +(this.subtotal * 0.05).toFixed(2); // 5% Ko-Fi tax
+        return +(this.subtotal * 0.05).toFixed(2); // 5% Ko‑Fi tax
     }
 
     get paypalTax() {
@@ -39,8 +44,6 @@ class Product {
         return +(this.total - this.subtotal).toFixed(2);
     }
 }
-
-
 
 function toTitleCase(str) {
     return str.replace(/\w\S*/g, word =>

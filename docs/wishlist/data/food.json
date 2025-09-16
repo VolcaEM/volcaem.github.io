@@ -1,11 +1,11 @@
 {
 	"food":{
 		"name":"Food",
-		"image":"/wishlist/images/food.png",
+		"image":"/wishlist/images/categories/CategoryFood.png",
 		"children":{
 			"pizza":{
 				"name":"Pizza",
-				"image":"/wishlist/images/categories/food/pizza.png",
+				"image":"/wishlist/images/categories/food/CategoryPizza.png",
 				"items":[
 					{
 						"id":"PizzaMarinara",
@@ -29,6 +29,20 @@
 						"image":"/wishlist/images/categories/food/pizza/pizza4formaggi.png",
 						"price":8,
 						"shipping":2,
+						"shipping_optional":true
+					}
+				]
+			},
+			"kebab":{
+				"name":"Kebab",
+				"image":"/wishlist/images/categories/food/CategoryKebab.png",
+				"items":[
+					{
+						"id":"PaninoKebab",
+						"name":"Panino Kebab",
+						"image":"/wishlist/images/categories/food/kebab/paninokebab.png",
+						"price":6,
+						"shipping":4,
 						"shipping_optional":true
 					}
 				]

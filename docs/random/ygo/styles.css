@@ -261,3 +261,30 @@ li {
 .canvasclass {
 	border: 3px solid black;
 }
+
+.tag-button {
+	position: relative;
+	background: #f0f0f0;
+	border: 1px solid #ccc;
+	padding: 4px 10px;
+	cursor: pointer;
+	color: transparent;
+	/* hides any fallback text */
+	border: 1px solid cyan;
+	border-radius: 8px;
+	/* <-- rounded corners */
+	transition: background 0.2s, transform 0.1s;
+}
+
+/* Render visible label from data-value */
+.tag-button::before {
+	content: attr(data-value);
+	color: black;
+	font-style: italic;
+	/* makes it look like <i> */
+}
+
+/* Hide label instantly when searching */
+.tag-button.hidden-label::before {
+	content: "";
+}

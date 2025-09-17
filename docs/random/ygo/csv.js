@@ -5,6 +5,7 @@ import {
     allowNewlines,
     useTallTr,
     useSmallTr,
+    enableCollections,
     isUsingAndroidApp,
     isAndroidApp
 
@@ -141,6 +142,39 @@ function logMessage(msg) {
             panel.scrollTop = panel.scrollHeight;
         }
     }
+}
+
+export function createStealthButton(label, mycards) {
+    const btn = document.createElement("button");
+
+    // Store the real value for click handling
+    btn.dataset.value = label;
+
+    // Add a class for styling and pseudo-element rendering
+    btn.classList.add("tag-button");
+
+    // Accessibility: screen readers still get the label
+    btn.setAttribute("aria-label", label);
+
+    // Click handler: filter cards by tag
+    btn.addEventListener("click", (cards) => {
+        const tag = btn.dataset.value;
+
+        // Find all cards whose comments contain [tag]
+        const matchingCards = manager.cards.filter(card =>
+            card.comments && card.comments.replaceAll("{", "[").replaceAll("}", "]").includes(`[${tag}]`)
+        );
+
+        // For now, just log them — replace with your display logic
+        //console.log(`Cards with [${tag}]:`, matchingCards);
+
+        // Example: update the UI
+        // renderCards(matchingCards);
+        displayCards(matchingCards);
+        window.scrollTo(0, 0);
+    });
+
+    return btn;
 }
 
 
@@ -405,10 +439,29 @@ export function displayCards(cards) {
         // …inside your row‐rendering loop…
 
         let tdComments = document.createElement("td");
-        const comments = card.comments || "";
+        let comments = card.comments || "";
 
-        // default is plain comments
-        tdComments.textContent = comments;
+        // Clear tdComments in case it had text
+        tdComments.textContent = "";
+
+        if (enableCollections) {
+            comments = comments.replaceAll("{", "[").replaceAll("}", "]");
+            // Regex to match [Something] patterns
+            const parts = comments.split(/(\[[^\]]+\])/g);
+
+            parts.forEach(part => {
+                if (part.startsWith("[") && part.endsWith("]")) {
+                    const label = part.slice(1, -1); // remove brackets
+                    const btn = createStealthButton(label);
+                    tdComments.appendChild(btn);
+                    tdComments.appendChild(document.createTextNode(" "));
+                } else {
+                    tdComments.appendChild(document.createTextNode(part));
+                }
+            });
+        } else {
+            tdComments.textContent = comments.replaceAll("{", "").replaceAll("}", "").replaceAll(/\[[^\]]+\]/g, "").trim();
+        }
 
         if (sortBy === "stonks") {
             const profit = (cleanedMarketPrice - Number(card.pricePaid))
@@ -466,4 +519,23 @@ export function displayCards(cards) {
             .replace("NUMBER", currentDisplayedCards.length.toString())
             .replace("UNIQUENUM", uniqueNames.size.toString()) + "\t</div>";
     }
+}
+
+if (enableCollections) {
+    // Detect CTRL+F / CMD+F and hide labels temporarily
+    document.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "f") {
+            console.log("Hiding");
+            document.querySelectorAll(".tag-button").forEach(btn => {
+                btn.classList.add("hidden-label");
+            });
+
+            // Optional: restore after 5 seconds
+            setTimeout(() => {
+                document.querySelectorAll(".tag-button").forEach(btn => {
+                    btn.classList.remove("hidden-label");
+                });
+            }, 9999);
+        }
+    });
 }

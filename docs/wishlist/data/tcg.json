@@ -32,6 +32,17 @@
 									"xyz":{
 										"name":"XYZ",
 										"image":"/wishlist/images/categories/tcg/yugioh/cards/monsters/XYZSubcategory.png",
+										"items":[
+										{
+											"id":"NeoGalaxyEyesPhotonDragon",
+											"name":"Neo Drago Fotonico Occhi Galattici",
+											"image":"/wishlist/images/categories/tcg/yugioh/cards/monsters/xyz/TYCMXNGEPD.png",
+											"price":2,
+											"shipping":1.6,
+											"url":"https://www.cardmarket.com/it/YuGiOh/Cards/Neo-GalaxyEyes-Photon-Dragon?sellerCountry=17&language=5&minCondition=4",
+											"paypal_tax":true
+										}
+										],
 										"children":{
 											"numbers":{
 												"name":"Numbers",

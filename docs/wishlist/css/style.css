@@ -201,6 +201,20 @@ header {
 	font-weight: bold;
 }
 
+.product-detail a.mail {
+	padding: 0 !important;
+	margin: 0 !important;
+	background-color: transparent !important;
+	color: black !important;
+	border-radius: 0 !important;
+	font-weight: bold;
+	/* makes it bold */
+	font-style: italic;
+	/* makes it italic */
+	text-decoration: underline;
+	/* adds underline */
+}
+
 .product-detail a:hover {
 	background-color: #e04e4e;
 }

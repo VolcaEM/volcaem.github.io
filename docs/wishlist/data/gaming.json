@@ -47,6 +47,64 @@
 				"image":"/wishlist/images/categories/gaming/GamesSubcategory.png",
 				"items":[
 					{
+						"id":"GGNINGIFTCARD",
+						"name":"Nintendo Gift Card",
+						"image":"/wishlist/images/categories/gaming/games/ningiftcard.png",
+						"price":15,
+						"shipping":0,
+						"url":"https://www.amazon.it/Nintendo-eShop-Carta-regalo-EUR/dp/B07VGTHHPT",
+						"variable_price":true,
+						"specific_instructions":"<b>Note:</b> Please send the code to <a href=\"mailto:volcasvoice+gifts@gmail.com\" class=\"mail\">volcasvoice+gifts@gmail.com</a> along with proof-of-purchase (photo or screenshot).<br><b>Note (2):</b> Only valid codes for the Italian region can be accepted.<br><b>Note (3):</b> I reserve the right to decline -- or even ignore (based on the circumstances) -- such gift(s) at my discretion, including cases where they are invalid, incompatible, or otherwise unsuitable.",
+						"no_donate_button":true
+					},
+					{
+						"id":"GGPSGIFTCARD",
+						"name":"PlayStation Gift Card",
+						"image":"/wishlist/images/categories/gaming/games/psgiftcard.png",
+						"price":10,
+						"shipping":0,
+						"url":"https://www.amazon.it/PlayStation-Network-Card-Codice-download/dp/B07JH83GHR",
+						"variable_price":true,
+						"specific_instructions":"<b>Note:</b> Please send the code to <a href=\"mailto:volcasvoice+gifts@gmail.com\" class=\"mail\">volcasvoice+gifts@gmail.com</a> along with proof-of-purchase (photo or screenshot).<br><b>Note (2):</b> Only valid codes for the Italian region can be accepted.<br><b>Note (3):</b> I reserve the right to decline -- or even ignore (based on the circumstances) -- such gift(s) at my discretion, including cases where they are invalid, incompatible, or otherwise unsuitable.",
+						"no_donate_button":true
+					},
+					{
+						"id":"GGXBOXGIFTCARD",
+						"name":"Xbox Gift Card",
+						"image":"/wishlist/images/categories/gaming/games/xboxgiftcard.png",
+						"price":5,
+						"shipping":0,
+						"url":"https://www.amazon.it/Xbox-Live-Regalo-Codice-Digital/dp/B07VNB4QT2",
+						"variable_price":true,
+						"specific_instructions":"<b>Note:</b> Please send the code to <a href=\"mailto:volcasvoice+gifts@gmail.com\" class=\"mail\">volcasvoice+gifts@gmail.com</a> along with proof-of-purchase (photo or screenshot).<br><b>Note (2):</b> Only valid codes for the Italian region can be accepted.<br><b>Note (3):</b> I reserve the right to decline -- or even ignore (based on the circumstances) -- such gift(s) at my discretion, including cases where they are invalid, incompatible, or otherwise unsuitable.",
+						"no_donate_button":true
+					},
+					{
+						"id":"GGDERQCODEZPS5",
+						"name":"Death end re;Quest Code Z",
+						"image":"/wishlist/images/categories/gaming/games/deathendrequestcodez.png",
+						"price":51.29,
+						"shipping":0.00,
+						"url":"https://www.amazon.it/Death-end-Quest-Code-Day/dp/B0F2FVLP14"
+					},
+					{
+						"id":"GGFDCEMIO",
+						"name":"Emio – L'uomo che sorride",
+						"image":"/wishlist/images/categories/gaming/games/emio.png",
+						"price":45.86,
+						"shipping":0.00,
+						"url":"https://www.amazon.it/Emio-Detective-Videogioco-Nintendo-Italiana/dp/B0D9PBWP75"
+					},
+					{
+						"id":"GGHKPS4",
+						"name":"Hollow Knight (PS4 Physical)",
+						"image":"/wishlist/images/categories/gaming/games/hollowknight.png",
+						"price":33.41,
+						"shipping":1.59,
+						"url":"https://www.amazon.it/Hollow-Knight-Ps4-Playstation-4/dp/B07QBLYTYX",
+						"shipping_optional":true
+					},
+					{
 						"id":"GGZTOK",
 						"name":"The Legend of Zelda: Tears of the Kingdom",
 						"image":"/wishlist/images/categories/gaming/games/totk.png",
@@ -66,6 +124,19 @@
 					}
 				]
 			}
-		}
+		},
+		"items":[
+			{
+				"id":"GAMAZONGIFTCARD",
+				"name":"Amazon Gift Card",
+				"image":"/wishlist/images/categories/gaming/amazongiftcard.png",
+				"price":5,
+				"shipping":0,
+				"url":"https://www.amazon.it/dp/B0DT6RBMNF?th=1&gpo=5",
+				"variable_price":true,
+				"specific_instructions":"<b>Note:</b> Please send the code to <a href=\"mailto:volcasvoice+gifts@gmail.com\" class=\"mail\">volcasvoice+gifts@gmail.com</a> along with proof-of-purchase (photo or screenshot).<br><b>Note (2):</b> Only valid codes for the Italian region can be accepted.<br><b>Note (3):</b> I reserve the right to decline -- or even ignore (based on the circumstances) -- such gift(s) at my discretion, including cases where they are invalid, incompatible, or otherwise unsuitable.",
+				"no_donate_button":true
+			}
+		]
 	}
 }

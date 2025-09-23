@@ -9,6 +9,9 @@ class Product {
         this.url = data.url || null;
         this.force_external = data.force_external || null;
         this.paypal_tax = data.paypal_tax || false;
+        this.variable_price = data.variable_price || false;
+        this.no_donate_button = data.no_donate_button || false;
+        this.specific_instructions = data.specific_instructions || null;
 
         // User choice: if optional, default to excluded; if not optional, include by necessity
         this.includeShipping = this.shipping_optional ? false : true;
@@ -73,20 +76,25 @@ async function showProduct() {
     function renderPrices() {
         const pricesInner = detail.querySelector('.prices-inner');
         pricesInner.innerHTML = `
-            <p>Price: ${p.price}€</p>
-            <p>${
-                p.shipping_optional && p.shipping > 0
-                    ? (p.includeShipping ? `Shipping: ${p.shipping}€` : `Shipping (optional): ${p.shipping}€`)
-                    : `Shipping: ${p.shipping}€`
-            }</p>
-            <p>Taxes + rounding: ${p.taxes}€</p>
-            <h3>Total: ${p.total}€</h3>
+            <p>${p.variable_price ? `<h3>` : ``} Price: ${p.price}€${p.variable_price ? `+</h3>` : ``}</p>
+            ${p.shipping > 0 ?
+                p.shipping_optional
+                    ? (p.includeShipping ? `<p>Shipping: ${p.shipping}€</p>` : `<p>Shipping (optional): ${p.shipping}€</p>`)
+                    : `<p>Shipping: ${p.shipping}€</p>` : ``
+            }
+            ${p.no_donate_button ? `` : `<p>Taxes + rounding: ${p.taxes}€${p.variable_price ? "+" : ""}</p>`}
+            ${p.no_donate_button ? `` : `<h3>Total: ${p.total}€${p.variable_price ? "+" : ""}</h3>`}
         `;
 
         const donateBtn = detail.querySelector('.donate-btn');
         if (donateBtn) {
             donateBtn.href = `https://ko-fi.com/volca/${p.total}`;
             donateBtn.textContent = `Donate ${p.total}€ via Ko-Fi`;
+            if (p.no_donate_button) {
+                donateBtn.style.display = "none";
+                donateBtn.style.width = "0px";
+                donateBtn.style.height = "0px";
+            }
         }
 
         // Keep the note visibility in sync if elements exist
@@ -157,7 +165,7 @@ async function showProduct() {
     if (p.price < 952380 && p.price > 0.00) {
         const note = document.createElement('p');
         note.className = 'donation-note';
-        note.innerHTML = `
+        note.innerHTML = p.specific_instructions ? p.specific_instructions : `
             <strong>Note:</strong> When donating, <b>please</b> include "<em>${p.name}</em>" or 
             <code><b id="copy-id" style="cursor:pointer;" title="Click to copy">ID ${p.id}</b></code> 
             in the message box so I know what it's for!

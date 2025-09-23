@@ -13,6 +13,9 @@ class Product {
         this.url = data.url || null;
         this.force_external = data.force_external || null;
         this.paypal_tax = data.paypal_tax || false;
+        this.variable_price = data.variable_price || false;
+        this.no_donate_button = data.no_donate_button || false;
+        this.specific_instructions = data.specific_instructions || null;
 
         // User choice: if optional, default to excluded; if not optional, include by necessity
         this.includeShipping = this.shipping_optional ? false : true;
@@ -135,7 +138,7 @@ function renderProductCard(grid, path, prodData) {
     <a href="${link}" ${hasCustomURL ? 'target="_blank"' : ''}>
       <img src="${p.image}" alt="${p.name}">
       <div class="item-name" title="${p.name}">${p.name}</div>
-      <div class="item-price">${p.total}€+</div>
+      <div class="item-price">${p.variable_price ? p.price : p.total}€+</div>
     </a>
   `;
     grid.appendChild(card);

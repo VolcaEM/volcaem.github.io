@@ -55,25 +55,15 @@ export function compareByCommentPresenceAndName(a, b) {
 
     //console.log("compareComment");
 
-    const aHasComment = !!a.comments?.trim();
-    const bHasComment = !!b.comments?.trim();
-
-    if (aHasComment && !bHasComment) return -1;
-    if (!aHasComment && bHasComment) return 1;
-
-    if (aHasComment && bHasComment) {
-        return a.comments.localeCompare(b.comments);
-    }
-
-    return 0;
+    return (a.comments.length > 0 || b.comments.length > 0) && a.comments.trim().localeCompare(b.comments.trim(), undefined, { numeric: true });
 }
 
 
 // 1) Correct JS syntax
 export function compareById(a, b) {
     // Split at the dash; if there is no dash, sufX will be undefined
-    const [preA, sufA = ""] = a.id.split("-");
-    const [preB, sufB = ""] = b.id.split("-");
+    const [preA, sufA = ""] = a.id.split("-").trim();
+    const [preB, sufB = ""] = b.id.split("-").trim();
 
     // 2) Compare the prefixes first (e.g. "ALIN" vs "CBLZ")
     const prefixCompare = preA.localeCompare(preB);
@@ -89,7 +79,7 @@ export function compareById(a, b) {
     }
 
     // 4) Fallback to string compare (handles non-numeric suffixes)
-    return sufA.localeCompare(sufB);
+    return sufA.trim().localeCompare(sufB.trim());
 }
 
 // Normalize and compare names (Italian numeric locale)

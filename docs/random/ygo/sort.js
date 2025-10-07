@@ -41,7 +41,7 @@ export const comparators = {
     marketPrice: (a, b) => (a._marketPrice || 0.00) - (b._marketPrice || 0.00),
 
     // Profit sort (descending)
-    stonks: (a, b) => Math.max(0.00, b._profit - a._profit),
+    stonks: (a, b) => b.pricePaid > 0.00 && Math.max(0.00, b._profit - a._profit),
 
     // Date sort
     dateObtained: (a, b) => parseDate(a.dateObtained) - parseDate(b.dateObtained),

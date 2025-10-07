@@ -48,7 +48,9 @@ export const gameTranslations = {
         ['ultimaterare', 'Ultimate Rare', 'Ultimate Rare'],
         ['starlightrare', 'Starlight Rare', 'Starlight Rare'],
         ['fake', 'FAKE', 'FALSA'],
-        ['number', 'Number ', 'Numero ']
+        ['number', 'Number ', 'Numero '],
+
+        ['useGenesysFormat', 'Apply Genesys format', 'Applica formato Genesys'],
     ],
 
     // POKEMON

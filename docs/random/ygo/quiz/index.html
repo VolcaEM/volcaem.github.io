@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>XYZ Summon Animation (Master Duel style)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main id="stage">
+    <div id="stars" class="layer hidden"></div>
+
+    <div id="camera" class="layer">
+	
+	  	  <img id="explosion" src="images/explosion.png" alt="explosion" style="display:none" />
+	
+      <div id="card-stack" class="center">
+        <div class="card back"></div>
+        <div class="card material m1"></div>
+        <div class="card material m2"></div>
+      </div>
+
+      <div id="xyz-effect" aria-hidden="true">
+        <div id="vortex"></div>
+
+        <div id="material-uzu" aria-hidden="true"></div>
+
+        <div id="center-flare" aria-hidden="true"></div>
+        <canvas id="particles"></canvas>
+      </div>
+    </div>
+  </main>
+  <img id="explosion" src="images/explosion.png" style="display: none;"></img>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -188,12 +188,40 @@ export function displayCards(cards) {
 
     logMessage(`isAndroidApp: ${isAndroidApp()}`);
 
-    // Calculate the unique card names.
-    const uniqueNames = new Set(cards.map(card => card.name));
+    let filtered_cards = cards.slice();
+
+    if (currentGame == "Yu-Gi-Oh") {
+        let force_genesys = false;
+        let genesysCheckbox = document.getElementById("genesysCheckbox");
+        if (force_genesys || (genesysCheckbox && genesysCheckbox.checked)) {
+            // Exclude Link and Pendulum cards
+            filtered_cards = filtered_cards.filter(card =>
+                !card.type.includes("Link") && !card.type.includes("Pendulum")
+            );
+        }
+    }
+
+    let duplicateCheck = document.getElementById("duplicatesCheckbox");
+    if (duplicateCheck) {
+        let matchingCards;
+        let force_no_duplicates = false;
+
+        if (force_no_duplicates || !duplicateCheck.checked) {
+            // Deduplicate by card.name
+            const seen = new Set();
+            filtered_cards = filtered_cards.filter(card => {
+                if (seen.has(card.name)) {
+                    return false; // skip duplicates
+                }
+                seen.add(card.name);
+                return true; // keep first occurrence
+            });
+        }
+    }
 
     // Update the result count immediately even if 0 entries.
     const resultCountEl = document.getElementById("resultCount");
-    if (cards.length === 0) {
+    if (filtered_cards.length === 0) {
         const tr = document.createElement("tr");
         const td = document.createElement("td");
         td.setAttribute("colspan", "15");
@@ -206,7 +234,10 @@ export function displayCards(cards) {
         return;
     }
 
-    cards.forEach(card => {
+    // Calculate the unique card names.
+    const uniqueNames = new Set(filtered_cards.map(card => card.name));
+
+    filtered_cards.forEach(card => {
 
         let nowrap_td = !allowNewlines;
         let usetall_tr = useTallTr;
@@ -295,7 +326,7 @@ export function displayCards(cards) {
 
                 // Add the event listeners
                 if (localMode) {
-                    img.addEventListener('click', () => clickHandler(card));
+                    img.addEventListener('click', () => clickHandler(card, !duplicateCheck.checked));
                 }
                 img.addEventListener("mouseenter", mouseEnterHandler);
                 img.addEventListener("mousemove", mouseMoveHandler);
@@ -467,20 +498,12 @@ export function displayCards(cards) {
             const profit = (cleanedMarketPrice - Number(card.pricePaid))
                 .toFixed(2);
 
-            if (Number(profit) > 0) {
+            if (Number(profit) > 0.00 && Number(card.pricePaid) > 0.00) {
                 // inject <br> only if there are comments
-                tdComments.innerHTML = comments ?
-                    `${escapeHTML(comments)}<br>+${profit}` :
-                    ("+" + profit);
+                tdComments.textContent = ("+" + profit);
+            } else {
+                tdComments.textContent = "";
             }
-        }
-
-        // small helper to avoid XSS
-        function escapeHTML(str) {
-            return str
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;");
         }
 
         tr.appendChild(tdComments);
@@ -512,11 +535,13 @@ export function displayCards(cards) {
         tbody.appendChild(tr);
     });
 
+    setCurrentDisplayedCards(filtered_cards.slice());
+
     updateTotalSpent();
 
     if (resultCountEl) {
         resultCountEl.innerHTML = "<div class=\"results\">" + translations[langIndex]["showingcards"]
-            .replace("NUMBER", currentDisplayedCards.length.toString())
+            .replace("NUMBER", filtered_cards.length.toString())
             .replace("UNIQUENUM", uniqueNames.size.toString()) + "\t</div>";
     }
 }

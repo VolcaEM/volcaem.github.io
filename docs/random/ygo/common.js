@@ -87,6 +87,8 @@ export function resetFilters() {
         .value = "";
     document.getElementById("debugCheckbox")
         .checked = false;
+    document.getElementById("duplicatesCheckbox")
+        .checked = true;
     document.getElementById("sortBy")
         .selectedIndex = 0;
     document.getElementById("packOptions")

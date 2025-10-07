@@ -53,6 +53,10 @@ import {
     dbsRarityOptions,
 } from './dbs.js';
 
+import {
+    displayCards,
+} from './csv.js';
+
 ////////////////////////////////
 // Card Classes
 ////////////////////////////////
@@ -85,6 +89,7 @@ export class Card {
 export class CardManager {
     constructor() {
         this.cards = [];
+        this.loaded = false;
     }
 
     loadCards(csvText) {
@@ -127,10 +132,43 @@ export class CardManager {
 
                         if (filterSelect != null && filterRarity != null) {
                             switch (currentGame) {
-                                case "Yu-Gi-Oh":
+                                case "Yu-Gi-Oh": {
                                     populateFilterTypeSelect(filterSelect, yugiohFilterOptions, key => translations[langIndex][key]);
                                     populateFilterTypeSelect(filterRarity, yugiohRarityOptions, key => translations[langIndex][key]);
-                                    break;
+
+                                    let gsd = document.getElementById("gameSpecificDiv");
+
+                                    // Create the wrapper span
+                                    const genesysControl = document.createElement('span');
+                                    genesysControl.id = "genesysControl";
+
+                                    // Create the checkbox
+                                    const checkbox = document.createElement('input');
+                                    checkbox.type = "checkbox";
+                                    checkbox.id = "genesysCheckbox";
+                                    checkbox.checked = false;
+
+                                    // Create the label span with translation key
+                                    const labelSpan = document.createElement('span');
+                                    const translationKey = "useGenesysFormat";
+                                    labelSpan.setAttribute("data-translation-key", translationKey);
+
+                                    // Inject the translated text immediately
+                                    if (translations && translations[langIndex] && translations[langIndex][translationKey]) {
+                                        labelSpan.textContent = translations[langIndex][translationKey];
+                                    } else {
+                                        labelSpan.textContent = translationKey; // fallback
+                                    }
+
+                                    // Assemble the structure
+                                    genesysControl.appendChild(checkbox);
+                                    genesysControl.appendChild(document.createTextNode(" ")); // spacing
+                                    genesysControl.appendChild(labelSpan);
+
+                                    // Append to your target container
+                                    gsd.appendChild(genesysControl);
+                                }
+                                break;
 
                                 case "Pokémon":
                                     populateFilterTypeSelect(filterSelect, pokemonFilterOptions, key => translations[langIndex][key]);
@@ -227,6 +265,8 @@ export class CardManager {
                 })
             );
         }
+
+        this.loaded = true;
     }
 
 

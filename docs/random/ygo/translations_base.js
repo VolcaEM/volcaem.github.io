@@ -51,6 +51,7 @@ export const baseTranslations = {
     reverseOrder: ['Reverse Table', 'Inverti Ordinamento'],
 
     showDebug: ['Show Debug', 'Mostra Debug'],
+    showDuplicates: ['Show Duplicates', 'Mostra Doppie'],
 
     tableImage: ['IMG', 'IMG'],
     tableName: ['Name', 'Nome'],
@@ -80,7 +81,7 @@ export const baseTranslations = {
     ],
 
     go: ['Go', 'Vai'],
-    pageLanguage: ['Display Language: ', 'Lingua di visualizzazione: '],
+    pageLanguage: ['Language: ', 'Lingua: '],
     loadcsv: ['Load CSV', 'Carica CSV'],
     totalSpent: ['Total spent: ', 'Totale speso: '],
 

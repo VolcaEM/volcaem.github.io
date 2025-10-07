@@ -1,0 +1,220 @@
+:root{
+  --stage-w:100vw;
+  --stage-h:100vh;
+  --accent:#66ccff;
+  --gold:#ffd27f;
+  --bg:#00102a;
+}
+
+/* Reset & base */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  overflow:hidden;
+  color:white;
+}
+
+/* Stage & layers */
+#stage{width:100%;height:100%;position:relative}
+.layer{position:absolute;inset:0;pointer-events:none}
+
+/* Starfield layer (starts hidden; JS fades it in) */
+#stars{
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0) 40%),
+              linear-gradient(#00102a, #000814);
+  filter:blur(0.25px);
+  opacity:0;
+  transition:opacity 520ms ease;
+  z-index:0;
+}
+
+/* Camera group */
+#camera{display:flex;align-items:center;justify-content:center;transform-origin:center center;z-index:2}
+
+/* Card stack */
+.center{position:relative;display:flex;align-items:center;justify-content:center;height:100%}
+#card-stack{width:300px;height:420px;transform-style:preserve-3d;pointer-events:none;position:relative;z-index:10}
+
+/* Card base */
+.card{
+  position:absolute;width:220px;height:320px;border-radius:14px;
+  
+  transform-origin:center center;backface-visibility:hidden;
+  display:flex;align-items:center;justify-content:center;
+  color:white;font-weight:700;font-size:24px;
+  z-index:1;
+  will-change:transform, opacity;
+}
+
+/* Card states */
+.card.back{transform:translateZ(-40px) rotateX(8deg) scale(0.9);opacity:0.6}
+.card.material.m1{transform:translate(-28px,10px) rotateZ(-8deg) translateZ(10px)}
+.card.material.m2{transform:translate(28px,-14px) rotateZ(8deg) translateZ(20px)}
+
+/* Elevated revealed final card */
+.card.back.revealed{
+  z-index:1000;
+  position:relative;
+  box-shadow: 0 40px 140px rgba(0,0,0,0.85);
+  background:#0b2336;box-shadow:0 20px 80px rgba(0,0,0,0.8), inset 0 2px 8px rgba(255,255,255,0.02);
+}
+
+/* XYZ effect container */
+#xyz-effect{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:20;pointer-events:none;
+  opacity:0;transform:scale(0.9);
+}
+
+/* Vortex ring */
+#vortex{
+  width:560px;height:560px;border-radius:50%;
+  background:conic-gradient(from 180deg at 50% 50%, rgba(102,204,255,0.06), rgba(255,215,127,0.06));
+  mix-blend-mode:screen;filter:blur(8px);
+  transform:scale(0.6);
+  transition:transform 600ms linear;
+  z-index:22;
+}
+
+/* Spiral (MaterialUzu). Images assigned in JS; keep centered and rotatable. */
+#material-uzu{
+  position:fixed;
+  top:50%;left:50%;
+  width:640px;height:640px;border-radius:50%;
+  transform:translate(-50%,-50%) scale(1) rotate(0deg);
+  transform-origin:center center;
+  mix-blend-mode:screen;
+  opacity:0;
+  transition:opacity 420ms ease, transform 520ms cubic-bezier(.2,.9,.25,1);
+  filter:drop-shadow(0 30px 60px rgba(0,0,0,0.45));
+  background-position:center;
+  background-size:contain;
+  background-repeat:no-repeat;
+  z-index:23;
+  will-change:transform, opacity;
+}
+
+/* Center flare (centerFlare) */
+#center-flare{
+  position:fixed;
+  top:50%;left:50%;
+  width:220px;height:220px;border-radius:50%;
+  transform:translate(-50%,-50%) scale(1);
+  background-position:center;
+  background-size:contain;
+  background-repeat:no-repeat;
+  opacity:0;
+  transition:opacity 360ms ease, transform 420ms cubic-bezier(.2,.9,.25,1);
+  pointer-events:none;
+  mix-blend-mode:screen;
+  z-index:40;
+}
+
+/* Glow orb fallback (kept for animations if present) */
+#glow-orb{
+  position:absolute;width:160px;height:160px;border-radius:50%;
+  background: radial-gradient(circle at 40% 35%, rgba(255,255,255,0.95), rgba(102,204,255,0.12) 30%, rgba(0,0,0,0) 70%);
+  box-shadow:0 0 120px 20px rgba(102,204,255,0.18), 0 0 30px 6px rgba(255,215,127,0.06);
+  transform:translateY(-20px) scale(0.8);
+  mix-blend-mode:screen;
+  z-index:30;
+}
+
+/* XYZ text */
+#xyz-number{
+  position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);
+  font-family: 'Impact', system-ui; font-size:76px;letter-spacing:12px;
+  text-shadow:0 6px 20px rgba(0,0,0,0.6);
+  color:transparent;
+  -webkit-background-clip:text;background-clip:text;
+  background-image:linear-gradient(90deg,var(--gold),var(--accent));
+  opacity:0;filter:drop-shadow(0 8px 20px rgba(0,0,0,0.6));
+  z-index:35;
+}
+
+/* Particles canvas */
+#particles{position:absolute;width:100%;height:100%;left:0;top:0;pointer-events:none;z-index:25}
+
+/* Play button */
+#playBtn{
+  position:absolute;right:24px;bottom:24px;padding:10px 16px;border-radius:8px;border:0;background:linear-gradient(180deg,#66ccff,#347f9a);
+  color:#02121a;font-weight:700;cursor:pointer;z-index:60;pointer-events:auto;box-shadow:0 6px 18px rgba(0,0,0,0.6)
+}
+
+/* Material base visibility (start hidden) */
+.card.material {
+  opacity: 0;
+  transition: opacity 160ms linear, transform 260ms cubic-bezier(.2,.9,.25,1);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* In-flight material */
+.card.material.in-flight {
+  z-index: 200;
+  opacity: 1;
+  transition: none;
+}
+
+/* Final small position after disappearing into center */
+.card.material.final-pos {
+  opacity: 0;
+  transform: scale(0.18) translateY(-10px);
+}
+
+/* Active classes toggled by JS */
+.effect-active #xyz-effect{opacity:1;transform:scale(1);transition:opacity 220ms linear}
+.effect-active #camera{animation:camera-zoom 700ms cubic-bezier(.2,.9,.25,1)}
+.effect-pulse #vortex{animation:vortex-spin 1200ms linear infinite}
+.effect-pulse #xyz-number{animation:xyz-pop 900ms cubic-bezier(.2,.9,.25,1) forwards}
+
+/* Spiral CSS rotation fallback */
+.rotate-uzu{
+  animation:uzu-rotate linear 6s infinite;
+}
+@keyframes uzu-rotate{
+  from{transform:translate(-50%,-50%) rotate(0deg) scale(1)}
+  to{transform:translate(-50%,-50%) rotate(360deg) scale(1)}
+}
+
+/* Keyframes */
+@keyframes vortex-spin{
+  from{transform:rotate(0) scale(0.9)}
+  to{transform:rotate(360deg) scale(1)}
+}
+@keyframes xyz-pop{
+  0%{opacity:0;transform:translateY(20px) scale(0.8)}
+  60%{opacity:1;transform:translateY(-6px) scale(1.06)}
+  100%{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes camera-zoom{
+  0%{transform:scale(1) translateZ(0)}
+  60%{transform:scale(1.14) translateZ(0)}
+  100%{transform:scale(1) translateZ(0)}
+}
+
+/* Responsive */
+@media (max-width:600px){
+  #card-stack{width:180px;height:260px}
+  .card{width:140px;height:200px;border-radius:10px}
+  #vortex{width:340px;height:340px}
+  #material-uzu{width:420px;height:420px}
+  #center-flare{width:120px;height:120px}
+  #xyz-number{font-size:44px}
+}
+
+/* explosion image placed behind the revealed card but above particles */
+#explosion{
+  position: absolute;       /* same stacking context as #card-stack / #camera */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  pointer-events: none;
+  z-index: 10;              /* less than card (cards use z-index 1000 when revealed) but above particles (25) */
+  display: none;
+  opacity: 0;
+  transition: opacity 260ms ease, transform 360ms cubic-bezier(.2,.9,.25,1);
+  will-change: opacity, transform;
+}

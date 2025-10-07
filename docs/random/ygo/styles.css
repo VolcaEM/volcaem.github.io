@@ -288,3 +288,15 @@ li {
 .tag-button.hidden-label::before {
 	content: "";
 }
+
+span::before {
+	content: "   ";
+}
+
+span::after {
+	content: "   ";
+}
+
+span {
+	margin-left: 8px;
+}

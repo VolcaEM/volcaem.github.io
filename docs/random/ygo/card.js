@@ -272,6 +272,10 @@ export class CardManager {
 
     filterCards(filters) {
         return this.cards.filter(card => {
+
+            let invertFilterCheckbox = document.getElementById("invertFilterCheckbox");
+            console.log("Invert filter checkbox checked: " + invertFilterCheckbox.checked.toString());
+
             if (filters.name && !card.name.toLowerCase()
                 .replaceAll("—— ", "")
                 .replaceAll("— ", "")
@@ -281,94 +285,105 @@ export class CardManager {
                 return false;
 
             if (filters.type) {
-                // Normalize and extract card type details.
-                const cardTypeStr = card.type.toLowerCase()
-                    .trim();
-                const cardBase = card.type.replace(/\(([^)]+)\)/, "")
-                    .trim()
-                    .toLowerCase();
+                const cardTypeStr = card.type.toLowerCase().trim();
+                const cardBase = card.type.replace(/\(([^)]+)\)/, "").trim().toLowerCase();
+
                 let cardBadges = [];
                 const badgeMatch = card.type.match(/\(([^)]+)\)/);
                 if (badgeMatch) {
-                    // Use "/" as delimiter, so "Pendulum/Effect" becomes ["pendulum", "effect"].
                     cardBadges = badgeMatch[1].split("/")
-                        .map(token => token.trim()
-                            .toLowerCase());
+                        .map(token => token.trim().toLowerCase());
                 }
 
-                // If the filter string includes parentheses, assume a full-type match.
+                let match = true; // assume match until proven otherwise
+
                 if (filters.type.indexOf("(") !== -1) {
-                    const filterTypeStr = filters.type.toLowerCase()
-                        .trim();
-                    // Extract the base from the filter.
-                    const filterBase = filters.type.replace(/\(([^)]+)\)/, "")
-                        .trim()
-                        .toLowerCase();
+                    // Full-type match with parentheses
+                    const filterBase = filters.type.replace(/\(([^)]+)\)/, "").trim().toLowerCase();
                     let filterBadges = [];
                     const filterBadgeMatch = filters.type.match(/\(([^)]+)\)/);
                     if (filterBadgeMatch) {
                         filterBadges = filterBadgeMatch[1].split("/")
-                            .map(token => token.trim()
-                                .toLowerCase());
+                            .map(token => token.trim().toLowerCase());
                     }
 
-                    // Base must match exactly.
-                    if (cardBase !== filterBase) return false;
+                    // Base must match
+                    if (cardBase !== filterBase) match = false;
 
-                    // Each badge in the filter must be present in the card.
+                    // Each badge in the filter must be present
                     for (const token of filterBadges) {
-                        switch (currentGame) {
-                            case "Yu-Gi-Oh":
-                                // Special handling in case you use "xyz" as shorthand.
-                                if (token === "xyz") {
-                                    if (!cardTypeStr.includes("xyz)")) return false;
-                                } else {
-                                    if (token === "link") {
-                                        if (!cardTypeStr.includes("(link")) return false;
-                                    } else {
-                                        if (!cardBadges.includes(token)) return false;
-                                    }
-                                }
-                                break;
-                            default:
-                                break;
+                        if (currentGame === "Yu-Gi-Oh") {
+                            if (token === "xyz") {
+                                if (!cardTypeStr.includes("xyz)")) match = false;
+                            } else if (token === "link") {
+                                if (!cardTypeStr.includes("(link")) match = false;
+                            } else {
+                                if (!cardBadges.includes(token)) match = false;
+                            }
+                        } else {
+                            if (!cardBadges.includes(token)) match = false;
                         }
                     }
                 } else {
-                    // Partial matching: the filter may be a single term or multiple tokens separated by "/"
-                    const filterTypeStr = filters.type.toLowerCase()
-                        .trim();
-                    let filterTokens = filterTypeStr.includes("/") ?
-                        filterTypeStr.split("/")
-                        .map(t => t.trim()) : [filterTypeStr];
+                    // Partial matching: single or multiple tokens
+                    const filterTokens = filters.type.toLowerCase().trim().includes("/") ?
+                        filters.type.toLowerCase().split("/").map(t => t.trim()) : [filters.type.toLowerCase().trim()];
 
-                    // For each filter token, at least one must appear in the card base or one of its badges.
-                    for (const token of filterTokens) {
-                        if (
-                            !cardBase.includes(token) &&
-                            !cardBadges.some(badge => badge.includes(token))
-                        ) {
-                            return false;
-                        }
+                    // At least one token must match
+                    match = filterTokens.some(token =>
+                        cardBase.includes(token) || cardBadges.some(badge => badge.includes(token))
+                    );
+                }
+
+                // Apply inversion
+                if (invertFilterCheckbox.checked) {
+                    match = !match;
+                }
+
+                if (!match) return false;
+            }
+
+            if (filters.rarity) {
+                if (!invertFilterCheckbox.checked) {
+                    if (card.rarity !== filters.rarity) {
+                        return false;
                     }
+                } else {
+                    return card.rarity !== filters.rarity;
                 }
             }
 
-
-
-            if (filters.rarity && card.rarity !== filters.rarity)
-                return false;
-
-            if (filters.quality && card.quality !== filters.quality)
-                return false;
+            if (filters.quality) {
+                if (!invertFilterCheckbox.checked) {
+                    if (card.quality !== filters.quality) {
+                        return false;
+                    }
+                } else {
+                    return card.quality !== filters.quality;
+                }
+            }
 
             // --- New: Filter by language
-            if (filters.language && card.language.toLowerCase() !== filters.language.toLowerCase())
-                return false;
+            if (filters.language) {
+                if (!invertFilterCheckbox.checked) {
+                    if (card.language.toLowerCase() !== filters.language.toLowerCase()) {
+                        return false;
+                    }
+                } else {
+                    return card.language.toLowerCase() !== filters.language.toLowerCase();
+                }
+            }
 
             // --- New: Filter by edition (or edition type)
-            if (filters.edition && card.edition.toLowerCase() !== filters.edition.toLowerCase())
-                return false;
+            if (filters.edition) {
+                if (!invertFilterCheckbox.checked) {
+                    if (card.edition.toLowerCase() !== filters.edition.toLowerCase()) {
+                        return false;
+                    }
+                } else {
+                    return card.edition.toLowerCase() !== filters.edition.toLowerCase();
+                }
+            }
 
             return true;
         });

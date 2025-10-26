@@ -52,6 +52,7 @@ export const baseTranslations = {
 
     showDebug: ['Show Debug', 'Mostra Debug'],
     showDuplicates: ['Show Duplicates', 'Mostra Doppie'],
+    invertFilters: ['Reverse filters', 'Inverti filtri'],
 
     tableImage: ['IMG', 'IMG'],
     tableName: ['Name', 'Nome'],

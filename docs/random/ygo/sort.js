@@ -62,18 +62,18 @@ export function compareByCommentPresenceAndName(a, b) {
 // 1) Correct JS syntax
 export function compareById(a, b) {
     // Split at the dash; if there is no dash, sufX will be undefined
-    const [preA, sufA = ""] = a.id.split("-").trim();
-    const [preB, sufB = ""] = b.id.split("-").trim();
+    const [preA, sufA = ""] = a.id.split("-");
+    const [preB, sufB = ""] = b.id.split("-");
 
     // 2) Compare the prefixes first (e.g. "ALIN" vs "CBLZ")
-    const prefixCompare = preA.localeCompare(preB);
+    const prefixCompare = preA.trim().localeCompare(preB.trim());
     if (prefixCompare !== 0) {
         return prefixCompare;
     }
 
     // 3) Same prefix: try numeric compare of the suffix
-    const nA = parseInt(sufA, 10);
-    const nB = parseInt(sufB, 10);
+    const nA = parseInt(sufA.trim(), 10);
+    const nB = parseInt(sufB.trim(), 10);
     if (!isNaN(nA) && !isNaN(nB)) {
         return nA - nB; // e.g. "9" < "10"
     }

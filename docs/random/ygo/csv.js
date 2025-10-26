@@ -451,13 +451,29 @@ export function displayCards(cards) {
         if (usesmall_tr === true) tdPackID.classList.add("small-tr");
         tr.appendChild(tdPackID);
 
+        const skip_before_2020 = false;
+
         // Date Obtained.
+        if (card.dateObtained && skip_before_2020) {
+            // Expecting dd/mm/YYYY
+            const parts = card.dateObtained.split("/");
+            if (parts.length === 3) {
+                const year = parseInt(parts[2], 10);
+
+                // Skip this card if year < 2020
+                if (year < 2020) {
+                    return;
+                }
+            }
+        }
+
         let tdDate = document.createElement("td");
         tdDate.textContent = card.dateObtained;
         if (nowrap_td === true) tdDate.classList.add("nowrap-td");
         if (usetall_tr === true) tdDate.classList.add("tall-tr");
         if (usesmall_tr === true) tdDate.classList.add("small-tr");
         tr.appendChild(tdDate);
+
 
         // Location.
         let tdLocation = document.createElement("td");

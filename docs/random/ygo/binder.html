@@ -7,84 +7,79 @@
 		<link rel="stylesheet" href="styles.css" />
 		<style>
 			html {
-				background: #191919;
+			background: #191919;
 			}
-
 			body {
-				background: transparent;
+			background: transparent;
 			}
-
 			.binder-container {
-				display: flex;
-				justify-content: center;
-				gap: 40px;
-				padding: 40px;
-				background-color: #191919;
+			display: flex;
+			justify-content: center;
+			gap: 40px;
+			padding: 40px;
+			background-color: #191919;
 			}
-
 			.binder-page {
-				display: grid;
-				grid-template-columns: repeat(3, 1fr);
-				grid-template-rows: repeat(3, auto);
-				gap: 10px;
-				background: #111;
-				padding: 15px;
-				border-radius: 8px;
-				border: 2px solid white;
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			grid-template-rows: repeat(3, auto);
+			gap: 10px;
+			background: #111;
+			padding: 15px;
+			border-radius: 8px;
+			border: 2px solid white;
 			}
-
 			.binder-page img {
-				width: 223px;
-				/* Yu-Gi-Oh card width in pixels */
-				height: 325px;
-				/* Yu-Gi-Oh card height in pixels */
-				object-fit: cover;
-				/* crop/center if needed */
-				cursor: pointer;
-				border: 2px solid #555;
-				border-radius: 4px;
-				transition: transform 0.2s;
-				background-color: #000;
-				/* optional: avoids flicker before load */
+			width: 223px;
+			/* Yu-Gi-Oh card width in pixels */
+			height: 325px;
+			/* Yu-Gi-Oh card height in pixels */
+			object-fit: cover;
+			/* crop/center if needed */
+			cursor: pointer;
+			border: 2px solid #555;
+			border-radius: 4px;
+			transition: transform 0.2s;
+			background-color: #000;
+			/* optional: avoids flicker before load */
 			}
-
 			.binder-page img:hover {
-				transform: scale(1.05);
-				border-color: gold;
+			transform: scale(1.05);
+			border-color: gold;
 			}
-
 			.nav-button {
-				position: fixed;
-				top: 50%;
-				transform: translateY(-50%);
-				width: 50px;
-				height: 50px;
-				cursor: pointer;
-				z-index: 9999;
-				background: rgba(0, 0, 0, 0.5);
-				border-radius: 50%;
-				display: flex;
-				align-items: center;
-				justify-content: center;
+			position: fixed;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 50px;
+			height: 50px;
+			cursor: pointer;
+			z-index: 9999;
+			background: rgba(0, 0, 0, 0.5);
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			}
-
 			.nav-button img {
-				max-width: 70%;
+			max-width: 70%;
 			}
-
 			.prev-button {
-				left: 10px;
+			left: 10px;
 			}
-
 			.next-button {
-				right: 10px;
+			right: 10px;
 			}
-
 			.binder-page {
-				overflow: hidden;
-				/* no scrollbars at all */
-				/* or, if you only want to hide vertical scrolling: */
-				/* overflow-y: hidden; */
+			overflow: hidden;
+			/* no scrollbars at all */
+			/* or, if you only want to hide vertical scrolling: */
+			/* overflow-y: hidden; */
+			}
+			.sort-controls {
+			vertical-align: center;
+			align-items: center;    /* vertically center all children */
+			gap: 8px;               /* optional: add spacing between items */
 			}
 		</style>
 	</head>
@@ -92,11 +87,23 @@
 		<span class="sort-controls" id="sortControls" style="display:none;">
 			<label for="sortBy">Sort by:</label>
 			<select id="sortBy"></select>
+			| 
 			<label for="sortOrder">Order:</label>
 			<select id="sortOrder">
 				<option value="asc">Ascending</option>
 				<option value="desc">Descending</option>
 			</select>
+			| 
+			<div id="sleeveFilterControls" style="text-align:center; margin:10px;">
+				<label for="sleeveFilter">Filter by sleeve state:</label>
+				<select id="sleeveFilter">
+					<option value="">(All)</option>
+					<option value="1">Single-sleeved</option>
+					<option value="2">Double-sleeved</option>
+					<option value="3">(Any sleeve)</option>
+					<option value="4">(No sleeves)</option>
+				</select>
+			</div>
 			<button id="resetSortBtn" title="Restore original order">Reset</button>
 		</span>
 		<span id="sortNotice" style="margin-left:10px; color:#aaa;"></span>
@@ -467,7 +474,7 @@
 				if (!localMode) {
 					return;
 				}
-					
+			
 				await loadTextFiles();
 			
 				const res = await fetch(csvFile)
@@ -508,10 +515,26 @@
 							sorts.precomputeNumericFields(card);
 						});
 			
+						const sleeveFilter = document.getElementById('sleeveFilter').value;
+						if (sleeveFilter === "1" || sleeveFilter === "2") {
+							filtered = filtered.filter(card => (sleeveStates[card.name] || 0) === parseInt(sleeveFilter));
+						} else if (sleeveFilter === "3") {
+							// Keep only cards that have *any* sleeve (1 or 2)
+							filtered = filtered.filter(card => {
+								const state = sleeveStates[card.name] || 0;
+								return state === 1 || state === 2;
+							});
+						} else if (sleeveFilter === "4") {
+						filtered = filtered.filter(card => {
+								const state = sleeveStates[card.name] || 0;
+								return state === 0;
+							});
+						}
 			
 						// Set working and original arrays
 						originalCards = filtered.slice();
 						cards = filtered.slice();
+			
 			
 						// Build comparators and UI
 						buildComparatorMap();
@@ -576,6 +599,11 @@
 					e.preventDefault();
 				}, { passive: false });
 			});
+			
+			document.getElementById('sleeveFilter').addEventListener('change', () => {
+				initBinder(csvFile);
+			});
+			
 		</script>
 	</body>
 </html>

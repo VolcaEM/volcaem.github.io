@@ -1,0 +1,64 @@
+{
+	"gaming":{
+		"name":"Gaming",
+		"image":"/wishlist/images/CategoryGaming.png",
+		"children":{
+			"accessories":{
+				"name":"Accessories",
+				"image":"/shop/images/categories/gaming/AccessoriesSubcategory.png",
+				"children":{
+					"figures":{
+						"name":"Figures",
+						"image":"/shop/images/categories/gaming/AccessoriesSubcategory.png",
+						"items":[
+							{
+								"id":"SGAFBKFP",
+								"name":"Banjo-Kazooie Funko-Pop",
+								"image":"/shop/images/categories/gaming/AccessoriesSubcategory.png",
+								"price":200,
+								"shipping":5.70,
+								"conditions":"NEW (sealed)"
+							}
+						]
+					}
+				}
+			},
+			"games":{
+				"name":"Games",
+				"image":"/wishlist/images/categories/gaming/GamesSubcategory.png",
+				"children":{
+					"PS4":{
+						"name":"PS4",
+						"image":"/wishlist/images/categories/gaming/games/hollowknight.png",
+						"items":[
+							{
+								"id":"SGGPS4DERQ2DOE",
+								"name":"Death end re;Quest 2<br>Day One Edition",
+								"image":"/shop/images/categories/gaming/games/ps4/derq2dayoneedition.png",
+								"price":120,
+								"sale_price":100,
+								"shipping":5.70,
+								"conditions":"NEW (sealed)"
+							}
+						]
+					},
+					"Xbox One":{
+						"name":"Xbox One",
+						"image":"/wishlist/images/categories/gaming/GamesSubcategory.png",
+						"items":[
+							{
+								"id":"SGGXB1TFC",
+								"name":"The Forgotten City",
+								"image":"/shop/images/categories/gaming/games/xb1/theforgottencity.png",
+								"price":30,
+								"shipping":5.70,
+								"conditions":"Used (good conditions)",
+								"info":"Includes Xbox Series X upgrade"
+							}
+						]
+					}
+				}
+			}
+		}
+	}
+}

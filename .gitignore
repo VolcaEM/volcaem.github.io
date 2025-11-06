@@ -10,3 +10,7 @@ docs/random/ygo/sleevestates.txt
 docs/wishlist/data/fix_image.py
 docs/wishlist/data/numbers.py
 docs/random/game/www/clean_folder.py
+docs/shop/data/fix_image.py
+docs/shop/data/numbers.py
+*.pdn
+docs/random/ygo/cards.csv

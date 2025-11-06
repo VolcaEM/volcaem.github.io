@@ -1,0 +1,46 @@
+{
+	"tcg":{
+		"name":"Trading Card Games",
+		"image":"/wishlist/images/CategoryTCG.png",
+		"children":{
+			"yugioh":{
+				"name":"Yu-Gi-Oh!",
+				"image":"/wishlist/images/categories/tcg/YGOSubcategory.png",
+				"children":{
+					"cards":{
+						"name":"Cards",
+						"image":"/wishlist/images/categories/tcg/yugioh/CardsSubcategory.png",
+						"children":{
+							"monsters":{
+								"name":"Monsters",
+								"image":"/wishlist/images/categories/tcg/yugioh/cards/MonstersSubcategory.png",
+								"children":{
+									"xyz":{
+										"name":"XYZ",
+										"image":"/wishlist/images/categories/tcg/yugioh/cards/monsters/XYZSubcategory.png",
+										"children":{
+											"numbers":{
+												"name":"Numbers",
+												"image":"/wishlist/images/categories/tcg/yugioh/cards/monsters/xyz/NumbersSubcategory.png",
+												"items":[
+													{
+														"id":"STYCMXN32",
+														"name":"Numero 32: Draghetto Squalo",
+														"image":"/shop/images/categories/tcg/yugioh/cards/monsters/xyz/numbers/STYCMXN32.png",
+														"price":20,
+														"shipping":5.7,
+														"conditions":"Near Mint, IT"
+													}
+												]
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

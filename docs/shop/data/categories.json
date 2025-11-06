@@ -1,0 +1,10 @@
+{
+	"gaming":{
+		"name":"Gaming",
+		"image":"/wishlist/images/categories/CategoryGaming.png"
+	},
+	"tcg":{
+		"name":"TCG",
+		"image":"/wishlist/images/categories/CategoryTCG.png"
+	}
+}

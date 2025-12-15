@@ -14,3 +14,4 @@ docs/shop/data/fix_image.py
 docs/shop/data/numbers.py
 *.pdn
 docs/random/ygo/cards.csv
+docs/random/ygo/sleevestates_.txt

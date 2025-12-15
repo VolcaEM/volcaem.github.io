@@ -1,5 +1,10 @@
 @import "badges-condition.css";
 @import "badges-edition.css";
+@import "badges-rarity.css";
+
+@import "badges-rarity-digimon.css";
+@import "badges-rarity-yugioh.css";
+
 @import "badges-type-general.css";
 @import "badges-type-yugioh.css";
 @import "badges-type-pokemon.css";

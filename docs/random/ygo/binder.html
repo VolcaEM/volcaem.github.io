@@ -104,6 +104,9 @@
 					<option value="4">(No sleeves)</option>
 				</select>
 			</div>
+			<input type="text" id="searchInput" placeholder="Search card name...">
+<div id="searchResult"></div>
+
 			<button id="resetSortBtn" title="Restore original order">Reset</button>
 		</span>
 		<span id="sortNotice" style="margin-left:10px; color:#aaa;"></span>
@@ -135,6 +138,11 @@
 			let cards = [];
 			// Preserve the original order (post-filtering) to allow Reset
 			let originalCards = [];
+			
+			// Configurable options
+const singleFirstPage = true;   // show first page as single
+const singleLastPage  = true;   // show last page as single
+
 			
 			const comparatorMap = new Map(); // key -> { label, fn }
 			let currentComparatorKey = '';
@@ -216,122 +224,121 @@
 				2: '2px solid red' // double sleeve
 			};
 			
+			function getCardsPerPage(pageIndex, totalPages) {
+  // First page special case
+  if (singleFirstPage && pageIndex === 0) return 9;
+  // Last page special case
+  if (singleLastPage && pageIndex === totalPages - 1) return 9;
+  // Default: two pages (left+right)
+  return 18;
+}
+
+			
 			function renderBinderPage() {
-				const leftPage = document.getElementById('pageLeft');
-				const rightPage = document.getElementById('pageRight');
-				leftPage.innerHTML = '';
-				rightPage.innerHTML = '';
-			
-				const startIndex = currentPageIndex * cardsPerPage;
-				let pageCards = cards.slice(startIndex, startIndex + cardsPerPage);
-			
-				// Pad with null placeholders until we have exactly cardsPerPage entries
-				while (pageCards.length < cardsPerPage) {
-					pageCards.push(null);
-				}
-			
-				const leftCards = pageCards.slice(0, 9);
-				const rightCards = pageCards.slice(9, 18);
-			
-				leftCards.forEach(card => {
-					const img = document.createElement('img');
-					applyOutlineBasedOnSleeveState(img, card.name);
-					if (card) {
-						img.src = card.getImageUrl();
-						img.title = card.name;
-						img.addEventListener('click', () => common.clickHandler(card, true));
-						// Context‑menu: toggle blacklist state in memory and update appearance
-						img.addEventListener('contextmenu', (e) => {
-							e.preventDefault();
-							const idx = blacklist.indexOf(card.name);
-							if (idx === -1) {
-								// Add to blacklist
-								blacklist.push(card.name);
-								img.style.filter = 'brightness(0)'; // visually blacked out
-							} else {
-								// Remove from blacklist
-								blacklist.splice(idx, 1);
-								img.style.filter = '';
-							}
-							// No save-to-disk here in browser mode — use Download Blacklist button to persist
-						});
-			
-						if (sleeves_enabled) {
-							// Wheel: cycle sleeve states 0→1→2→0
-							img.addEventListener('wheel', (e) => {
-								e.preventDefault();
-								const current = sleeveStates[card.name] || 0;
-								const next = (current + 1) % 3;
-								if (next === 0) {
-									delete sleeveStates[card.name];
-									img.style.outline = '';
-								} else {
-									sleeveStates[card.name] = next;
-									img.style.outline = outlineColors[next];
-								}
-							}, { passive: false });
-						}
-			
-					} else {
-						img.src = 'placeholder.png'; // your blank-slot image
-						img.title = '';
-					}
-					img.alt = '';
-					leftPage.appendChild(img);
-				});
-			
-				rightCards.forEach(card => {
-					const img = document.createElement('img');
-					applyOutlineBasedOnSleeveState(img, card.name);
-					if (card) {
-						img.src = card.getImageUrl();
-						img.title = card.name;
-						img.addEventListener('click', () => common.clickHandler(card, true));
-						// Context‑menu: toggle blacklist state in memory and update appearance
-						img.addEventListener('contextmenu', (e) => {
-							e.preventDefault();
-							const idx = blacklist.indexOf(card.name);
-							if (idx === -1) {
-								// Add to blacklist
-								blacklist.push(card.name);
-								img.style.filter = 'brightness(0)'; // visually blacked out
-							} else {
-								// Remove from blacklist
-								blacklist.splice(idx, 1);
-								img.style.filter = '';
-							}
-							// No save-to-disk here in browser mode — use Download Blacklist button to persist
-						});
-			
-						if (sleeves_enabled) {
-							// Wheel: cycle sleeve states 0→1→2→0
-							img.addEventListener('wheel', (e) => {
-								e.preventDefault();
-								const current = sleeveStates[card.name] || 0;
-								const next = (current + 1) % 3;
-								if (next === 0) {
-									delete sleeveStates[card.name];
-									img.style.outline = '';
-								} else {
-									sleeveStates[card.name] = next;
-									img.style.outline = outlineColors[next];
-								}
-							}, { passive: false });
-						}
-			
-					} else {
-						img.src = 'placeholder.png';
-						img.title = '';
-					}
-					img.alt = '';
-					rightPage.appendChild(img);
-				});
-			
-				// Update page indicator (1-based)
-				const totalPages = Math.max(1, Math.ceil(cards.length / cardsPerPage));
-				document.getElementById('pageIndicator').textContent =
-					`Page ${currentPageIndex + 1} of ${totalPages}`;
-			}
+  const leftPage  = document.getElementById('pageLeft');
+  const rightPage = document.getElementById('pageRight');
+  leftPage.innerHTML = '';
+  rightPage.innerHTML = '';
+
+  // --- helpers ---
+  function getTotalPages() {
+    let base = Math.ceil(cards.length / 18);
+    if (singleFirstPage) base++;
+    if (singleLastPage) base++;
+    return base;
+  }
+
+  function getCardsPerPage(pageIndex, totalPages) {
+    if (singleFirstPage && pageIndex === 0) return 9;
+    if (singleLastPage && pageIndex === totalPages - 2) return 9;
+    return 18;
+  }
+
+  const totalPages = getTotalPages();
+  const cardsThisPage = getCardsPerPage(currentPageIndex, totalPages);
+
+  // offset calculation: each "normal" page = 18 slots, but shift if first page is single
+  let offset = currentPageIndex * 18;
+  if (singleFirstPage && currentPageIndex > 0) {
+    offset -= 9; // first page only consumed 9
+  }
+
+  let pageCards = cards.slice(offset, offset + cardsThisPage);
+
+  // pad with placeholders
+  while (pageCards.length < cardsThisPage) {
+    pageCards.push(null);
+  }
+
+  // --- rendering helper for one side ---
+  function renderSide(container, sideCards) {
+    sideCards.forEach(card => {
+      const img = document.createElement('img');
+      applyOutlineBasedOnSleeveState(img, card ? card.name : undefined);
+
+      if (card) {
+        img.src = card.getImageUrl();
+        img.title = card.name;
+        img.alt = '';
+
+        // click handler
+        img.addEventListener('click', () => common.clickHandler(card, true));
+
+        // context menu → toggle blacklist
+        img.addEventListener('contextmenu', (e) => {
+          e.preventDefault();
+          const idx = blacklist.indexOf(card.name);
+          if (idx === -1) {
+            blacklist.push(card.name);
+            img.style.filter = 'brightness(0)';
+          } else {
+            blacklist.splice(idx, 1);
+            img.style.filter = '';
+          }
+        });
+
+        // wheel → cycle sleeve states
+        if (sleeves_enabled) {
+          img.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const current = sleeveStates[card.name] || 0;
+            const next = (current + 1) % 3;
+            if (next === 0) {
+              delete sleeveStates[card.name];
+              img.style.outline = '';
+            } else {
+              sleeveStates[card.name] = next;
+              img.style.outline = outlineColors[next];
+            }
+          }, { passive: false });
+        }
+      } else {
+        img.src = 'placeholder.png';
+        img.title = '';
+        img.alt = '';
+      }
+
+      container.appendChild(img);
+    });
+  }
+
+  // --- single vs double page ---
+  if (cardsThisPage === 9) {
+    leftPage.style.display = 'none';
+    rightPage.style.display = '';
+    renderSide(rightPage, pageCards);
+  } else {
+    leftPage.style.display = '';
+    rightPage.style.display = '';
+    renderSide(leftPage, pageCards.slice(0, 9));
+    renderSide(rightPage, pageCards.slice(9, 18));
+  }
+
+  // page indicator
+  document.getElementById('pageIndicator').textContent =
+    `Page ${currentPageIndex + 1} of ${totalPages}`;
+}
+
 			
 			document.getElementById('goToPageBtn').addEventListener('click', () => {
 				const totalPages = Math.ceil(cards.length / cardsPerPage);
@@ -568,6 +575,67 @@
 				document.getElementById('stats').textContent =
 					`Total: ${totalCards} | Blacklisted: ${totalBlacklisted} | Unsleeved: ${unsleeved} | Single: ${single} | Double: ${double}`;
 			}
+			
+			function findCardPosition(cardName) {
+  const idx = cards.findIndex(c => c && c.name.toLowerCase().includes(cardName.toLowerCase()));
+  if (idx === -1) return null;
+
+  // compute page/slot
+  let pageIndex = Math.floor(idx / 18);
+  let slot = (idx % 18) + 1;
+
+  // adjust if singleFirstPage
+  if (singleFirstPage) {
+    if (idx < 9) {
+      // it’s on the single first page
+      pageIndex = 0;
+      slot = (idx % 9) + 1;
+    } else {
+      // shift page index forward by 1
+      pageIndex = Math.floor((idx - 9) / 18) + 1;
+      slot = ((idx - 9) % 18) + 1;
+    }
+  }
+
+  // adjust if singleLastPage
+  const totalPages = (function() {
+    let base = Math.ceil(cards.length / 18);
+    if (singleFirstPage) base++;
+    if (singleLastPage) base++;
+    return base;
+  })();
+
+  // If it’s in the last 9 cards and singleLastPage is enabled
+  if (singleLastPage) {
+    const lastPageStart = cards.length - 9;
+    if (idx >= lastPageStart) {
+      pageIndex = totalPages - 1;
+      slot = (idx - lastPageStart) + 1;
+    }
+  }
+
+  const card = cards[idx];
+  const sleeveState = sleeveStates[card.name] || 0; // 0 = none, 1/2 = your custom states
+
+  return {
+    page: pageIndex + 1,   // human-readable page number
+    slot: slot,            // 1–9
+    name: card.name,       // card name
+    sleeve: sleeveState    // current sleeve state
+  };
+}
+
+document.getElementById('searchInput').addEventListener('change', (e) => {
+  const query = e.target.value.trim();
+  const result = findCardPosition(query);
+  const output = document.getElementById('searchResult');
+  if (result) {
+    output.textContent = `${result.name} is on page ${result.page}, slot ${result.slot}, sleeve state ${result.sleeve}`;
+  } else {
+    output.textContent = `${query} not found`;
+  }
+});
+
 			
 			
 			document.getElementById('prevPage').addEventListener('click', () => {

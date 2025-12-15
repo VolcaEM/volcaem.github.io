@@ -1,0 +1,37 @@
+/* Rarities */
+.digimon-badge-rarity-common {
+	background-color: lightgray;
+	color: black;
+}
+
+.digimon-badge-rarity-uncommon {
+	background-color: mediumseagreen;
+	color: white;
+}
+
+.digimon-badge-rarity-rare {
+	background-color: deepskyblue;
+	color: white;
+}
+
+.digimon-badge-rarity-superrare {
+	background-color: #c27eff;
+	/* lavender */
+	color: white;
+}
+
+.digimon-badge-rarity-secretrare {
+	background-color: gold;
+	color: black;
+}
+
+.digimon-badge-rarity-promo {
+	background-color: slategray;
+	color: white;
+}
+
+.digimon-badge-rarity-parallelart {
+	background-color: #d35400;
+	/* orange */
+	color: white;
+}

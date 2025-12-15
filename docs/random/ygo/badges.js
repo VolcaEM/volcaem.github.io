@@ -80,10 +80,10 @@ export function getQualityBadge(quality) {
     let q = quality.toLowerCase();
 
     if (q === translations[0]["unknowngood"].toLowerCase()) {
-        return '<span class="badge" data-original-title="UnknownGood">✅</span>';
+        return '<span class="badge" data-original-title="UnknownGood" title="UnknownGood">✅</span>';
     }
     if (q === translations[0]["unknownbad"].toLowerCase()) {
-        return '<span class="badge" data-original-title="UnknownBad">❌</span>';
+        return '<span class="badge" data-original-title="UnknownBad" title="UnknownBad">❌</span>';
     }
 
     if (q === "none") {
@@ -91,21 +91,108 @@ export function getQualityBadge(quality) {
     }
 
     if (q === translations[0]["mint"].toLowerCase()) {
-        return '<span class="badge badge-cond-mint" data-original-title="Mint">MT</span>';
+        return '<span class="badge badge-cond-mint" data-original-title="Mint" title="Mint">MT</span>';
     } else if (q === translations[0]["nearmint"].toLowerCase()) {
-        return '<span class="badge badge-cond-near-mint" data-original-title="Near Mint">NM</span>';
+        return '<span class="badge badge-cond-near-mint" data-original-title="Near Mint" title="Near Mint">NM</span>';
     } else if (q === translations[0]["slightlyplayed"].toLowerCase()) {
-        return '<span class="badge badge-cond-slightly-played" data-original-title="Slightly Played">SP</span>';
+        return '<span class="badge badge-cond-slightly-played" data-original-title="Slightly Played" title="Slightly Played">SP</span>';
     } else if (q === translations[0]["moderatelyplayed"].toLowerCase()) {
-        return '<span class="badge badge-cond-moderately-played" data-original-title="Moderately Played">MP</span>';
+        return '<span class="badge badge-cond-moderately-played" data-original-title="Moderately Played" title="Moderately Played">MP</span>';
     } else if (q === translations[0]["played"].toLowerCase()) {
-        return '<span class="badge badge-cond-played" data-original-title="Played">PL</span>';
+        return '<span class="badge badge-cond-played" data-original-title="Played" title="Played">PL</span>';
     } else if (q === translations[0]["poor"].toLowerCase()) {
-        return '<span class="badge badge-cond-poor" data-original-title="Poor">PO</span>';
+        return '<span class="badge badge-cond-poor" data-original-title="Poor" title="Poor">PO</span>';
     } else {
         return quality;
     }
 }
+
+export function getRarityBadge(rarity, tl) {
+    let r = rarity.replaceAll(" ", "").toLowerCase();
+
+    if (!tl) {
+        if (!rarity) {
+            return "r-undefined";
+        }
+        return rarity == "None" ? "" : rarity;
+    }
+
+    let is_fake = rarity.toLowerCase() == ((translations[0]["fake"] || "FAKE").toLowerCase());
+    if (is_fake) {
+        return '<span class="badge badge-card-fake">' + translations[langIndex]["fake"] + '</span>';
+    }
+
+    let badge = "defaultbadge";
+    let ot = "defaultot";
+    let value = tl;
+
+    if (r === "common") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-common";
+        ot = "Common";
+    } else if (r === "rare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-rare";
+        ot = "Rare";
+    } else if (r === "parallelrare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-parallelrare";
+        ot = "Parallel Rare";
+    } else if (r === "goldrare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-goldrare";
+        ot = "Gold Rare";
+    } else if (r === "superrare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-superrare";
+        ot = "Super Rare";
+    } else if (r === "ultrarare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-ultrarare";
+        ot = "Ultra Rare";
+    } else if (r === "ultraparallelrare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-ultraparallelrare";
+        ot = "Ultra Parallel Rare";
+    } else if (r === "parallelultrarare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-parallelultrarare";
+        ot = "Parallel Ultra Rare";
+    } else if (r === "platinumsecretrare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-platinumsecretrare";
+        ot = "Platinum Secret Rare";
+    } else if (r === "prismaticsecretrare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-prismaticsecretrare";
+        ot = "Prismatic Secret Rare";
+    } else if (r === "goldsecretrare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-goldsecretrare";
+        ot = "Gold Secret Rare";
+    } else if (r === "premiumgoldrare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-premiumgoldrare";
+        ot = "Premium Gold Rare";
+    } else if (r === "secretrare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-secretrare";
+        ot = "Secret Rare";
+    } else if (r === "quartercenturysecretrare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-quartercenturysecretrare";
+        ot = "Quarter Century Secret Rare";
+    } else if (r === "ghostrare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-ghostrare";
+        ot = "Ghost Rare";
+    } else if (r === "collectorsrare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-collectorsrare";
+        ot = "Collector's Rare";
+    } else if (r === "prismaticcollectorsrare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-prismaticcollectorsrare";
+        ot = "Prismatic Collector's Rare";
+    } else if (r === "ultimaterare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-ultimaterare";
+        ot = "Ultimate Rare";
+    } else if (r === "prismaticultimaterare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-prismaticultimaterare";
+        ot = "Prismatic Ultimate Rare";
+    } else if (r === "starlightrare") {
+        badge = "badge " + currentGame.toLowerCase() + "-badge-rarity-starlightrare";
+        ot = "Starlight Rare";
+    } else {
+        return rarity;
+    }
+
+    return '<span class="' + badge + '" data-original-title="' + ot + '" title="' + ot + '">' + value + '</span>';
+}
+
 
 export function getEditionBadge(edition) {
     let accepted = true;

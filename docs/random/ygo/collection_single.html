@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Collection</title>
+  <style>
+    :root {
+      --accent:#c62828;
+      --text:#eee;
+    }
+    body {
+      margin:0;
+      font-family:Inter,Segoe UI,system-ui,Arial;
+      background:#070707;
+      color:var(--text);
+    }
+    header {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:18px 22px;
+      border-bottom:1px solid rgba(255,255,255,0.03);
+    }
+    header a { color:#bbb; text-decoration:none }
+    header h2 { margin:0; color:var(--accent) }
+    main { max-width:1200px; margin:20px auto; padding:0 18px }
+    .summary { display:flex; gap:18px; align-items:center; margin-bottom:18px }
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+      gap:18px;
+    }
+    .card {
+      background:#111;
+      border-radius:10px;
+      padding:10px;
+      border:1px solid rgba(255,255,255,0.03);
+      text-align:center;
+    }
+    /* Aspect ratio box for 480x700 */
+    .card .img-box {
+      aspect-ratio: 480 / 700;
+      width:100%;
+      overflow:hidden;
+      border-radius:6px;
+      background:#222;
+    }
+    .card img {
+      width:100%;
+      height:100%;
+      object-fit: cover; /* keeps ratio, fills box */
+      display:block;
+    }
+    .title { margin-top:8px; font-weight:700; color:#fff }
+		.title {
+	  display: -webkit-box;
+	  -webkit-line-clamp: 2;     /* max 2 lines */
+	  -webkit-box-orient: vertical;
+	  overflow: hidden;
+	}
+
+    .have { font-size:13px; color:#bbb; margin-top:4px }
+    .empty { color:#999; padding:30px; text-align:center }
+    footer { padding:18px; text-align:center; color:#777 }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="collection.html">← Back</a>
+    <h2 id="collectionName">Collection</h2>
+  </header>
+
+<main>
+  <div id="summary" class="summary"></div>
+  <div style="display:flex; gap:10px; margin-bottom:18px">
+    <button id="copyMissingBtn" style="display:none;
+      background:var(--accent); color:#fff; border:none;
+      padding:8px 14px; border-radius:6px; cursor:pointer; font-weight:600;">
+      Copy Missing Items
+    </button>
+    <button id="copyOwnedBtn" style="display:none;
+      background:var(--accent); color:#fff; border:none;
+      padding:8px 14px; border-radius:6px; cursor:pointer; font-weight:600;">
+      Copy Owned Items
+    </button>
+    <button id="copyAllBtn" style="display:none;
+      background:var(--accent); color:#fff; border:none;
+      padding:8px 14px; border-radius:6px; cursor:pointer; font-weight:600;">
+      Copy All Items
+    </button>
+  </div>
+  <div id="cardsGrid" class="grid" aria-live="polite"></div>
+</main>
+
+<script>
+  const COLLECTIONS_JSON = 'collections.json';
+  const CARDS_CSV = 'cards.csv';
+  const MISSING_IMG = 'missing.png';
+
+  async function loadCsv(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Failed to load ' + url);
+      const text = await res.text();
+      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length);
+      let start = 0;
+      if (lines.length && /name/i.test(lines[0]) && /photo/i.test(lines[0])) start = 1;
+      const map = new Map();
+      for (let i = start; i < lines.length; i++) {
+          const parts = lines[i].split('|');
+          const name = (parts[0] || '').trim();
+          if (!name) continue;
+          const photoUrl = (parts[13] || '').trim() || null;
+          const key = name.toLowerCase();
+          const cardId = (parts[8] || '').trim() || null;
+          if (!cardId) continue;
+          if (!map.has(key)) map.set(key, { name, photoUrl, cardId });
+      }
+      return map;
+  }
+
+  async function loadJson(url) {
+      const r = await fetch(url);
+      if (!r.ok) throw new Error('Failed to load ' + url);
+      return r.json();
+  }
+
+  function getQueryParam(name) {
+      return new URLSearchParams(window.location.search).get(name);
+  }
+
+  function slugEqual(a, b) {
+      return String(a || '').trim().toLowerCase() === String(b || '').trim().toLowerCase();
+  }
+
+  function uniqueSorted(names) {
+      const seen = new Map();
+      for (const n of names) {
+          const trimmed = (n || '').trim();
+          if (!trimmed) continue;
+          const key = trimmed.toLowerCase();
+          if (!seen.has(key)) seen.set(key, trimmed);
+      }
+      return Array.from(seen.values()).sort((a, b) =>
+          a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' })
+      );
+  }
+
+  function viewCard(cardid) {
+      window.open("/card.html?id=" + cardid + "&checkname");
+  }
+
+  function createCardElement(name, owned, photoUrl, cardid) {
+      const div = document.createElement('div');
+      div.className = 'card';
+      const box = document.createElement('div');
+      box.className = 'img-box';
+      const img = document.createElement('img');
+      img.alt = name;
+      img.src = owned && photoUrl ? photoUrl : MISSING_IMG;
+      if (img.src && img.src != "null" && img.src != MISSING_IMG && cardid && cardid.length > 0) {
+          img.style.cursor = "pointer";
+          img.addEventListener('click', () => viewCard(cardid));
+      }
+      box.appendChild(img);
+      const title = document.createElement('div');
+      title.className = 'title';
+      title.textContent = name;
+      const have = document.createElement('div');
+      have.className = 'have';
+      have.textContent = owned ? 'Owned' : 'Missing';
+      div.appendChild(box);
+      div.appendChild(title);
+      div.appendChild(have);
+      return div;
+  }
+
+  async function init() {
+      try {
+          const collectionName = getQueryParam('collection');
+          if (!collectionName) {
+              document.getElementById('cardsGrid').innerHTML =
+                '<div class="empty">No collection specified in URL.</div>';
+              return;
+          }
+          const [collections, cardMap] = await Promise.all([
+              loadJson(COLLECTIONS_JSON), loadCsv(CARDS_CSV)
+          ]);
+          const col = collections.find(c => slugEqual(c.name, collectionName));
+          if (!col) {
+              document.getElementById('cardsGrid').innerHTML =
+                `<div class="empty">Collection "${collectionName}" not found.</div>`;
+              return;
+          }
+          document.getElementById('collectionName').textContent = col.name;
+
+          const rawNames = col.children || [];
+          const names = uniqueSorted(rawNames);
+
+          const ownedItems = [];
+          const missingItems = [];
+
+          const haveCount = names.filter(n => cardMap.has(n.trim().toLowerCase())).length;
+          const summary = document.getElementById('summary');
+          summary.innerHTML = `<div style="font-weight:700;color:#fff">${names.length} unique cards</div>
+                           <div style="color:#bbb">${haveCount} owned • ${names.length - haveCount} missing</div>`;
+
+          const grid = document.getElementById('cardsGrid');
+          grid.innerHTML = '';
+          for (const name of names) {
+              const key = name.trim().toLowerCase();
+              const entry = cardMap.get(key);
+              const owned = !!entry;
+              const photoUrl = entry && entry.photoUrl ? entry.photoUrl : null;
+              const cardid = entry && entry.cardId ? entry.cardId : null;
+              const el = createCardElement(name, owned, photoUrl, cardid);
+              grid.appendChild(el);
+              if (owned) ownedItems.push(name);
+              else missingItems.push(name);
+          }
+          if (names.length === 0) {
+              grid.innerHTML = '<div class="empty">This collection has no cards listed.</div>';
+          }
+
+          // Helper to wire up copy buttons
+          function setupCopyButton(btnId, items, label) {
+              const btn = document.getElementById(btnId);
+              if (items.length > 0) {
+                  btn.style.display = 'inline-block';
+                  btn.onclick = async () => {
+                      try {
+                          await navigator.clipboard.writeText(items.join('\n'));
+                          btn.textContent = "Copied!";
+                          setTimeout(() => btn.textContent = label, 1500);
+                      } catch (err) {
+                          alert("Failed to copy: " + err);
+                      }
+                  };
+              }
+          }
+
+          setupCopyButton('copyMissingBtn', missingItems, "Copy Missing Items");
+          setupCopyButton('copyOwnedBtn', ownedItems, "Copy Owned Items");
+          setupCopyButton('copyAllBtn', names, "Copy All Items");
+
+      } catch (err) {
+          console.error(err);
+          document.getElementById('cardsGrid').innerHTML =
+            '<div class="empty">Error loading collection. Check console.</div>';
+      }
+  }
+
+  init();
+</script>
+
+</body>
+</html>

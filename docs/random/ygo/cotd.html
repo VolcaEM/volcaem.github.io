@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0"/>
+  <title>Yu-Gi-Oh! Card of the Day 🎴</title>
+  <link rel="stylesheet" href="cotd.css">
+  <style>
+  </style>
+</head>
+<body>
+  <table class="layout">
+    <!-- Row 1: header -->
+    <tr class="row-header">
+      <td>
+        <h1>Quale Carta di Yu-Gi-Oh sei Oggi? 🎉</h1>
+        <p class="instruction">
+		  Clicca sul pulsante in basso per pescare una carta — in bocca al lupo! 🍀
+          <!-- Click to draw your card—may the odds be in your favor! 🍀 -->
+        </p>
+      </td>
+    </tr>
+	
+	<tr class="spacer-row"><td></td></tr>
+
+
+    <!-- Row 2: image (auto‐height) -->
+    <tr class="row-image">
+      <td>
+        <div class="card-scene">
+          <div class="card" id="card">
+            <img src="images/common/CardBack.png"   alt="" class="card-back"/>
+            <img src=""                       alt="" class="card-front"  id="card-front"/>
+            <img src=""                       alt="" class="effect-image" id="effect-overlay"/>
+          </div>
+        </div>
+      </td>
+    </tr>
+	<br>
+	
+	<tr class="spacer-row"><td></td></tr>
+
+	
+    <!-- Row 3: text below image -->
+    <tr class="row-text">
+      <td>
+        <div id="card-info">
+          <h2 id="card-name">❔❔❔</h2>
+          <p id="card-rarity">???</p>
+		  <p id="card-subtext">???</p>
+        </div>
+      </td>
+    </tr>
+	<br>
+	
+	<tr class="spacer-row"><td></td></tr>
+	
+    <!-- Row 4: try again button -->
+    <tr class="row-button">
+      <td>
+        <button id="draw-button">Pesca una Carta 🎴</button>
+      </td>
+    </tr>
+  </table>
+    <script type="module" src="cotd.js" defer></script>
+</body>
+</html>

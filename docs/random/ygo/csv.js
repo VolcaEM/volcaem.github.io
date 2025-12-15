@@ -33,6 +33,7 @@ import {
 import {
     getTypeDisplay,
     getQualityBadge,
+    getRarityBadge,
     getLanguageBadge,
     getEditionBadge,
 } from './badges.js';
@@ -349,7 +350,7 @@ export function displayCards(cards) {
 
         // Name.
         let tdName = document.createElement("td");
-        tdName.textContent = card.name;
+        tdName.textContent = card.name.replaceAll("\\", "");
         if (card.rarity.toLowerCase() == (translations[0]["fake"] || "FAKE")
             .toLowerCase()) {
             tdName.innerHTML = tdName.textContent + " <b>(" + translations[langIndex]["fake"] + ")</b>";
@@ -369,12 +370,18 @@ export function displayCards(cards) {
 
         // Rarity.
         let tdRarity = document.createElement("td");
-        let fakestr = `<span class="badge-type-fake">` + (translations[langIndex]["fake"] || "FAKE") + `</span>`;
-        tdRarity.innerHTML = (card.rarity.toLowerCase() == ((translations[0]["fake"] || "FAKE")
+        let fakestr = `<span class="badge badge-card-fake">` + (translations[langIndex]["fake"] || "FAKE") + `</span>`;
+        let rarity_str = (card.rarity.toLowerCase() == ((translations[0]["fake"] || "FAKE")
             .toLowerCase()) ? fakestr : translations[langIndex][card.rarity.toLowerCase()
             .trim()
-            .replace(" ", "")
+            .replaceAll(" ", "")
         ]);
+        rarity_str = rarity_str.replaceAll("——", "—").replaceAll("— ", "");
+        tdRarity.innerHTML = getRarityBadge(card.rarity, rarity_str);
+
+
+        //if (card.name.includes("Esosorelle")) console.log(tdRarity.innerHTML + " because " + card.rarity.toLowerCase().trim().replaceAll(" ", "") + " is " + translations[langIndex][card.rarity.toLowerCase().trim().replaceAll(" ", "")]);
+
         if (nowrap_td === true) tdRarity.classList.add("nowrap-td");
         if (usetall_tr === true) tdRarity.classList.add("tall-tr");
         if (usesmall_tr === true) tdRarity.classList.add("small-tr");

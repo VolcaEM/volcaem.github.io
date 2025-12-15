@@ -96,44 +96,6 @@
 	color: black;
 }
 
-/* Rarities */
-.badge-rarity-common {
-	background-color: lightgray;
-	color: black;
-}
-
-.badge-rarity-uncommon {
-	background-color: mediumseagreen;
-	color: white;
-}
-
-.badge-rarity-rare {
-	background-color: deepskyblue;
-	color: white;
-}
-
-.badge-rarity-superrare {
-	background-color: #c27eff;
-	/* lavender */
-	color: white;
-}
-
-.badge-rarity-secretrare {
-	background-color: gold;
-	color: black;
-}
-
-.badge-rarity-promo {
-	background-color: slategray;
-	color: white;
-}
-
-.badge-rarity-parallelart {
-	background-color: #d35400;
-	/* orange */
-	color: white;
-}
-
 /* Traits / series badges */
 .badge-trait-cs {
 	background-color: #16a085;

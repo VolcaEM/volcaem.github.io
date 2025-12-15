@@ -168,8 +168,8 @@ export function updateDebugOptions() {
     // Calculate frequency of each card name.
     const freq = {};
     manager.cards.forEach(card => {
-        const name = card.name.replace("<", "")
-            .replace(">", "") || translations[langIndex]["Unknown"];
+        const name = card.name.replaceAll("<", "")
+            .replaceAll(">", "") || translations[langIndex]["Unknown"];
         freq[name] = (freq[name] || 0) + 1;
     });
 

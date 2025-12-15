@@ -202,7 +202,7 @@ export function displayCardDetails(cards) {
                 .replaceAll("None", "")
                 .trim();
 
-            const marketPriceNumber = parseFloat(cleanedMarketPrice.replace(",", "."));
+            const marketPriceNumber = parseFloat(cleanedMarketPrice.replaceAll(",", "."));
 
             // Build optional fields
             const marketPriceHTML =

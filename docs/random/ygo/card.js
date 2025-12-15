@@ -274,7 +274,6 @@ export class CardManager {
         return this.cards.filter(card => {
 
             let invertFilterCheckbox = document.getElementById("invertFilterCheckbox");
-            console.log("Invert filter checkbox checked: " + invertFilterCheckbox.checked.toString());
 
             if (filters.name && !card.name.toLowerCase()
                 .replaceAll("—— ", "")
@@ -344,14 +343,27 @@ export class CardManager {
             }
 
             if (filters.rarity) {
-                if (!invertFilterCheckbox.checked) {
-                    if (card.rarity !== filters.rarity) {
-                        return false;
-                    }
-                } else {
-                    return card.rarity !== filters.rarity;
+				//console.log("Filter active for rarity:", filters.rarity);
+
+				const filterValue = filters.rarity.replaceAll("—", "").trim().toLowerCase().replaceAll(" ", "").replaceAll("'", "").trim().toLowerCase();
+				const cardValue = card.rarity.replaceAll("—", "").replaceAll(" ", "").replaceAll("'", "").trim().toLowerCase();
+				const translationValue = translations[0][filterValue].replaceAll("—", "").replaceAll(" ", "").replaceAll("'", "").trim().toLowerCase();
+
+				//console.log("Computed filterValue:", filterValue);
+				//console.log("Translation lookup:", translationValue);
+				//console.log("Card rarity value:", cardValue);
+				//console.log("Invert filter checked:", invertFilterCheckbox.checked);
+
+				let result = false;
+				result = cardValue === translationValue;
+				
+				if (invertFilterCheckbox.checked) {
+                    result = !result;
                 }
-            }
+				
+				return result;
+			}
+
 
             if (filters.quality) {
                 if (!invertFilterCheckbox.checked) {

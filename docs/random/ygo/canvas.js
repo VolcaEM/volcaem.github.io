@@ -124,6 +124,15 @@ export function renderAllCharts(cards) {
     const container = document.getElementById('chartsContainer');
     if (!container) return;
     container.innerHTML = '';
+	
+	let mycards = cards.filter(card => {
+        const type = (card.type || '').toLowerCase();
+        return !(
+            type.includes('none') ||
+            type.includes('product') ||
+            type.includes('undefined')
+        );
+    });
 
     const props = ['type', 'rarity', 'quality', 'language', 'edition'];
 
@@ -153,7 +162,7 @@ export function renderAllCharts(cards) {
 
         // 5) Draw the chart into the canvas
         initChart(
-            cards,
+            mycards,
             canvas.id,
             prop, {},
             legend.id,

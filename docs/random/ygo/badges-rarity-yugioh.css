@@ -1,0 +1,116 @@
+/* Common */
+.yu-gi-oh-badge-rarity-common {
+	background-color: #CC7E32;
+	color: white;
+}
+
+/* Rare */
+.yu-gi-oh-badge-rarity-rare {
+	background-color: #1E1CC3;
+	color: white;
+}
+
+/* Parallel Rare */
+.yu-gi-oh-badge-rarity-parallelrare {
+	background-color: #A531FF;
+	color: white;
+}
+
+/* Super Rare */
+.yu-gi-oh-badge-rarity-superrare {
+	background-color: #28AAE1;
+	color: white;
+}
+
+/* Ultra Rare */
+.yu-gi-oh-badge-rarity-ultrarare {
+	background-color: #DB2FFF;
+	color: white;
+}
+
+/* Ultra Parallel Rare */
+.yu-gi-oh-badge-rarity-ultraparallelrare {
+	background-color: #9A6ECE;
+	color: white;
+}
+
+/* Gold Rare */
+.yu-gi-oh-badge-rarity-goldrare {
+	background-color: #DFA023;
+	color: white;
+}
+
+/* Premium Gold Rare */
+.yu-gi-oh-badge-rarity-premiumgoldrare {
+	background-color: #DFA023;
+	color: white;
+	border: 1px solid #8C6339;
+}
+
+/* Secret Rare */
+.yu-gi-oh-badge-rarity-secretrare {
+	background-color: #EC1E27;
+	color: white;
+}
+
+/* Gold Secret Rare */
+.yu-gi-oh-badge-rarity-goldsecretrare {
+	background-color: #DFA023;
+	color: white;
+}
+
+/* Platinum Secret Rare */
+.yu-gi-oh-badge-rarity-platinumsecretrare {
+	background-color: #28AAE1;
+	color: white;
+}
+
+/* Prismatic Secret Rare */
+.yu-gi-oh-badge-rarity-prismaticsecretrare {
+	background: #EC1E27;
+	color: white;
+}
+
+/* Quarter Century Secret Rare */
+.yu-gi-oh-badge-rarity-quartercenturysecretrare {
+	background: #CB0017;
+	color: white;
+}
+
+/* Collector's Rare */
+.yu-gi-oh-badge-rarity-collectorsrare {
+	background-color: #AD7A47;
+	color: white;
+}
+
+/* Prismatic Collector's Rare */
+.yu-gi-oh-badge-rarity-prismaticcollectorsrare {
+	background: #AD7A47;
+	color: white;
+}
+
+/* Ultimate Rare */
+.yu-gi-oh-badge-rarity-ultimaterare {
+	background-color: #DB2FFF;
+	color: white;
+}
+
+/* Prismatic Ultimate Rare */
+.yu-gi-oh-badge-rarity-prismaticultimaterare {
+	background: #DB2FFF;
+	color: white;
+}
+
+/* Ghost Rare */
+.yu-gi-oh-badge-rarity-ghostrare {
+	background-color: #989898;
+	color: white;
+	border: 1px solid lightgray;
+}
+
+/* Starlight Rare */
+.yu-gi-oh-badge-rarity-starlightrare {
+	background: #6A4196;
+	color: white;
+	border: 1px solid gold;
+}

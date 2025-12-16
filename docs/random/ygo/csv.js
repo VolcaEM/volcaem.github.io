@@ -7,7 +7,8 @@ import {
     useSmallTr,
     enableCollections,
     isUsingAndroidApp,
-    isAndroidApp
+    isAndroidApp,
+    sellerMode
 
 } from './config.js';
 
@@ -420,6 +421,12 @@ export function displayCards(cards) {
         if (nowrap_td === true) tdPricePaid.classList.add("nowrap-td");
         if (usetall_tr === true) tdPricePaid.classList.add("tall-tr");
         if (usesmall_tr === true) tdPricePaid.classList.add("small-tr");
+        if (sellerMode) {
+            tdPricePaid.style.height = "0px";
+            tdPricePaid.style.width = "0px";
+            tdPricePaid.style.display = "none";
+            tdPricePaid.style.opacity = "0%";
+        }
         tr.appendChild(tdPricePaid);
 
         // Market Price.
@@ -434,7 +441,6 @@ export function displayCards(cards) {
         if (usetall_tr === true) tdMarketPrice.classList.add("tall-tr");
         if (usesmall_tr === true) tdMarketPrice.classList.add("small-tr");
         tr.appendChild(tdMarketPrice);
-
 
         // ID.
         let tdID = document.createElement("td");
@@ -479,8 +485,13 @@ export function displayCards(cards) {
         if (nowrap_td === true) tdDate.classList.add("nowrap-td");
         if (usetall_tr === true) tdDate.classList.add("tall-tr");
         if (usesmall_tr === true) tdDate.classList.add("small-tr");
+        if (sellerMode) {
+            tdDate.style.height = "0px";
+            tdDate.style.width = "0px";
+            tdDate.style.display = "none";
+            tdDate.style.opacity = "0%";
+        }
         tr.appendChild(tdDate);
-
 
         // Location.
         let tdLocation = document.createElement("td");
@@ -488,6 +499,12 @@ export function displayCards(cards) {
         if (nowrap_td === true) tdLocation.classList.add("nowrap-td");
         if (usetall_tr === true) tdLocation.classList.add("tall-tr");
         if (usesmall_tr === true) tdLocation.classList.add("small-tr");
+        if (sellerMode) {
+            tdLocation.style.height = "0px";
+            tdLocation.style.width = "0px";
+            tdLocation.style.display = "none";
+            tdLocation.style.opacity = "0%";
+        }
         tr.appendChild(tdLocation);
 
         // …inside your row‐rendering loop…
@@ -553,6 +570,14 @@ export function displayCards(cards) {
         } else {
             tdWiki.textContent = "";
         }
+
+        if (sellerMode) {
+            tdWiki.style.height = "0px";
+            tdWiki.style.width = "0px";
+            tdWiki.style.display = "none";
+            tdWiki.style.opacity = "0%";
+        }
+
         tr.appendChild(tdWiki);
 
         tbody.appendChild(tr);

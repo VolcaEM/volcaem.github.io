@@ -4,6 +4,7 @@ import {
     langIndex,
     localMode,
     allowNewlines,
+    sellerMode,
 } from './config.js';
 
 import {
@@ -363,6 +364,36 @@ export function doInit() {
     }
 
     initCollectionPage();
+
+    if (sellerMode) {
+        let thmarket = document.getElementById("thMarket");
+        thmarket.setAttribute("data-translation-key", "tableMarketSeller");
+
+        let thPricePaid = document.getElementById("thSpent");
+
+        thPricePaid.style.height = "0px";
+        thPricePaid.style.width = "0px";
+        thPricePaid.style.display = "none";
+        thPricePaid.style.opacity = "0%";
+
+        let thDate = document.getElementById("thDate");
+        thDate.style.height = "0px";
+        thDate.style.width = "0px";
+        thDate.style.display = "none";
+        thDate.style.opacity = "0%";
+
+        let thLocation = document.getElementById("thLocation");
+        thLocation.style.height = "0px";
+        thLocation.style.width = "0px";
+        thLocation.style.display = "none";
+        thLocation.style.opacity = "0%";
+
+        let thWiki = document.getElementById("thWiki");
+        thWiki.style.height = "0px";
+        thWiki.style.width = "0px";
+        thWiki.style.display = "none";
+        thWiki.style.opacity = "0%";
+    }
 
     // Apply translations using the selected language.
     applyTranslations(langIndex);

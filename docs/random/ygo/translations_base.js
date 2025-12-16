@@ -63,6 +63,7 @@ export const baseTranslations = {
     tableEdition: ['Edit.', 'Ediz.'],
     tableSpent: ['Spent', 'Spesi'],
     tableMarket: ['Market', 'Mercato'],
+    tableMarketSeller: ['Price', 'Prezzo'],
     tableId: ['ID', 'ID'],
     tableObtained: ['Obt.', 'Data'],
     tableLocation: ['Loc.', 'Posiz.'],

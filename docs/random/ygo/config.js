@@ -18,6 +18,8 @@ export const CANVAS_SIZE = 500;
 
 export const enableCollections = allowNewlines && true;
 
+export const sellerMode = true;
+
 export function setLangIndex(val) {
     langIndex = val;
 }

@@ -89,13 +89,15 @@ export function loadCSVAndDisplayCards(myfile) {
         .catch(err => {
             console.error("Error loading CSV file:", err);
             const tbody = document.getElementById("cardBody");
-            tbody.innerHTML = "";
-            const tr = document.createElement("tr");
-            const td = document.createElement("td");
-            td.setAttribute("colspan", "15");
-            td.textContent = translations[langIndex]["csverror"];
-            tr.appendChild(td);
-            tbody.appendChild(tr);
+			if(tbody) {
+				tbody.innerHTML = "";
+				const tr = document.createElement("tr");
+				const td = document.createElement("td");
+				td.setAttribute("colspan", "15");
+				td.textContent = translations[langIndex]["csverror"];
+				tr.appendChild(td);
+				tbody.appendChild(tr);
+			}
         });
 }
 
@@ -186,6 +188,9 @@ export function displayCards(cards) {
     setCurrentDisplayedCards(cards.slice());
 
     const tbody = document.getElementById("cardBody");
+	if(!tbody) {
+		return;
+	}
     tbody.innerHTML = "";
 
     logMessage(`isAndroidApp: ${isAndroidApp()}`);
@@ -372,12 +377,20 @@ export function displayCards(cards) {
         // Rarity.
         let tdRarity = document.createElement("td");
         let fakestr = `<span class="badge badge-card-fake">` + (translations[langIndex]["fake"] || "FAKE") + `</span>`;
-        let rarity_str = (card.rarity.toLowerCase() == ((translations[0]["fake"] || "FAKE")
-            .toLowerCase()) ? fakestr : translations[langIndex][card.rarity.toLowerCase()
-            .trim()
-            .replaceAll(" ", "")
-        ]);
-        rarity_str = rarity_str.replaceAll("——", "—").replaceAll("— ", "");
+        let rarity_str = "Unknown";
+		if(card.rarity) {
+			rarity_str = (card.rarity.toLowerCase() == ((translations[0]["fake"] || "FAKE")
+				.toLowerCase()) ? fakestr : translations[langIndex][card.rarity.toLowerCase()
+				.trim()
+				.replaceAll(" ", "")
+			]);
+			
+			if(rarity_str && rarity_str.length > 0) {
+				rarity_str = rarity_str.replaceAll("——", "—").replaceAll("— ", "");
+			} else {
+				//console.log(card.name + ": weird rarity");
+			}
+		}
         tdRarity.innerHTML = getRarityBadge(card.rarity, rarity_str);
 
 
@@ -390,7 +403,7 @@ export function displayCards(cards) {
 
         // Quality badge.
         let tdQuality = document.createElement("td");
-        tdQuality.innerHTML = getQualityBadge(card.quality)
+        tdQuality.innerHTML = getQualityBadge(sellerMode && card.quality === "Unknown (good)" ? "Moderately Played" : card.quality)
             .replaceAll("None", "");
         if (nowrap_td === true) tdQuality.classList.add("nowrap-td");
         if (usetall_tr === true) tdQuality.classList.add("tall-tr");
@@ -414,6 +427,13 @@ export function displayCards(cards) {
         if (usetall_tr === true) tdEdition.classList.add("tall-tr");
         if (usesmall_tr === true) tdEdition.classList.add("small-tr");
         tr.appendChild(tdEdition);
+		
+		let have_min_price = false;
+		let min_price = 3;
+		
+		if(have_min_price && card.pricePaid.toFixed(2) < min_price) {
+			return;
+		}
 
         // Price I Paid.
         let tdPricePaid = document.createElement("td");
@@ -436,7 +456,11 @@ export function displayCards(cards) {
             .replaceAll("➡️", "")
             .replaceAll("None", "");
         let tdMarketPrice = document.createElement("td");
-        tdMarketPrice.textContent = card.marketPrice;
+		if (sellerMode) {
+            tdMarketPrice.textContent = Math.max(Math.ceil(card.pricePaid * 3.85 * 10) / 10, 1).toFixed(2).toString();
+        } else {
+			tdMarketPrice.textContent = card.marketPrice;
+		}
         if (nowrap_td === true) tdMarketPrice.classList.add("nowrap-td");
         if (usetall_tr === true) tdMarketPrice.classList.add("tall-tr");
         if (usesmall_tr === true) tdMarketPrice.classList.add("small-tr");
@@ -465,33 +489,51 @@ export function displayCards(cards) {
         tr.appendChild(tdPackID);
 
         const skip_before_2020 = false;
+		const skip_before_specific_date = false; // NEW optional flag
+		//const cutoffDate = new Date(2025, 10, 4); // JS months are 0‑indexed → 10 = November
+		const cutoffDate = new Date(2026, 2, 3); // JS months are 0‑indexed → 10 = November
 
-        // Date Obtained.
-        if (card.dateObtained && skip_before_2020) {
-            // Expecting dd/mm/YYYY
-            const parts = card.dateObtained.split("/");
-            if (parts.length === 3) {
-                const year = parseInt(parts[2], 10);
+		// Date Obtained.
+		if (card.dateObtained) {
 
-                // Skip this card if year < 2020
-                if (year < 2020) {
-                    return;
-                }
-            }
-        }
+			// Expecting dd/mm/YYYY
+			const parts = card.dateObtained.split("/");
+			if (parts.length === 3) {
+				const day = parseInt(parts[0], 10);
+				const month = parseInt(parts[1], 10) - 1; // JS months are 0‑indexed
+				const year = parseInt(parts[2], 10);
 
-        let tdDate = document.createElement("td");
-        tdDate.textContent = card.dateObtained;
-        if (nowrap_td === true) tdDate.classList.add("nowrap-td");
-        if (usetall_tr === true) tdDate.classList.add("tall-tr");
-        if (usesmall_tr === true) tdDate.classList.add("small-tr");
-        if (sellerMode) {
-            tdDate.style.height = "0px";
-            tdDate.style.width = "0px";
-            tdDate.style.display = "none";
-            tdDate.style.opacity = "0%";
-        }
-        tr.appendChild(tdDate);
+				const obtainedDate = new Date(year, month, day);
+
+				// Skip this card if year < 2020
+				if (skip_before_2020 && year < 2020) {
+					return;
+				}
+
+				// NEW: Skip this card if obtained before 04/11/2025
+				if (skip_before_specific_date && obtainedDate < cutoffDate) {
+					return;
+				}
+			}
+		}
+
+		let tdDate = document.createElement("td");
+		tdDate.textContent = card.dateObtained;
+		if (nowrap_td === true) tdDate.classList.add("nowrap-td");
+		if (usetall_tr === true) tdDate.classList.add("tall-tr");
+		if (usesmall_tr === true) tdDate.classList.add("small-tr");
+		if (sellerMode) {
+			tdDate.style.height = "0px";
+			tdDate.style.width = "0px";
+			tdDate.style.display = "none";
+			tdDate.style.opacity = "0%";
+		}
+		tr.appendChild(tdDate);
+
+		let myspecifiedloc = "IP:M Album";
+		if (false && card.location.toLowerCase() != myspecifiedloc.toLowerCase()) {
+			return;
+		}
 
         // Location.
         let tdLocation = document.createElement("td");

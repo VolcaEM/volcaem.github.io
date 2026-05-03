@@ -3,6 +3,11 @@ import {
 } from './config.js';
 
 import {
+    collator,
+    manager
+} from './card.js';
+
+import {
     currentGame,
 } from './detect.js';
 
@@ -84,17 +89,12 @@ export function compareById(a, b) {
 
 // Normalize and compare names (Italian numeric locale)
 export function compareByName(a, b) {
-    const clean = str =>
-        str.replace("CXyz ", "")
-        .replace(/Number [CSF]|Numero [CSF]/g, translations[langIndex]["number"])
-        .trim();
-
-    return clean(a.name)
-        .localeCompare(clean(b.name), "it", {
-            numeric: true,
-            sensitivity: "base"
-        });
+    return collator.compare(
+        manager.normalizeForSort(a.name || ""),
+        manager.normalizeForSort(b.name || "")
+    );
 }
+
 
 
 // Strip HTML and whitespace, then compare

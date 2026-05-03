@@ -1,6 +1,7 @@
 import {
     langIndex,
-    setLangIndex
+    setLangIndex,
+    sellerMode
 } from './config.js';
 
 import {
@@ -90,6 +91,67 @@ export class CardManager {
     constructor() {
         this.cards = [];
         this.loaded = false;
+    }
+
+    normalizeForSort(raw) {
+        if (!raw) return "";
+
+        function startsWithAnyNumberPrefix(str, prefixes) {
+            return prefixes.some(p =>
+                str.startsWith(p + " ") || str.startsWith(p) || str.startsWith(p + "")
+            );
+        }
+
+        function padNum(n, width = 6) {
+            return String(Number(n)).padStart(width, '0');
+        }
+
+        const numberPrefixes = [
+            "numero",
+            "number",
+            "no.", // Japanese Ｎｏ． normalized to "No."
+            "编号",
+            "numéro",
+            "nummer",
+            "número",
+        ];
+
+
+
+        let s = String(raw).normalize('NFKC')
+            .replace(/[\u200B-\u200F\u202A-\u202E\u2060\uFEFF]/g, '')
+            .replace(/\u00A0/g, ' ')
+            .replace(/\u2013|\u2014|\u2015/g, '-')
+            .replace(/\s+/g, ' ')
+            .trim();
+
+        // Remove leading junk
+        s = s.replace(/^[\s\|\t,._:-]+/, '');
+
+        // Remove CXyz prefix
+        s = s.replace(/^C\s*xyz\s*/i, '');
+
+        const lower = s.toLowerCase();
+
+        // 1. Only treat as Number card if it STARTS with a known prefix
+        if (startsWithAnyNumberPrefix(lower, numberPrefixes)) {
+            // Extract the number
+            let m = lower.match(/^(?:numero|number|no\.)\s*[icsf]*\s*(\d+)\b/);
+            if (m) {
+                const num = padNum(m[1]);
+                return `${translations[langIndex]["number"].toLowerCase()} ${num} ${lower}`;
+            }
+        }
+
+        // 2. C123 → only if it STARTS with C123
+        let m = lower.match(/^c\s*(\d+)\b/);
+        if (m) {
+            const num = padNum(m[1]);
+            return `${translations[langIndex]["number"].toLowerCase()} ${num} ${lower}`;
+        }
+
+        // 3. Alphabetical fallback
+        return lower;
     }
 
     loadCards(csvText) {
@@ -222,6 +284,16 @@ export class CardManager {
                 }
             }
 
+            if (sellerMode) {
+                if ((data["Type"] || "").toLowerCase().includes("product")) {
+                    continue;
+                }
+
+                if (!(data["Location"] || "").toLowerCase().includes("shelves") && !(data["Location"] || "").toLowerCase().includes("binder")) {
+                    continue;
+                }
+            }
+
             // Construct and store the card
             this.cards.push(new Card({
                 name: data["Name"],
@@ -254,16 +326,13 @@ export class CardManager {
 
         // Your existing alphabetical sort…
         if (sort_alphabetically) {
-            const normalize = s => s
-                .replace("CXyz ", "")
-                .replace(/Number [CSF]|Numero [CSF]/g, translations[langIndex]["number"]);
+
+
+            // Sorting
             this.cards.sort((a, b) =>
-                normalize(a.name)
-                .localeCompare(normalize(b.name), 'it', {
-                    numeric: true,
-                    sensitivity: 'base'
-                })
+                collator.compare(this.normalizeForSort(a.name || ''), this.normalizeForSort(b.name || ''))
             );
+
         }
 
         this.loaded = true;
@@ -343,26 +412,26 @@ export class CardManager {
             }
 
             if (filters.rarity) {
-				//console.log("Filter active for rarity:", filters.rarity);
+                //console.log("Filter active for rarity:", filters.rarity);
 
-				const filterValue = filters.rarity.replaceAll("—", "").trim().toLowerCase().replaceAll(" ", "").replaceAll("'", "").trim().toLowerCase();
-				const cardValue = card.rarity.replaceAll("—", "").replaceAll(" ", "").replaceAll("'", "").trim().toLowerCase();
-				const translationValue = translations[0][filterValue].replaceAll("—", "").replaceAll(" ", "").replaceAll("'", "").trim().toLowerCase();
+                const filterValue = filters.rarity.replaceAll("—", "").trim().toLowerCase().replaceAll(" ", "").replaceAll("'", "").trim().toLowerCase();
+                const cardValue = card.rarity.replaceAll("—", "").replaceAll(" ", "").replaceAll("'", "").trim().toLowerCase();
+                const translationValue = translations[0][filterValue].replaceAll("—", "").replaceAll(" ", "").replaceAll("'", "").trim().toLowerCase();
 
-				//console.log("Computed filterValue:", filterValue);
-				//console.log("Translation lookup:", translationValue);
-				//console.log("Card rarity value:", cardValue);
-				//console.log("Invert filter checked:", invertFilterCheckbox.checked);
+                //console.log("Computed filterValue:", filterValue);
+                //console.log("Translation lookup:", translationValue);
+                //console.log("Card rarity value:", cardValue);
+                //console.log("Invert filter checked:", invertFilterCheckbox.checked);
 
-				let result = false;
-				result = cardValue === translationValue;
-				
-				if (invertFilterCheckbox.checked) {
+                let result = false;
+                result = cardValue === translationValue;
+
+                if (invertFilterCheckbox.checked) {
                     result = !result;
                 }
-				
-				return result;
-			}
+
+                return result;
+            }
 
 
             if (filters.quality) {
@@ -429,5 +498,7 @@ export class CardManager {
 
 
 }
+
+export const collator = new Intl.Collator('it', { numeric: true, sensitivity: 'base' });
 
 export const manager = new CardManager();

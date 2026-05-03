@@ -70,36 +70,45 @@ export function ensureTranslationsReady() {
 
 // Function to reset all filter controls
 export function resetFilters() {
-    document.getElementById("selectedLanguage")
-        .selectedIndex = langIndex;
-    document.getElementById("filterName")
-        .value = "";
-    document.getElementById("filterType")
-        .value = "";
-    document.getElementById("filterRarity")
-        .value = "";
-    document.getElementById("filterQuality")
-        .value = "";
-    document.getElementById("filterLanguage")
-        .value = "";
-    document.getElementById("filterEdition")
-        .value = "";
-    document.getElementById("sortBy")
-        .value = "";
-    document.getElementById("debugCheckbox")
-        .checked = false;
-    document.getElementById("duplicatesCheckbox")
-        .checked = true;
-    document.getElementById("invertFilterCheckbox")
-        .checked = false;
-    document.getElementById("sortBy")
-        .selectedIndex = 0;
-    document.getElementById("packOptions")
-        .value = "";
-    document.getElementById("locationOptions")
-        .value = "";
 
+    // --- Safely set language selector ---
+    if (typeof langIndex === "number" && translations?.[langIndex]) {
+        const selLang = document.getElementById("selectedLanguage");
+        if (selLang) selLang.selectedIndex = langIndex;
+    }
+
+    // --- Safe helper ---
+    const setValue = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.value = value;
+    };
+
+    const setChecked = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.checked = value;
+    };
+
+    // --- Reset all filters safely ---
+    setValue("filterName", "");
+    setValue("filterType", "");
+    setValue("filterRarity", "");
+    setValue("filterQuality", "");
+    setValue("filterLanguage", "");
+    setValue("filterEdition", "");
+    setValue("sortBy", "");
+    setValue("packOptions", "");
+    setValue("locationOptions", "");
+
+    setChecked("debugCheckbox", false);
+    setChecked("duplicatesCheckbox", true);
+    setChecked("invertFilterCheckbox", false);
+
+    // Reset sort index if element exists
+    const sortEl = document.getElementById("sortBy");
+    if (sortEl) sortEl.selectedIndex = 0;
 }
+
+
 
 export function handleApplyFilters() {
 
@@ -360,39 +369,50 @@ export function initCollectionPage() {
 export function doInit() {
     if (localMode === false) {
         let csvload = document.getElementById("loadCSV");
-        csvload.style.display = "block";
+		if(csvload) {
+			csvload.style.display = "block";
+		}
     }
 
     initCollectionPage();
 
     if (sellerMode) {
         let thmarket = document.getElementById("thMarket");
-        thmarket.setAttribute("data-translation-key", "tableMarketSeller");
+		if(thmarket) {
+			thmarket.setAttribute("data-translation-key", "tableMarketSeller");
+		}
 
         let thPricePaid = document.getElementById("thSpent");
-
-        thPricePaid.style.height = "0px";
-        thPricePaid.style.width = "0px";
-        thPricePaid.style.display = "none";
-        thPricePaid.style.opacity = "0%";
+		if(thPricePaid) {
+			thPricePaid.style.height = "0px";
+			thPricePaid.style.width = "0px";
+			thPricePaid.style.display = "none";
+			thPricePaid.style.opacity = "0%";
+		}
 
         let thDate = document.getElementById("thDate");
-        thDate.style.height = "0px";
-        thDate.style.width = "0px";
-        thDate.style.display = "none";
-        thDate.style.opacity = "0%";
+		if(thDate) {
+			thDate.style.height = "0px";
+			thDate.style.width = "0px";
+			thDate.style.display = "none";
+			thDate.style.opacity = "0%";
+		}
 
         let thLocation = document.getElementById("thLocation");
-        thLocation.style.height = "0px";
-        thLocation.style.width = "0px";
-        thLocation.style.display = "none";
-        thLocation.style.opacity = "0%";
+		if(thLocation) {
+			thLocation.style.height = "0px";
+			thLocation.style.width = "0px";
+			thLocation.style.display = "none";
+			thLocation.style.opacity = "0%";
+		}
 
         let thWiki = document.getElementById("thWiki");
-        thWiki.style.height = "0px";
-        thWiki.style.width = "0px";
-        thWiki.style.display = "none";
-        thWiki.style.opacity = "0%";
+		if(thWiki) {
+			thWiki.style.height = "0px";
+			thWiki.style.width = "0px";
+			thWiki.style.display = "none";
+			thWiki.style.opacity = "0%";
+		}
     }
 
     // Apply translations using the selected language.
